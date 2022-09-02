@@ -177,21 +177,6 @@
         "factor": 184.999999999
     },
     {
-        "type": "Handelsposten",
-        "points": 10,
-        "fe": 2000,
-        "lut": 2000,
-        "h2o": 0,
-        "h2": 0,
-        "factor": 72,
-        "dependencies": [
-            {
-                "type": "Schiffsfabrik",
-                "level": 1
-            }
-        ]
-    },
-    {
         "type": "Orbitale Verteidigungsstation",
         "points": 2.05,
         "fe": 400,
