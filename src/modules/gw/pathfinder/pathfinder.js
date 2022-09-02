@@ -513,7 +513,7 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
     }
     
     get unis() {
-        return ['uni3', 'speed3'];
+        return ['uni4', 'uni3', 'speed3'];
     }
     
     get selectedUni() {

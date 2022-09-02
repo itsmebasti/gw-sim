@@ -1,4 +1,4 @@
-import levelFactor from '../static/levelFactor.json';
+import levelFactor from '../static/levelFactor.json' assert {type: 'json'};
 import timeBonus from '../static/timeBonus';
 import ResourceChanges from '../resources/resourceChanges';
 import { CHANGE, RES, RESOURCES, STORAGE } from '../static/types';
