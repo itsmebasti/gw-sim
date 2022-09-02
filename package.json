@@ -10,6 +10,9 @@
     "devDependencies": {
         "lwc-services": "^3.2.2"
     },
+    "engines": {
+        "node": "16.13.0"
+    },
     "lwc": {
         "modules": [
             {
