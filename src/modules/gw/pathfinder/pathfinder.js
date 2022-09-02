@@ -64,7 +64,7 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
         
         this.database.get('AccountData', accountName)
             .then((state) => this.load(state))
-            .catch(() => this.load(accountState('speed3')));
+            .catch(() => this.load(accountState(UNI.default.NAME)));
     }
     
     load(accountState) {

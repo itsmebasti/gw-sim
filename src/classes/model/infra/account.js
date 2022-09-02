@@ -18,7 +18,7 @@ export default class Account extends EventBus {
     constructor(data) {
         super();
     
-        this.uni = UNI[data.uni ?? 'speed3'];
+        this.uni = UNI[data.uni] ?? UNI.default;
         this.player = data.player;
         this.serverTime = data.serverTime;
         this.research = this.researchObject(data.research, this.uni.SPEED);

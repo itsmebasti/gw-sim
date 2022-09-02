@@ -5,7 +5,6 @@ export default class App extends SldsWebComponent {
     items = {
         overview: { title: 'Gesamt-übersicht', iconName: "decision", iconCss: "forecasts", beta: true },
         pathfinder: { title: 'Pathfinder', iconName: "trailhead", iconCss: "stage-collection"},
-        criticalPath: { title: 'Kritischer Pfad', iconName: "story", iconCss: "datadotcom", beta: true, error: true },
         fleets: { title: 'Flotten-übersicht', iconName: "activations", iconCss: "activations", beta: true, error: true },
     };
     

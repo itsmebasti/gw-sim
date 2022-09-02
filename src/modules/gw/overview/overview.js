@@ -34,7 +34,7 @@ export default class Overview extends CacheMixin(SldsWebComponent) {
     @api refresh(accountName = this.cache.selectedAccount ?? 'Default') {
         return this.database.get('AccountData', accountName)
             .then((state) => {
-                this.accountState = state ?? accountState(UNI.speed3);
+                this.accountState = state ?? accountState(UNI.default);
                 this.selectedTime = this.serverTime;
             })
             .then(() => this.database.getAll('Paths'))

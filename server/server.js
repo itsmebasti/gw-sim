@@ -1,5 +1,4 @@
 import express from 'express';
-import JobRouter from './jobRouter';
 import compression from 'compression';
 import helmet from 'helmet';
 
@@ -8,7 +7,6 @@ const PORT = process.env.PORT || 3001;
 
 express()
     .use(compression())
-    .use('/job', new JobRouter())
     
     .get('/', helmet.contentSecurityPolicy({
         directives: {

@@ -12,10 +12,11 @@ export function accountState(uniName) {
 }
 
 const UNI = {
+    get default() {return this.uni4},
     uni3: {
         NAME: 'uni3',
         SPEED: 1,
-        START_DATE: new Date(2020, 3, 24, 20),
+        START_DATE: new Date(2020, 4-1, 24, 20),
         START_INFRA: {
             buildings: { [FACTORY.KZ]: 1 },
             ships: {},
@@ -45,7 +46,7 @@ const UNI = {
     speed3: {
         NAME: 'speed3',
             SPEED: 6,
-            START_DATE: new Date(2022, 1, 4, 20),
+            START_DATE: new Date(2022, 2-1, 4, 20),
             START_INFRA: {
             buildings: { [FACTORY.KZ]: 1 },
             ships: {},
