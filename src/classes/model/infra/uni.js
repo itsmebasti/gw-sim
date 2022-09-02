@@ -14,9 +14,24 @@ export function accountState(uniName) {
 const UNI = {
     uni3: {
         NAME: 'uni3',
-            SPEED: 1,
-            START_DATE: new Date(2020, 3, 24, 20),
-            START_INFRA: {
+        SPEED: 1,
+        START_DATE: new Date(2020, 3, 24, 20),
+        START_INFRA: {
+            buildings: { [FACTORY.KZ]: 1 },
+            ships: {},
+            towers: {}
+        },
+        START_RES: [
+            { type: RES.FE, stored: 500 },
+            { type: RES.LUT, stored: 500 },
+            { type: RES.H2O, stored: 500 },
+            { type: RES.H2, stored: 0 }]
+    },
+    uni4: {
+        NAME: 'uni4',
+        SPEED: 1,
+        START_DATE: new Date(2022, 9-1, 9, 20),
+        START_INFRA: {
             buildings: { [FACTORY.KZ]: 1 },
             ships: {},
             towers: {}
