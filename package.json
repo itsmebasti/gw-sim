@@ -19,6 +19,7 @@
         "build": "lwc-services build --mode production",
         "build:dev": "lwc-services build",
         "serve": "node --experimental-specifier-resolution=node server/server.js",
+        "start": "yarn serve",
         "watch": "lwc-services watch",
         "watch:prod": "lwc-services watch --mode=production"
     }
