@@ -3,8 +3,10 @@
     
     <div class="slds-grid">
         <div class="slds-col slds-size_2-of-5">
-            <slds-accordion-section for:each={constructions} for:item="construction" key={construction.label}
+            <slds-accordion-section for:each={constructions} for:item="construction" for:index="index" key={construction.label}
                                     label={construction.label} open={construction.open}>
+                <input if:true={construction.amountInput} type="number" step="1" class="amount"/>
+                <br />
                 <span for:each={construction.options} for:item="option" key={option}
                       class="slds-pill slds-pill_link">
                     <a class="slds-pill__action slds-p-right--xxx-small" onclick={build}>
@@ -46,6 +48,7 @@
             Summe: ({generated})&nbsp;&nbsp;
             <button class="slds-button slds-button_brand" disabled={cache.produce} onclick={resetCount}>"Begleichen"</button>
             <button class="slds-button slds-button_brand" onclick={rerender}>Auf alles anwenden</button>
+             | <button class="slds-button slds-button_brand" onclick={cancelQueue}>BS auflösen</button>
             <br>
             <div if:true={account} for:each={resources} for:item="res" key={res.name}
                  class="slds-show_inline-block slds-m-horizontal--x-small">
@@ -75,7 +78,7 @@
                             onremove={remove}
                             onduplicate={duplicate}></gw-path-logger>
             
-            <slds-accordion-section label="Path">
+            <slds-accordion-section label="Pfad">
                 <input value={selectedPath} class="path-name slds-input slds-m-horizontal--small"/>
                 <button class="slds-button slds-button_success" onclick={savePath}>Speichern</button>
                 <br>
@@ -93,7 +96,6 @@
                 <button class="slds-button slds-button_brand" onclick={executePasted}>Ausführen</button>
                 <button class="slds-button slds-button_brand" onclick={copy}>Pfad kopieren</button>
             </slds-accordion-section>
-
         </div>
     </div>
 </template>

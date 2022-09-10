@@ -137,7 +137,9 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
     }
     
     build(evt) {
-        this.add({ type: 'start', tec: evt.target.innerText, produce: this.cache.produce });
+        let increment = Number(evt.target.closest('slds-accordion-section').querySelector('.amount')?.value);
+        increment = (increment > 0) ? increment : 1;
+        this.add({ type: 'start', tec: evt.target.innerText, produce: this.cache.produce, increment });
     }
     
     complete(evt) {
@@ -157,9 +159,13 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
                     this.logger.markAsSucceeded();
                     break;
                 case 'start':
-                    this.logger.command('Starte ' + step.tec + ' ' + this.levelFor(step.tec));
+                    const level = this.levelFor(step.tec);
+                    this.logger.command('Starte ' + step.tec + ' ' + (level+1) + ((step.increment > 1) ? " - " + (level + step.increment) : ""));
                     this.produceResForNextBuild = step.produce ?? true;
                     this.account.completeAndEnqueue(step.tec);
+                    for(let i = step.increment-1; i > 0 ; i--) {
+                        this.account.enqueue(step.tec);
+                    }
                     this.produceResForNextBuild = true;
                     break;
                 case 'wait':
@@ -189,7 +195,7 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
     
     levelFor(tech) {
         const construction = this.account.get(tech);
-        return 1 + construction.level + this.account.get(construction.factoryType).queue.filter(({type}) => type === tech).length;
+        return construction.level + this.account.get(construction.factoryType).queue.filter(({type}) => type === tech).length;
     }
     
     
@@ -450,6 +456,10 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
         this.load(this.accountState);
     }
     
+    cancelQueue() {
+        this.account
+    }
+    
     saveAccountState() {
         return this.database.add("AccountData", new Account(this.accountState).state)
             .catch(this.handle);
@@ -472,10 +482,10 @@ export default class Pathfinder extends CacheMixin(SldsWebComponent) {
     
     get constructions() {
         return [
-            {label: 'Gebäude', options: technologies.buildings, open : 1},
-            {label: 'Forschung', options: technologies.research, open : 1},
-            {label: 'Schiffe', options: technologies.ships, open : 1},
-            {label: 'Türme', options: technologies.towers, open : 1},
+            {label: 'Gebäude', options: technologies.buildings, open : 1, amountInput: 0},
+            {label: 'Forschung', options: technologies.research, open : 1, amountInput: 0},
+            {label: 'Schiffe', options: technologies.ships, open : 1, amountInput: 1},
+            {label: 'Türme', options: technologies.towers, open : 1, amountInput: 1},
         ]
     }
     

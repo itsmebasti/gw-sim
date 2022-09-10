@@ -3,8 +3,8 @@ import SldsWebComponent from '../../../classes/framwork/misc/sldsWebComponent';
 export default class App extends SldsWebComponent {
     _selected = 'pathfinder';
     items = {
-        overview: { title: 'Gesamt-übersicht', iconName: "decision", iconCss: "forecasts", beta: true },
         pathfinder: { title: 'Pathfinder', iconName: "trailhead", iconCss: "stage-collection"},
+        overview: { title: 'Gesamt-übersicht', iconName: "decision", iconCss: "forecasts", beta: true },
         fleets: { title: 'Flotten-übersicht', iconName: "activations", iconCss: "activations", beta: true, error: true },
     };
     

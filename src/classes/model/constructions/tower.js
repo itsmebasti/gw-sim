@@ -16,6 +16,6 @@ export default class Tower extends Construction {
     }
     
     increaseSeconds(orbiLevel) {
-        return Math.floor(this.describe.time * timeBonus(orbiLevel) / this.speed)
+        return this.describe.time * timeBonus(orbiLevel) / this.speed;
     }
 }

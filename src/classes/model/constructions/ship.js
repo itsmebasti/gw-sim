@@ -16,6 +16,6 @@ export default class Ship extends Construction {
     }
     
     increaseSeconds(sfLevel) {
-        return Math.floor(this.describe.time * timeBonus(sfLevel) / this.speed)
+        return this.describe.time * timeBonus(sfLevel) / this.speed;
     }
 }

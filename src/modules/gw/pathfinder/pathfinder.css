@@ -6,3 +6,17 @@ input.res {
 input.path-name {
   width: 200px;
 }
+
+input.amount {
+  width: 40px;
+}
+
+input.amount::-webkit-outer-spin-button,
+input.amount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.amount {
+  -moz-appearance: textfield;
+}
