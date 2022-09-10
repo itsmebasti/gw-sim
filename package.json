@@ -18,9 +18,10 @@
         "bs": "yarn build:dev && yarn serve",
         "build": "lwc-services build --mode production",
         "build:dev": "lwc-services build",
-        "serve": "node --experimental-specifier-resolution=node server/server.js",
-        "start": "yarn serve",
+        "serve": "node server/server.js",
         "watch": "lwc-services watch",
-        "watch:prod": "lwc-services watch --mode=production"
+        "watch:prod": "lwc-services watch --mode=production",
+        "gcp-build": "yarn build",
+        "start": "yarn serve"
     }
 }
