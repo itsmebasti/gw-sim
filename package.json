@@ -41,6 +41,8 @@
         "start": "node server.js",
         "gcp-build": "yarn build",
         "watch": "rollup --config --watch",
-        "local": "yarn build && yarn start"
+        "local": "yarn build && yarn start",
+        "deploy": "gcloud app deploy --quiet",
+        "open": "gcloud app browse"
     }
 }
