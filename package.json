@@ -37,9 +37,10 @@
         "rollup-plugin-terser": "^7.0.2"
     },
     "scripts": {
-        "gcp-build": "rollup --config",
+        "build": "rollup --config",
+        "start": "node server.js",
+        "gcp-build": "yarn build",
         "watch": "rollup --config --watch",
-        "start": "node scripts/server.js",
-        "local": "yarn gcp-build && yarn start"
+        "local": "yarn build && yarn start"
     }
 }
