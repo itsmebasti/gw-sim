@@ -28,7 +28,7 @@ export default {
         resolveSubdirectoryImports(),
         lwc({ sourcemap: watching, exclude: '**/*.json' }),
         json(),
-        replace({ preventAssignment: true, 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) }),
+        replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) }),
         copy({
             targets: [
                 { src: 'src/index.html', dest: 'dist' },

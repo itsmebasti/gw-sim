@@ -30,14 +30,11 @@
                     </a>
                 </li>
                 <li>
-                    <gw-uploads oncomplete={refreshContent}></gw-uploads>
                 </li>
             </ul>
         </ul>
         <div class="slds-vertical-tabs__content gw-components slds-scrollable">
             <gw-pathfinder if:true={items.pathfinder.visible}></gw-pathfinder>
-            <gw-overview if:true={items.overview.visible}></gw-overview>
-            <gw-fleets if:true={items.fleets.visible}></gw-fleets>
         </div>
     </section>
 </template>
