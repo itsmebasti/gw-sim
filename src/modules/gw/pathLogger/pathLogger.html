@@ -1,9 +1,9 @@
 <template>
     <ul class="slds-m-vertical--xx-small" ondragover={allowDrop} ondrop={drop} data-command="-1">
         <li>
-            <div>[{serverTime}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier ----------</div>
+            <div>[{serverTime}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier</div>
         </li>
-        
+
         <li for:each={displayedLogs} for:item="log" key={log.id}
             data-command={log.command}
             draggable={log.isCommand}
@@ -12,25 +12,25 @@
             ondragstart={drag}
             ondrop={drop}
             class={log.severity}>
-            
+
             <div if:true={log.time}>[{log.time}]&nbsp;<span class={log.cssClass}>{log.msgType}</span>&nbsp;&gt;&nbsp;{log.message}</div>
             <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
             <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1">
                 {log.message}
-                
+
                 <div class="slds-drop-zone__actions">
-                    <slds-button-icon onclick={jumpTo} icon="pop_in" size="x-small" text="Bis hier"></slds-button-icon>
-                    <slds-button-icon onclick={duplicate} icon="layers" size="x-small" text="Duplizieren"></slds-button-icon>
-                    <slds-button-icon onclick={up} icon="up" size="x-small" text="Hoch schieben"></slds-button-icon>
-                    <slds-button-icon onclick={down} icon="down" size="x-small" text="Runter schieben"></slds-button-icon>
-                    <slds-button-icon onclick={toEnd} icon="arrow_bottom" size="x-small" text="Ans Ende"></slds-button-icon>
-                    <slds-button-icon onclick={remove} icon="close" size="x-small" text="Löschen"></slds-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={duplicate} icon-name="utility:layers" tooltip="Duplizieren"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={up} icon-name="utility:up"            tooltip="Hoch schieben"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={down} icon-name="utility:down"        tooltip="Runter schieben"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={toEnd} icon-name="utility:arrow_bottom" tooltip="Ans Ende"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={remove} icon-name="utility:close"     tooltip="Löschen"></lightning-button-icon>
                 </div>
             </div>
         </li>
-        
+
         <li>
-            <div>[{startTime}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad startet hier ----------</div>
+            <div>[{startTime}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad startet hier</div>
         </li>
     </ul>
 <!--    <button class="slds-button slds-button_success" onclick={clear}>Clear Log</button>-->

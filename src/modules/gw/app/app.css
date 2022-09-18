@@ -1,5 +1,165 @@
-@media screen and (max-width: 1000px) {
-  .slds-vertical-tabs__nav {
-    display: none;
-  }
+:host {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :host {
+        --borders: black;
+        --text: white;
+        --text-dark: #ccc;
+
+        --gw-dark-blue: #162C36;
+        --gw-dark-grey: #333333;
+        --gw-light-grey: #808080;
+        --gw-header-blue: #2c3e50;
+        --gw-navigation-header: #2b89c6;
+        --gw-navigation: #226d9d;
+
+        --gw-res-odd: #263545;
+        --gw-res-even: #202d3b;
+        --gw-start-enabled: #00ff00;
+        --gw-start-disabled: #D91E18;
+
+        /* these are custom defined inside the lwc-base project */
+        --slds-c-vertical-tabs-nav-color-background: var(--gw-navigation);
+        --slds-c-vertical-tabs-nav-color-border: var(--gw-navigation);
+        --slds-c-vertical-tabs-text-color: var(--text);
+        --slds-c-vertical-tabs-nav-item-color-background: var(--gw-navigation-header);
+        --slds-c-vertical-tabs-nav-item-color-background-active: black;
+        --slds-c-vertical-tabs-nav-item-color-background-hover: var(--gw-navigation);
+        --slds-c-vertical-tabs-nav-item-color-border: var(--gw-navigation);
+        --slds-c-vertical-tabs-content-color-background: black;
+
+        --slds-c-accordion-color-border: var(--borders);
+        --slds-c-accordion-heading-text-color: var(--text-dark);
+        --sds-c-accordion-heading-text-color-hover: var(--text);
+        --slds-c-accordion-summary-color-background: var(--gw-dark-blue);
+
+        --slds-c-button-inverse-shadow-focus: var(--gw-navigation);
+        --slds-c-button-shadow: var(--gw-navigation);
+        --slds-c-button-shadow-focus: var(--gw-navigation);
+        --slds-c-button-brand-color-background: var(--gw-navigation);
+        --slds-c-button-brand-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-brand-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-brand-color-border: var(--borders);
+        --slds-c-button-brand-color-border-hover: var(--borders);
+        --slds-c-button-brand-text-color: var(--text);
+        --slds-c-button-brand-text-color-active: var(--text-dark);
+        --slds-c-button-brand-text-color-hover: var(--text-dark);
+        --slds-c-button-color-background: var(--gw-navigation);
+        --slds-c-button-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-color-border: var(--gw-navigation-header);
+        --slds-c-button-color-border-active: var(--gw-navigation-header);
+        --slds-c-button-color-border-hover: var(--gw-navigation-header);
+        --slds-c-button-destructive-color-background: var(--gw-navigation);
+        --slds-c-button-destructive-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-destructive-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-destructive-color-border: var(--borders);
+        --slds-c-button-destructive-color-border-active: var(--borders);
+        --sds-c-button-destructive-color-border-hover: var(--borders);
+        --slds-c-button-destructive-text-color: var(--text-dark);
+        --slds-c-button-destructive-text-color-active: var(--text-dark);
+        --slds-c-button-inverse-color-background: var(--gw-navigation);
+        --slds-c-button-inverse-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-inverse-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-inverse-color-border: var(--borders);
+        --slds-c-button-inverse-color-border-active: var(--borders);
+        --slds-c-button-inverse-color-border-focus: var(--borders);
+        --slds-c-button-inverse-color-border-hover: var(--borders);
+        --slds-c-button-inverse-text-color: var(--text);
+        --slds-c-button-inverse-text-color-active: var(--text-dark);
+        --slds-c-button-inverse-text-color-hover: var(--text-dark);
+        --slds-c-button-neutral-color-background: var(--gw-navigation);
+        --slds-c-button-neutral-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-neutral-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-neutral-color-border: var(--borders);
+        --slds-c-button-neutral-color-border-active: var(--borders);
+        --slds-c-button-neutral-color-border-hover: var(--borders);
+        --slds-c-button-outline-brand-color-background: var(--gw-navigation);
+        --slds-c-button-outline-brand-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-outline-brand-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-outline-brand-color-border: var(--borders);
+        --slds-c-button-outline-brand-color-border-hover: var(--borders);
+        --slds-c-button-stateful-color-background-selected: var(--gw-navigation-header);
+        --slds-c-button-stateful-color-background-selected-active: var(--gw-navigation-header);
+        --slds-c-button-stateful-color-background-selected-hover: var(--gw-navigation-header);
+        --slds-c-button-stateful-color-border-selected: var(--borders);
+        --slds-c-button-stateful-color-border-selected-hover: var(--borders);
+        --slds-c-button-success-color-background: var(--gw-navigation);
+        --slds-c-button-success-color-background-active: var(--gw-navigation-header);
+        --slds-c-button-success-color-background-hover: var(--gw-navigation-header);
+        --slds-c-button-success-color-border: var(--borders);
+        --slds-c-button-success-color-border-active: var(--borders);
+        --slds-c-button-success-color-border-hover: var(--borders);
+        --slds-c-button-success-text-color: var(--text);
+        --slds-c-button-success-text-color-active: var(--text-dark);
+        --slds-c-button-success-text-color-hover: var(--text-dark);
+        --slds-c-button-text-color: var(--text);
+        --slds-c-button-text-color-active: var(--text-dark);
+        --slds-c-button-text-color-hover: var(--text-dark);
+        --slds-c-button-text-destructive-color-background: var(--text);
+        --slds-c-button-text-destructive-color-background-active: var(--text-dark);
+        --slds-c-button-text-destructive-color-background-hover: var(--text-dark);
+        --slds-c-button-text-destructive-color-border: var(--borders);
+        --slds-c-button-text-destructive-color-border-hover: var(--borders);
+        --slds-c-button-text-destructive-text-color: var(--text);
+        --slds-c-button-text-destructive-text-color-active: var(--text-dark);
+        --slds-c-button-text-destructive-text-color-hover: var(--text-dark);
+
+        --slds-c-icon-color-foreground: var(--text);
+        --slds-c-icon-color-foreground-active: var(--text);
+
+        --slds-c-pill-action-color-border: var(--borders);
+        --slds-c-pill-color-background: var(--gw-navigation-header);
+        --slds-c-pill-color-border: var(--borders);
+        --slds-c-pill-container-color-background: var(--gw-navigation);
+        --slds-c-pill-error-color-border: var(--borders);
+        --slds-c-pill-error-color-border-active: var(--borders);
+        --slds-c-pill-error-text-color: var(--text);
+
+        --slds-c-tabs-item-color-border-active: var(--gw-dark-grey);
+        --slds-c-tabs-item-color-border-hover: var(--gw-dark-grey);
+        --slds-c-tabs-item-text-color: var(--gw-light-grey);
+        --slds-c-tabs-item-text-color-active: var(--gw-light-grey);
+        --slds-c-tabs-list-color-border: var(--gw-dark-grey);
+
+        --slds-c-tooltip-color-background: var(--gw-dark-grey);
+        --slds-c-tooltip-text-color: var(--gw-light-grey);
+
+        --slds-c-textarea-color-background: var(--gw-dark-grey);
+        --slds-c-textarea-color-background-error-focus: var(--gw-dark-grey);
+        --slds-c-textarea-color-background-focus: var(--gw-dark-grey);
+        --slds-c-textarea-color-border: var(--borders);
+        --slds-c-textarea-color-border-focus: var(--borders);
+        --slds-c-textarea-text-color: var(--text);
+        --slds-c-textarea-text-color-error-focus: var(--text);
+        --slds-c-textarea-text-color-focus: var(--text);
+
+        --slds-c-select-color-background: var(--gw-light-grey);
+        --slds-c-select-color-background-focus: var(--gw-light-grey);
+        --slds-c-select-color-border: var(--borders);
+        --slds-c-select-color-border-focus: var(--borders);
+        --slds-c-select-text-color: var(--text);
+        --slds-c-select-text-color-focus: var(--text);
+
+        --slds-c-input-color-background: var(--gw-light-grey);
+        --slds-c-input-color-background-focus: var(--gw-light-grey);
+        --slds-c-input-color-border: var(--borders);
+        --slds-c-input-color-border-focus: var(--borders);
+        --slds-c-input-text-color: var(--gw-text);
+        --slds-c-input-text-color-focus: var(--text);
+
+        --slds-c-checkbox-toggle-color-background: var(--gw-navigation);
+        --slds-c-checkbox-toggle-color-background-checked-focus: var(--gw-navigation-header);
+        --slds-c-checkbox-toggle-color-background-hover: var(--gw-navigation-header);
+        --slds-c-checkbox-toggle-color-border: var(--gw-navigation-header);
+        --slds-c-checkbox-toggle-color-border-hover: var(--gw-navigation-header);
+        --slds-c-checkbox-toggle-mark-color-foreground: var(--text);
+        --slds-c-checkbox-toggle-switch-color-background: var(--text);
+        --slds-c-checkbox-toggle-switch-color-background-checked: var(--text);
+
+        color: var(--text);
+        background-color: black;
+    }
 }

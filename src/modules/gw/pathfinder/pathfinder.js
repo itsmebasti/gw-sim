@@ -316,7 +316,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
         if(next >= 0 && next < planets.length) {
             this.selectPlanet(planets[next]);
-            this.template.querySelector('slds-select.planets').selectedIndex = next;
+            this.template.querySelector('base-select.planets').selectedIndex = next;
         }
     }
 
@@ -326,7 +326,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
         if(prev >= 0) {
             this.selectPlanet(planets[prev]);
-            this.template.querySelector('slds-select.planets').selectedIndex = prev;
+            this.template.querySelector('base-select.planets').selectedIndex = prev;
         }
     }
 
@@ -472,10 +472,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     get constructions() {
         return [
-            {label: 'Gebäude', options: technologies.buildings, open : 1},
-            {label: 'Forschung', options: technologies.research, open : 1},
-            {label: 'Schiffe', options: technologies.ships, open : 1},
-            {label: 'Türme', options: technologies.towers, open : 1},
+            {label: 'Gebäude', options: technologies.buildings },
+            {label: 'Forschung', options: technologies.research },
+            {label: 'Schiffe', options: technologies.ships },
+            {label: 'Türme', options: technologies.towers },
         ]
     }
 
@@ -529,7 +529,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     handle = (error) => {
-        this.template.querySelector('slds-toast').display('error', error);
+        this.template.querySelector('base-toast').display('error', error);
     }
 
     error = (error) => {
@@ -537,6 +537,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     toast = (message, details) => {
-        this.template.querySelector('slds-toast').display('success', message, details);
+        this.template.querySelector('base-toast').display('success', message, details);
     }
 }

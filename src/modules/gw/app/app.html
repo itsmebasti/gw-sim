@@ -1,40 +1,9 @@
 <template>
-    <github-corner repo="https://github.com/itsmebasti/gw-sim"></github-corner>
+    <github-corner corner-color="#2b89c6" repo="https://github.com/itsmebasti/gw-sim"></github-corner>
 
-    <section class="slds-vertical-tabs slds-template__container">
-        <ul aria-orientation="vertical" class="slds-vertical-tabs__nav">
-            <ul class="slds-vertical-tabs__nav">
-                <li for:each={itemList} for:item="item" class={item.liCss} key={item.page}>
-                    <a class="slds-vertical-tabs__link" data-page={item.page} onclick={select}>
-                        <span class="slds-vertical-tabs__left-icon">
-                            <span class={item.css}>
-                                <svg aria-hidden="true" class="slds-icon slds-icon_small">
-                                    <use xlink:href={item.icon}></use>
-                                </svg>
-                            </span>
-                        </span>
-
-                        <span>{item.title}</span>
-
-                        <span if:true={item.beta} class="slds-vertical-tabs__right-icon">
-                            <span class="slds-badge slds-badge_inverse">beta</span>
-                        </span>
-
-                        <span if:true={item.error} class="slds-vertical-tabs__right-icon">
-                            <span class="slds-icon_container slds-icon-utility-error">
-                                <svg class="slds-icon slds-icon_x-small slds-icon-text-error">
-                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#error"></use>
-                                </svg>
-                            </span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                </li>
-            </ul>
-        </ul>
-        <div class="slds-vertical-tabs__content gw-components slds-scrollable">
-            <gw-pathfinder if:true={items.pathfinder.visible}></gw-pathfinder>
-        </div>
-    </section>
+    <base-vertical-tabs>
+        <base-tab title="Pathfinder" icon-name="standard:trailhead_alt">
+            <gw-pathfinder></gw-pathfinder>
+        </base-tab>
+    </base-vertical-tabs>
 </template>

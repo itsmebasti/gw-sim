@@ -1,73 +1,72 @@
 <template>
-    <slds-toast></slds-toast>
-
     <div class="slds-grid">
-        <div class="slds-col slds-size_2-of-5">
-            <slds-accordion-section for:each={constructions} for:item="construction" key={construction.label}
-                                    label={construction.label} open={construction.open}>
-                <span for:each={construction.options} for:item="option" key={option}
-                      class="slds-pill slds-pill_link">
-                    <a class="slds-pill__action slds-p-right--xxx-small" onclick={build}>
-                        <span class="slds-pill__label">{option}</span>
-                    </a>
-                </span>
-            </slds-accordion-section>
-            <slds-accordion-section label="Account Konfigurieren">
-                <textarea placeholder="Kompletten Account hochladen" onblur={uploadAccount} class="slds-theme_offline" rows="2" cols="20"></textarea>
-                <br>
+        <lightning-accordion allow-multiple-sections-open class="slds-col slds-size_2-of-6" active-section-name="Gebäude">
+            <base-toast class="slds-is-absolute slds-m-top_large"></base-toast>
+
+            <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
+                                         label={construction.label} name={construction.label}>
+                <a href="javascript:void(0)" class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small" for:each={construction.options} for:item="option" key={option} onclick={build}>{option}</a>
+            </lightning-accordion-section>
+            <lightning-accordion-section label="Account Konfigurieren">
+                <textarea placeholder="Kompletten Account hochladen" rows="2" cols="20" onblur={uploadAccount} class="slds-theme_offline slds-m-bottom--x-small"></textarea>
                 <template if:true={defaultSelected}>
-                    Uni: <slds-select class="slds-show_inline-block slds-m-horizontal--xx-small"
-                                      value={selectedUni} options={unis} onchange={setUni}></slds-select>
-                    <br>
-                    Start Zeitpunkt:
-                    <input class="date" value={date} type="date" />
-                    <input class="time" value={time} type="time" step="1" />
-                    <button class="slds-button slds-button_brand" onclick={changeTime}>Anwenden</button>
-                    <button class="slds-button slds-button_brand" onclick={resetTime}>Uni Start</button>
+                    <section class=" slds-p-bottom--x-small">
+                        Uni:<base-select class="slds-show_inline-block slds-m-left--small"
+                                        value={selectedUni} options={unis} onchange={setUni}></base-select>
+                    </section>
+                    <section class=" slds-p-bottom--x-small">
+                        Start:<input class="date slds-input slds-m-left--small" value={date} type="date" />
+                        <input class="time slds-input slds-m-left--small" value={time} type="time" step="1" />
+                        <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left--small"></lightning-button>
+                    </section>
+                    <lightning-button variant="brand" onclick={resetTime} label="Uni Start"></lightning-button>
                 </template>
-            </slds-accordion-section>
-        </div>
-        <div class="slds-col slds-size_3-of-5">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Account: <slds-select class="slds-show_inline-block slds-m-horizontal--small"
-                                  value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></slds-select>
-            <slds-button-icon icon="copy" variant="bare" onclick={copyAccount} title="kopieren"></slds-button-icon>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Planet:
-            <slds-button-icon icon="back" variant="bare" onclick={previousPlanet}></slds-button-icon>
-            <slds-select class="planets slds-show_inline-block slds-m-horizontal--xx-small"
-                         value={cache.coords} options={planets} onchange={changePlanet}></slds-select>
-            <slds-button-icon icon="forward" variant="bare" onclick={nextPlanet}></slds-button-icon>
-            <br>
-            <slds-toggle label="Ressourcen" class="slds-show_inline-block slds-m-horizontal--medium"
-                         when-on="produzieren"
-                         when-off="generieren"
-                         checked={cache.produce}
-                         onchange={toggleProduce}></slds-toggle>
+            </lightning-accordion-section>
+        </lightning-accordion>
 
-            Summe: ({generated})&nbsp;&nbsp;
-            <button class="slds-button slds-button_brand" disabled={cache.produce} onclick={resetCount}>"Begleichen"</button>
-            <button class="slds-button slds-button_brand" onclick={rerender}>Auf alles anwenden</button>
-            <br>
-            <div if:true={account} for:each={resources} for:item="res" key={res.name}
-                 class="slds-show_inline-block slds-m-horizontal--x-small">
-                <span class="slds-text-title_bold slds-align_absolute-center">{res.name}</span>
-                <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
-                <input type="number" step="1" class="res" value="0" />
-            </div>
-            <div class="slds-show_inline-block slds-m-horizontal--x-small">
-                <span class="slds-text-title_bold slds-align_absolute-center">Vergangene Zeit</span>
-                <span class="slds-text-title_bold slds-align_absolute-center">{timePassed}</span>
-                <input type="time" step="1" class="wait" />
-            </div>
+        <div class="slds-col slds-size_4-of-6 slds-p-horizontal--medium">
+            <section class="slds-p-bottom--x-small">
+                Account:<base-select class="slds-show_inline-block slds-m-horizontal--small"
+                                    value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
+                <lightning-button-icon icon-name="utility:copy" variant="bare" onclick={copyAccount} title="kopieren"></lightning-button-icon>
+                <span class="slds-m-horizontal--small">Planet:</span>
+                <lightning-button-icon icon-name="utility:back" variant="bare" onclick={previousPlanet}></lightning-button-icon>
+                <base-select class="planets slds-show_inline-block slds-m-horizontal--xx-small"
+                            value={cache.coords} options={planets} onchange={changePlanet}></base-select>
+                <lightning-button-icon icon-name="utility:forward" variant="bare" onclick={nextPlanet}></lightning-button-icon>
+            </section>
+            <section class="slds-p-bottom--x-small">
+                <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
+                Summe: ({generated})&nbsp;&nbsp;
+                <lightning-button-group>
+                    <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
+                    <lightning-button variant="brand" onclick={rerender} label="Auf alles anwenden"></lightning-button>
+                </lightning-button-group>
+            </section>
+            <section class="ressources slds-grid slds-grid--vertical-stretch slds-size_small slds-p-bottom--x-small">
+                <div if:true={account} for:each={resources} for:item="res" key={res.name}
+                        class="slds-col slds-p-horizontal--xxx-small">
+                    <span class="slds-align_absolute-center">{res.name}</span>
+                    <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
+                    <input type="number" step="1" class="res slds-input" value="0" />
+                </div>
+                <div class="slds-col slds-p-horizontal--xxx-small">
+                    <span class="slds-align_absolute-center">Zeit</span>
+                    <span class="slds-align_absolute-center">{timePassed}</span>
+                    <input type="time" step="1" value="00:00:00" class="wait slds-input" required/>
+                </div>
+                <div class="slds-col slds-p-horizontal--xxx-small allign-bottom">
+                    <lightning-button variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
+                </div>
+            </section>
 
-            <button class="slds-button slds-button_brand" onclick={applyManualChanges}>Verrechnen</button>
-            <br>
-            <button class="slds-button slds-button_brand" onclick={complete}>Alles fertig bauen</button>
-            <slds-toggle label="Details" class="slds-show_inline-block slds-m-horizontal--large"
-                         when-on="anzeigen" when-off="verstecken" checked={showDetails}
-                         onchange={toggleDetails}></slds-toggle>
-            <button class="slds-button slds-button_brand" onclick={reset}>RESET</button>
-            <slds-button-icon icon="undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z"></slds-button-icon>
-            <slds-button-icon icon="redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y"></slds-button-icon>
+            <section>
+                <lightning-button variant="brand" onclick={complete} label="Alles fertig bauen"></lightning-button>
+                <base-toggle label="Details" class="slds-show_inline-block slds-m-left--small" checked={showDetails} onchange={toggleDetails}></base-toggle>
+                <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
+                <lightning-button-icon icon-name="utility:undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left--small"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left--small"></lightning-button-icon>
+            </section>
 
             <gw-path-logger hide-details={cache.hideDetails}
                             onjumpto={jumpTo}
@@ -75,25 +74,31 @@
                             onremove={remove}
                             onduplicate={duplicate}></gw-path-logger>
 
-            <slds-accordion-section label="Pfad">
-                <input value={selectedPath} class="path-name slds-input slds-m-horizontal--small"/>
-                <button class="slds-button slds-button_success" onclick={savePath}>Speichern</button>
-                <br>
-                <slds-select class="slds-show_inline-block slds-m-horizontal--small"
-                             value={selectedPath} options={savedPaths} onchange={selectPath}></slds-select>
-                vom Speicher&nbsp;&nbsp;
-                <button class="slds-button slds-button_success" onclick={loadPath}>Laden</button>
-                <button class="slds-button slds-button_destructive" onclick={deletePath}>Löschen</button>
-                <button class="slds-button slds-button_destructive" onclick={deletePaths}>Alle Pfade löschen</button>
-
-
-                <br>
-                <textarea class="path slds-m-left--medium slds-m-top--medium" rows="1" cols="40"></textarea>
-                <br>
-                <button class="slds-button slds-button_brand" onclick={executePasted}>Ausführen</button>
-                <button class="slds-button slds-button_brand" onclick={copy}>Pfad kopieren</button>
-            </slds-accordion-section>
-
+            <lightning-accordion allow-multiple-sections-open>
+                <lightning-accordion-section label="Pfad" name="Pfad">
+                    <section class="slds-p-vertical--x-small">
+                        <input value={selectedPath} class="path-name slds-input slds-m-right--small"/>
+                        <lightning-button variant="success" onclick={savePath} label="Speichern"></lightning-button>
+                    </section>
+                    <section class="slds-p-bottom--x-small">
+                        <base-select class="slds-show_inline-block"
+                                    value={selectedPath} options={savedPaths} onchange={selectPath}></base-select>
+                        <span class="slds-m-horizontal--x-small">vom Speicher</span>
+                        <lightning-button-group>
+                            <lightning-button variant="success" onclick={loadPath} label="Laden"></lightning-button>
+                            <lightning-button variant="destructive" onclick={deletePath} label="Löschen"></lightning-button>
+                            <lightning-button variant="destructive" onclick={deletePaths} label="Alle Pfade löschen"></lightning-button>
+                        </lightning-button-group>
+                    </section>
+                    <section class="slds-p-bottom--x-small">
+                        <textarea class="path slds-theme_offline slds-" rows="1" cols="40"></textarea>
+                        <lightning-button-group class="slds-m-left--small">
+                            <lightning-button variant="brand" onclick={executePasted} label="Ausführen"></lightning-button>
+                            <lightning-button variant="brand" onclick={copy} label="kopieren"></lightning-button>
+                        </lightning-button-group>
+                    </section>
+                </lightning-accordion-section>
+            </lightning-accordion>
         </div>
     </div>
 </template>

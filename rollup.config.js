@@ -19,6 +19,7 @@ export default {
         dir: 'dist',
         format: 'esm',
     },
+    preserveEntrySignatures: false,
     watch: {
         clearScreen: false,
         include: 'src/**'
@@ -28,12 +29,14 @@ export default {
         resolveSubdirectoryImports(),
         lwc({ sourcemap: watching, exclude: '**/*.json' }),
         json(),
-        replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) }),
+        replace({ 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV), 'preventAssignment': true }),
         copy({
             targets: [
                 { src: 'src/index.html', dest: 'dist' },
-                { src: 'src/assets', dest: 'dist' },
-            ]
+                { src: 'src/favicon.ico', dest: 'dist/assets/icons' },
+                { src: 'node_modules/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css', dest: 'dist/assets/styles' },
+            ],
+            copyOnce: true
         }),
         production && terser(),
         watching && serve('dist'),
