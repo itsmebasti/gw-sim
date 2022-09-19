@@ -2,8 +2,12 @@
     <github-corner corner-color="#2b89c6" repo="https://github.com/itsmebasti/gw-sim"></github-corner>
 
     <base-vertical-tabs>
-        <base-tab title="Pathfinder" icon-name="standard:trailhead_alt">
+        <base-tab label="Pathfinder" icon="standard:trailhead_alt">
             <gw-pathfinder></gw-pathfinder>
+        </base-tab>
+        
+        <base-tab label="Configuration" icon="standard:settings">
+            <lightning-button label="Theme wechseln" onclick={toggleTheme}></lightning-button>
         </base-tab>
     </base-vertical-tabs>
 </template>
