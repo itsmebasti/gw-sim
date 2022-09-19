@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 
-export default class TimeSlider extends SldsWebComponent {
+export default class TimeSlider extends LightningElement {
     @api hours = 24;
     _seconds;
 

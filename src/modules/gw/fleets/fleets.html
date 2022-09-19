@@ -1,0 +1,48 @@
+<template>
+    <div class="section data-selection">
+        <label for="data-set">
+            Yoyo:
+            <select id="data-set" onchange={selectSubset}>
+                <option for:each={subsets} for:item="subset" key={subset.value} value={subset.value}>
+                    {subset.label}
+                </option>
+            </select>
+        </label>
+    </div>
+
+    <div class="section filter">
+        <label for="mission">
+            Mission:
+            <select id="mission">
+                <option value="Angriff">Angriff</option>
+                <option value="Transport">Transport</option>
+                <option value="Stationieren">Stationieren</option>
+                <option value="returning">Rückkehrer</option>
+            </select>
+        </label>
+        <label for="owner">
+            Eigentümer:
+            <select id="owner" onchange={selectDataset}>
+                <option value="own">Eigene</option>
+                <option value="other">Fremde</option>
+            </select>
+        </label>
+        <label for="player">
+            Spieler:
+            <select id="player">
+                <option value="own">Gemli</option>
+                <option value="other">darksidance</option>
+            </select>
+        </label>
+    </div>
+    <div class="section grouping">
+        <button class="slds-button slds-button_success" onclick={refreshFleet}>Daten refreshen</button>
+    </div>
+
+    <div class="slds-grid slds-wrap">
+        <gw-fleet-summary for:each={filteredData} for:item="fleet" key={fleet.id} fleet={fleet}></gw-fleet-summary>
+    </div>
+
+<!--    <pre>{filtersJson}</pre>-->
+<!--    <pre>{filteredDataJson}</pre>-->
+</template>

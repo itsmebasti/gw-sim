@@ -1,0 +1,99 @@
+<template>
+    <table class="overview" if:true={hasData}>
+        <tbody>
+            <tr>
+                <th colspan="23">Gesamtübersicht ({start})</th>
+            </tr>
+            <tr>
+                <th><a onclick={restart} class="time">00:00:00</a> - {passedTime}</th>
+                <th colspan={colspan}>
+                    <gw-time-slider start={serverTime}
+                                    hours="24"
+                                    seconds={selectedTime}
+                                    onchange={changeTime}></gw-time-slider></th>
+            </tr>
+            <tr>
+                <td class="row-title">Planet</td>
+                <th for:each={columns} for:item="column" key={column.name}>{column.name}</th>
+            </tr>
+            <tr>
+                <td class="row-title">Logs</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    <div for:each={column.logs} for:item="log" key={log.id} class="no-wrap">
+                        <div class="log">
+                            <lightning-icon icon-name="utility:warning" size="x-small" variant="warning"></lightning-icon>
+                            <span role="tooltip">
+                                {log.date}
+                                <br>
+                                {log.message}
+                            </span>
+                        </div>
+
+                        <a onclick={jumpTo} class="time">{log.title}</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="row-title">Bauschleife</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    {column.building}
+                    <br>
+                    <a onclick={continueFor} class="time">{column.timeLeft}</a>
+                    <div class="queue">{column.queue}</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="row-title">Eisen</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    <span class="start" title="Speicher">{column.res.before.fe}</span>
+                    <br><span class="prod" title="Produktion">{column.res.prod.fe}</span>
+                    <br><span class="transport" title="Transporte">{column.res.transport.fe}</span>
+                    <br><span class="trade" title="Handel">{column.res.trade.fe}</span>
+                    <br><span class="farm" title="Farm">{column.res.farm.fe}({column.res.farmFuture.fe})</span>
+                    <br><span class="cost" title="Ausgaben">{column.res.cost.fe}</span>
+                    <hr>
+                    <span class="sum">{column.res.sum.fe}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="row-title">Lutinum</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    <span class="start" title="Speicher">{column.res.before.lut}</span>
+                    <br><span class="prod" title="Produktion">{column.res.prod.lut}</span>
+                    <br><span class="transport" title="Transporte">{column.res.transport.lut}</span>
+                    <br><span class="trade" title="Handel">{column.res.trade.lut}</span>
+                    <br><span class="farm" title="Farm">{column.res.farm.lut}({column.res.farmFuture.lut})</span>
+                    <br><span class="cost" title="Ausgaben">{column.res.cost.lut}</span>
+                    <hr>
+                    <span class="sum">{column.res.sum.lut}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="row-title">Wasser</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    <span class="start">{column.res.before.h2o}</span>
+                    <br><span class="prod">{column.res.prod.h2o}</span>
+                    <br><span class="transport">{column.res.transport.h2o}</span>
+                    <br><span class="trade">{column.res.trade.h2o}</span>
+                    <br><span class="farm">{column.res.farm.h2o}({column.res.farmFuture.h2o})</span>
+                    <br><span class="cost">{column.res.cost.h2o}</span>
+                    <hr>
+                    <span class="sum">{column.res.sum.h2o}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="row-title">Wasserstoff</td>
+                <td for:each={columns} for:item="column" key={column.name}>
+                    <span class="start">{column.res.before.h2}</span>
+                    <br><span class="prod">{column.res.prod.h2}</span>
+                    <br><span class="transport">{column.res.transport.h2}</span>
+                    <br><span class="trade">{column.res.trade.h2}</span>
+                    <br><span class="farm">{column.res.farm.h2}({column.res.farmFuture.h2})</span>
+                    <br><span class="cost">{column.res.cost.h2}</span>
+                    <hr>
+                    <span class="sum">{column.res.sum.h2}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>

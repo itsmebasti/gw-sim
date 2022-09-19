@@ -1,0 +1,11 @@
+<template>
+    <base-toast></base-toast>
+
+    <textarea placeholder={researchPlaceholder} id="research" onblur={upload} class="slds-theme_offline" rows="3" cols="40"></textarea>
+    <textarea placeholder={overviewPlaceholder} id="overview" onblur={upload} class="slds-theme_offline" rows="3" cols="40"></textarea>
+    <textarea placeholder={overviewHtmlPlaceholder} id="overviewHtml" onblur={upload} class="slds-theme_offline" rows="3" cols="40"></textarea>
+    <textarea placeholder={statsPlaceholder} id="stats" onblur={upload} class="slds-theme_offline" rows="3" cols="40"></textarea>
+    <textarea placeholder={landingHtmlPlaceholder} id="landingHtml" onblur={upload} class="slds-theme_offline" rows="3" cols="40"></textarea>
+
+    <lightning-button label="Alle Accountdaten Löschen" variant="success" onclick={clear}></lightning-button> (Pfade sind nicht betroffen)
+</template>

@@ -21,6 +21,7 @@ export default {
     },
     preserveEntrySignatures: false,
     watch: {
+        clearScreen: false,
         buildDelay: 1000,
         include: 'src/**'
     },
