@@ -1,0 +1,19 @@
+<template>
+    <ul class="slds-accordion">
+        <li class="slds-accordion__list-item">
+            <section class={classes}>
+                <div class="slds-accordion__summary">
+                    <h2 class="slds-accordion__summary-heading">
+                        <button class="slds-button slds-button_reset slds-accordion__summary-action" onclick={toggle}>
+                            <svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left">
+                                <use xlink:href={icon}></use>
+                            </svg>
+                            <span class="slds-accordion__summary-content">{label}</span>
+                        </button>
+                    </h2>
+                </div>
+                <div class="slds-accordion__content"><slot></slot></div>
+            </section>
+        </li>
+    </ul>
+</template>

@@ -1,0 +1,44 @@
+.data-selection::before {
+    content: "Datensatz";
+}
+
+.filter::before {
+     content: "Manuelle Filter";
+}
+
+.grouping::before {
+      content: "Gruppieren";
+}
+
+.section::before {
+     color: #808080;
+     position: absolute;
+     top: -16px;
+     left: 4px;
+     background-color: #fff;
+     padding: 0 4px;
+ }
+
+.section {
+    position: relative;
+    border: solid 1px #ecebea;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 10px 2px 2px 2px;
+    margin: 10px;
+}
+
+select {
+    border: solid 1px #ecebea;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+label {
+    display: inline-block;
+    margin: 5px;
+}
+
+label * {
+    display: block;
+}

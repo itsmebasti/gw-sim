@@ -1,0 +1,26 @@
+# Log files
+logs
+*.log
+*-debug.log
+*-error.log
+
+# Standard dist folder
+/dist
+
+# Tooling files
+node_modules
+jsconfig.json
+
+# Temp directory
+/tmp
+
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+/.idea
+/package-lock.json
+/yarn.lock.json

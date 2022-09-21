@@ -1,0 +1,84 @@
+[
+  {
+    "type": "Leichter Laserturm",
+    "fe": 600,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 0,
+    "time": 1000,
+    "dependencies": [
+      {
+        "type": "Orbitale Verteidigungsstation",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Laserturm",
+    "fe": 2000,
+    "lut": 200,
+    "h2o": 0,
+    "h2": 0,
+    "time": 10000,
+    "dependencies": [
+      {
+        "type": "Orbitale Verteidigungsstation",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "EMP-Werfer",
+    "fe": 200,
+    "lut": 5000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 25000,
+    "dependencies": [
+      {
+        "type": "Orbitale Verteidigungsstation",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Plasmaturm",
+    "fe": 2000,
+    "lut": 2000,
+    "h2o": 50,
+    "h2": 0,
+    "time": 850,
+    "dependencies": [
+      {
+        "type": "Orbitale Verteidigungsstation",
+        "level": 1
+      },
+      {
+        "type": "Ionisation",
+        "level": 4
+      }
+    ]
+  },
+  {
+    "type": "Raks",
+    "fe": 15000,
+    "lut": 2000,
+    "h2o": 2000,
+    "h2": 0,
+    "time": 10000,
+    "dependencies": [
+      {
+        "type": "Orbitale Verteidigungsstation",
+        "level": 1
+      },
+      {
+        "type": "Explosivgeschosse",
+        "level": 10
+      }
+    ]
+  }
+]

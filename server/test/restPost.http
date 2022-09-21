@@ -1,0 +1,31 @@
+GET http://localhost:3001/job/32
+Accept: application/json
+
+###
+POST http://localhost:3001/job/critical-path
+Content-Type: application/json
+
+{
+    "infra": {"Eisenmine": 2},
+    "days": 1
+}
+
+###
+POST http://localhost:3001/job/critical-path
+Content-Type: application/json
+
+{
+    "infra": {"Eisenmine": 6},
+    "days": 4
+}
+###
+
+###
+POST http://localhost:3001/job/critical-path
+Content-Type: application/json
+
+{
+    "infra": {"Eisenmine": 7},
+    "days": 5
+}
+###

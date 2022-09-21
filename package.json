@@ -1,0 +1,32 @@
+{
+    "dependencies": {
+        "bull": "^4.2.0",
+        "compression": "^1.7.4",
+        "express": "^4.17.1",
+        "helmet": "^4.6.0",
+        "redis": "^4.0.1",
+        "throng": "^5.0.0"
+    },
+    "devDependencies": {
+        "lwc-services": "^3.2.2"
+    },
+    "lwc": {
+        "modules": [
+            {
+                "dir": "src/modules"
+            }
+        ]
+    },
+    "scripts": {
+        "bs": "yarn build:dev && yarn serve",
+        "build": "yarn modules:off && lwc-services build --mode production",
+        "build:dev": "yarn modules:off && lwc-services build",
+        "serve": "yarn modules:on && node --experimental-specifier-resolution=node server/server.js",
+        "worker": "yarn modules:on && node --max-old-space-size=8192 --experimental-specifier-resolution=node server/worker.js",
+        "watch": "yarn modules:off && lwc-services watch",
+        "watch:prod": "yarn modules:off && lwc-services watch --mode=production",
+        "redis": "cd tmp/redis && redis-server.exe",
+        "modules:off": "echo {} > src/classes/package.json",
+        "modules:on": "(echo {\\\"type\\\": \\\"module\\\"}) > src/classes/package.json && cat src/classes/package.json"
+    }
+}

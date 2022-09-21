@@ -1,0 +1,203 @@
+[
+  {
+    "type": "Verbrennungsantrieb",
+    "punkte": 2.5,
+    "fe": 1000,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 0,
+    "factor": 24.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Ionenantrieb",
+    "punkte": 25,
+    "fe": 4000,
+    "lut": 4000,
+    "h2o": 0,
+    "h2": 2000,
+    "factor": 99.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Raumkrümmungsantrieb",
+    "punkte": 75,
+    "fe": 0,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 30000,
+    "factor": 24.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 5
+      },
+      {
+        "type": "Ionenantrieb",
+        "level": 5
+      }
+    ]
+  },
+  {
+    "type": "Raumfaltungsantrieb",
+    "punkte": 300,
+    "fe": 0,
+    "lut": 0,
+    "h2o": 20000,
+    "h2": 100000,
+    "factor": 150,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Raumkrümmungsantrieb",
+        "level": 10
+      }
+    ]
+  },
+  {
+    "type": "Ionisation",
+    "punkte": 39.25,
+    "fe": 9500,
+    "lut": 5750,
+    "h2o": 0,
+    "h2": 450,
+    "factor": 259.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Chemiefabrik",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Energiebündelung",
+    "punkte": 78.725,
+    "fe": 17000,
+    "lut": 13250,
+    "h2o": 0,
+    "h2": 1240,
+    "factor": 259.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Ionisation",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Explosivgeschosse",
+    "punkte": 10,
+    "fe": 4000,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 0,
+    "factor": 24.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Ionisation",
+        "level": 2
+      },
+      {
+        "type": "Energiebündelung",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Spionagetechnik",
+    "punkte": 1.25,
+    "fe": 400,
+    "lut": 100,
+    "h2o": 0,
+    "h2": 0,
+    "factor": 259.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Erweiterte Schiffspanzerung",
+    "punkte": 40,
+    "fe": 4000,
+    "lut": 4000,
+    "h2o": 4000,
+    "h2": 4000,
+    "factor": 750,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Ladekapazität",
+    "punkte": 25.5,
+    "fe": 0,
+    "lut": 10000,
+    "h2o": 0,
+    "h2": 200,
+    "factor": 24.999999999,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Recycling-Technik",
+    "punkte": 72.5,
+    "fe": 10000,
+    "lut": 8000,
+    "h2o": 8000,
+    "h2": 3000,
+    "factor": 49.95,
+    "dependencies": [
+      {
+        "type": "Forschungszentrum",
+        "level": 1
+      },
+      {
+        "type": "Chemiefabrik",
+        "level": 1
+      }
+    ]
+  }
+]

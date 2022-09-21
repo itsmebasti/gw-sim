@@ -1,0 +1,262 @@
+[
+  {
+    "type": "Schakal",
+    "fe": 250,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 75,
+    "time": 2400,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Recycler",
+    "fe": 850,
+    "lut": 850,
+    "h2o": 100,
+    "h2": 0,
+    "time": 12400,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 2
+      },
+      {
+        "type": "Recycling-Technik",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Spionagesonde",
+    "fe": 0,
+    "lut": 150,
+    "h2o": 0,
+    "h2": 0,
+    "time": 100,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Renegade",
+    "fe": 1000,
+    "lut": 0,
+    "h2o": 0,
+    "h2": 0,
+    "time": 6000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 2
+      }
+    ]
+  },
+  {
+    "type": "Raider",
+    "fe": 500,
+    "lut": 500,
+    "h2o": 0,
+    "h2": 0,
+    "time": 10000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Ionenantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Falcon",
+    "fe": 0,
+    "lut": 2000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 72000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Ionenantrieb",
+        "level": 2
+      },
+      {
+        "type": "Spionagetechnik",
+        "level": 5
+      }
+    ]
+  },
+  {
+    "type": "Kolonisationsschiff",
+    "fe": 10000,
+    "lut": 15000,
+    "h2o": 1000,
+    "h2": 15000,
+    "time": 1440000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Ionenantrieb",
+        "level": 4
+      }
+    ]
+  },
+  {
+    "type": "Tjuger",
+    "fe": 2000,
+    "lut": 2000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 72000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumkrümmungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Cougar",
+    "fe": 4000,
+    "lut": 5000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 72000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumkrümmungsantrieb",
+        "level": 1
+      },
+      {
+        "type": "Erweiterte Schiffspanzerung",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Longeagle V",
+    "fe": 50000,
+    "lut": 5000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 480000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumkrümmungsantrieb",
+        "level": 4
+      }
+    ]
+  },
+  {
+    "type": "Kleines Handelsschiff",
+    "fe": 2000,
+    "lut": 2000,
+    "h2o": 0,
+    "h2": 0,
+    "time": 25000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Verbrennungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Großes Handelsschiff",
+    "fe": 8000,
+    "lut": 2000,
+    "h2o": 0,
+    "h2": 5000,
+    "time": 40000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumkrümmungsantrieb",
+        "level": 5
+      }
+    ]
+  },
+  {
+    "type": "Noah",
+    "fe": 0,
+    "lut": 50000,
+    "h2o": 2000,
+    "h2": 0,
+    "time": 60000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumfaltungsantrieb",
+        "level": 1
+      }
+    ]
+  },
+  {
+    "type": "Longeagle X",
+    "fe": 0,
+    "lut": 250000,
+    "h2o": 25000,
+    "h2": 0,
+    "time": 2400000,
+    "dependencies": [
+      {
+        "type": "Schiffsfabrik",
+        "level": 1
+      },
+      {
+        "type": "Raumfaltungsantrieb",
+        "level": 2
+      }
+    ]
+  }
+]

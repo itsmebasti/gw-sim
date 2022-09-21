@@ -1,0 +1,10 @@
+<template>
+    <div class="slds-form-element">
+        <div class="slds-form-element__control">
+            <div class="slds-slider">
+                <input type="range" oninput={updateSeconds} onchange={dispatch} class="slds-slider__range" min={min} max={max} value={seconds} />
+                <output style={bubbleStyle} class="bubble">{bubbleText}</output>
+            </div>
+        </div>
+    </div>
+</template>

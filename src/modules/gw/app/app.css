@@ -1,0 +1,5 @@
+@media screen and (max-width: 1000px) {
+  .slds-vertical-tabs__nav {
+    display: none;
+  }
+}

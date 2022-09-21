@@ -1,0 +1,99 @@
+<template>
+    <slds-toast></slds-toast>
+    
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5">
+            <slds-accordion-section for:each={constructions} for:item="construction" key={construction.label}
+                                    label={construction.label} open={construction.open}>
+                <span for:each={construction.options} for:item="option" key={option}
+                      class="slds-pill slds-pill_link">
+                    <a class="slds-pill__action slds-p-right--xxx-small" onclick={build}>
+                        <span class="slds-pill__label">{option}</span>
+                    </a>
+                </span>
+            </slds-accordion-section>
+            <slds-accordion-section label="Account Konfigurieren">
+                <textarea placeholder="Kompletten Account hochladen" onblur={uploadAccount} class="slds-theme_offline" rows="2" cols="20"></textarea>
+                <br>
+                <template if:true={defaultSelected}>
+                    Uni: <slds-select class="slds-show_inline-block slds-m-horizontal--xx-small"
+                                      value={selectedUni} options={unis} onchange={setUni}></slds-select>
+                    <br>
+                    Start Zeitpunkt:
+                    <input class="date" value={date} type="date" />
+                    <input class="time" value={time} type="time" step="1" />
+                    <button class="slds-button slds-button_brand" onclick={changeTime}>Anwenden</button>
+                    <button class="slds-button slds-button_brand" onclick={resetTime}>Uni Start</button>
+                </template>
+            </slds-accordion-section>
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Account: <slds-select class="slds-show_inline-block slds-m-horizontal--small"
+                                  value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></slds-select>
+            <slds-button-icon icon="copy" variant="bare" onclick={copyAccount} title="kopieren"></slds-button-icon>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Planet:
+            <slds-button-icon icon="back" variant="bare" onclick={previousPlanet}></slds-button-icon>
+            <slds-select class="planets slds-show_inline-block slds-m-horizontal--xx-small"
+                         value={cache.coords} options={planets} onchange={changePlanet}></slds-select>
+            <slds-button-icon icon="forward" variant="bare" onclick={nextPlanet}></slds-button-icon>
+            <br>
+            <slds-toggle label="Ressourcen" class="slds-show_inline-block slds-m-horizontal--medium"
+                         when-on="produzieren"
+                         when-off="generieren"
+                         checked={cache.produce}
+                         onchange={toggleProduce}></slds-toggle>
+
+            Summe: ({generated})&nbsp;&nbsp;
+            <button class="slds-button slds-button_brand" disabled={cache.produce} onclick={resetCount}>"Begleichen"</button>
+            <button class="slds-button slds-button_brand" onclick={rerender}>Auf alles anwenden</button>
+            <br>
+            <div if:true={account} for:each={resources} for:item="res" key={res.name}
+                 class="slds-show_inline-block slds-m-horizontal--x-small">
+                <span class="slds-text-title_bold slds-align_absolute-center">{res.name}</span>
+                <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
+                <input type="number" step="1" class="res" value="0" />
+            </div>
+            <div class="slds-show_inline-block slds-m-horizontal--x-small">
+                <span class="slds-text-title_bold slds-align_absolute-center">Vergangene Zeit</span>
+                <span class="slds-text-title_bold slds-align_absolute-center">{timePassed}</span>
+                <input type="time" step="1" class="wait" />
+            </div>
+            
+            <button class="slds-button slds-button_brand" onclick={applyManualChanges}>Verrechnen</button>
+            <br>
+            <button class="slds-button slds-button_brand" onclick={complete}>Alles fertig bauen</button>
+            <slds-toggle label="Details" class="slds-show_inline-block slds-m-horizontal--large"
+                         when-on="anzeigen" when-off="verstecken" checked={showDetails}
+                         onchange={toggleDetails}></slds-toggle>
+            <button class="slds-button slds-button_brand" onclick={reset}>RESET</button>
+            <slds-button-icon icon="undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z"></slds-button-icon>
+            <slds-button-icon icon="redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y"></slds-button-icon>
+            
+            <gw-path-logger hide-details={cache.hideDetails}
+                            onjumpto={jumpTo}
+                            onmove={move}
+                            onremove={remove}
+                            onduplicate={duplicate}></gw-path-logger>
+            
+            <slds-accordion-section label="Path">
+                <input value={selectedPath} class="path-name slds-input slds-m-horizontal--small"/>
+                <button class="slds-button slds-button_success" onclick={savePath}>Speichern</button>
+                <br>
+                <slds-select class="slds-show_inline-block slds-m-horizontal--small"
+                             value={selectedPath} options={savedPaths} onchange={selectPath}></slds-select>
+                vom Speicher&nbsp;&nbsp;
+                <button class="slds-button slds-button_success" onclick={loadPath}>Laden</button>
+                <button class="slds-button slds-button_destructive" onclick={deletePath}>Löschen</button>
+                <button class="slds-button slds-button_destructive" onclick={deletePaths}>Alle Pfade löschen</button>
+                
+                
+                <br>
+                <textarea class="path slds-m-left--medium slds-m-top--medium" rows="1" cols="40"></textarea>
+                <br>
+                <button class="slds-button slds-button_brand" onclick={executePasted}>Ausführen</button>
+                <button class="slds-button slds-button_brand" onclick={copy}>Pfad kopieren</button>
+            </slds-accordion-section>
+
+        </div>
+    </div>
+</template>

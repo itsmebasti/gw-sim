@@ -1,0 +1,13 @@
+{
+    "background_color": "#fff",
+    "display": "standalone",
+    "icons": [{
+        "src": "icons/apple-touch-icon.png",
+        "type": "image/png",
+        "sizes": "512x512"
+    }],
+    "name": "GW Sim",
+    "short_name": "GW Sim",
+    "start_url": "/#pathfinder",
+    "theme_color": "#fff"
+}
