@@ -2,7 +2,7 @@ import Fleet from '../../../../classes/model/fleet/fleet';
 import gwTimestamp from '../../../../classes/framwork/misc/gwTimestamp';
 import Database from '../../../../classes/framwork/database/database';
 
-export default class FleetsHtml {
+export default class Fleets {
     values;
     database = new Database();
 

@@ -1,18 +1,18 @@
 export default class Database {
     static NO_DB_SUPPORT = 'Dein Browser unterstützt keine Zwischenspeicherung!'
     static NAME = 'SIM';
-    version = 4;
-    
+    version = 5;
+
     constructor() {
         const openRequest = window.indexedDB.open(Database.NAME, this.version);
         openRequest.onupgradeneeded = ({ oldVersion, target : { result : db } }) => {
             db.onerror = () => console.error(db.error);
-            
+
             if(oldVersion < 1) {
                 db.createObjectStore('Raw', { keyPath: 'name' });
                 db.createObjectStore('Queue', { keyPath: 'coords' });
                 const fleets = db.createObjectStore('Fleets', { keyPath: 'id' });
-        
+
                 fleets.createIndex('deliveryCoords', 'delivery.planet.coords');
                 fleets.createIndex('deployCoords', 'deploy.planet.coords');
                 fleets.createIndex('deliveryTime', 'delivery.time');
@@ -22,7 +22,7 @@ export default class Database {
                 try {
                     this.clear('Raw');
                 } catch(ignored) {}
-                
+
                 db.createObjectStore('AccountData', { keyPath: 'player' });
             }
             if(oldVersion < 3) {
@@ -31,21 +31,24 @@ export default class Database {
             if(oldVersion < 4) {
                 db.deleteObjectStore('Queue');
             }
-            
+            if(oldVersion < 5) {
+                db.deleteObjectStore('Raw');
+            }
+
             db.close();
         };
     }
-    
+
     add(tableName, ...data) {
         return new DbPromise((db, resolve) => {
             const table = db.transaction(tableName, 'readwrite').objectStore(tableName);
-            
+
             data.forEach((row) => table.put(row));
-    
+
             resolve();
         });
     }
-    
+
     getAll(tableName) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName)
@@ -54,7 +57,7 @@ export default class Database {
                 .onsuccess = ({ target : { result }}) => resolve(result);
         });
     }
-    
+
     getAllBy(tableName, index, range) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName)
@@ -64,7 +67,7 @@ export default class Database {
                 .onsuccess = ({ target : { result }}) => resolve(result);
         });
     }
-    
+
     deleteAllBy(tableName, index, range) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName, 'readwrite')
@@ -80,7 +83,7 @@ export default class Database {
                 };
         });
     }
-    
+
     clear(tableName) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName, 'readwrite')
@@ -89,7 +92,7 @@ export default class Database {
             resolve();
         });
     }
-    
+
     get(tableName, key) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName)
@@ -98,7 +101,7 @@ export default class Database {
                 .onsuccess = ({ target : { result }}) => resolve(result);
         });
     }
-    
+
     delete(tableName, key) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName, 'readwrite')
@@ -107,7 +110,7 @@ export default class Database {
                 .onsuccess = ({ target : { result }}) => resolve(result);
         });
     }
-    
+
     upsert(tableName, row) {
         return new DbPromise((db, resolve) => {
             db.transaction(tableName, 'readwrite')
@@ -130,17 +133,17 @@ class DbPromise {
                     reject(openRequest.error);
                 }
             }
-            
+
             openRequest.onsuccess = ({ target: { result: db } }) =>  {
                 db.onerror = () => reject(db.error);
-                
+
                 try {
                     callback(db, resolve);
                 }
                 catch(e) {
                     reject(e);
                 }
-                
+
                 db.close();
             }
         });

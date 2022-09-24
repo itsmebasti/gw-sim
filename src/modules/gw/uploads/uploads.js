@@ -1,112 +1,132 @@
 import { LightningElement, track } from 'lwc';
 import Database from '../../../classes/framwork/database/database';
-import FleetsHtml from './parser/fleetsHtml';
-import LandingHtml from './parser/landingHtml';
-import OverviewPage from './parser/overviewPage';
-import StatsPage from './parser/statsPage';
-import ResearchPage from './parser/researchPage';
+import Landing from './parser/landing';
+import Overview from './parser/overview';
+import ResourceStats from './parser/resourceStats';
+import Research from './parser/research';
 import technologies from '../../../classes/model/static/technologies';
+import { FACTORY } from '../../../classes/model/static/types';
+import toHHMMSS from '../../../classes/framwork/misc/toHHMMSS';
 
 export default class Uploads extends LightningElement {
     database = new Database();
-    @track times = {};
+
+    @track latestUpload;
+
+    @track savedAccounts;
+    selectedAccount = 'Default';
 
     connectedCallback() {
-        this.database.getAll("Raw")
-            .then((rawPages) => rawPages.forEach((raw) => this.times[raw.name] = raw.time))
+        this.database.get("AccountData", this.selectedAccount)
+            .then((account) => this.latestUpload = toHHMMSS(account?.serverTime))
             .catch(this.handle);
+
+        this.loadStoredAccounts();
     }
 
-    upload({ target, target: { id: name, value} }) {
-        if(!value) return;
-        target.value = "";
 
-        const internalPrefix = /-.*/;
-        name = name.replace(internalPrefix, "");
-        const time = Date.now();
+    pasteDom(evt) {
+        evt.preventDefault();
+        evt.target.value = evt.clipboardData.getData('text/html');
 
-        this.database.add("Raw", {name, value, time})
-            .then(() => {
-                if(name === "landingHtml") {
-                    // new FleetsHtml(value).store();
+        evt.target.nextSibling.focus();
+    }
+
+
+    upload(evt) {
+        const [research, overview, reourceStats, landing] = [...this.template.querySelectorAll('textarea.upload')].map((element) => element.value);
+
+        for(let value of [research, overview, reourceStats, landing]) {
+            if(value === '') {
+                this.error('Bitte kopiere erst alle vier Seiten in die felder!');
+                return;
+            }
+        }
+
+        try{
+            this.database.add("AccountData", this.accountState(landing, overview, research, reourceStats))
+                .then(() => this.toast("Account erfolgreich hochgeladen, seite neu laden!"))
+                .catch(this.handle);
+        }
+        catch(e) {
+            this.error('Daten fehlerhaft!')
+        }
+    }
+
+
+    accountState(landingDom, overviewDom, researchDom, reourceStatsDom) {
+        const landing = new Landing(landingDom);
+        const overview = new Overview(overviewDom, this.template.querySelector('p.temp'));
+        const research = new Research(researchDom);
+        const reourceStats = new ResourceStats(reourceStatsDom);
+
+        const planets = overview.planets;
+
+        const planetFor = (toFind) => planets.find(({coords}) => coords === toFind);
+
+        if(landing.research) {
+            planetFor(landing.research.coords).current.push(landing.research)
+        }
+
+        reourceStats.queueResources().forEach((planetQueRes) => {
+            const planet = planetFor(planetQueRes.coords);
+            const currentShips = planet.current.find(({factory}) => factory === FACTORY.SF);
+            const currentShipsInfo = technologies.shipDescribes.find(({type}) => type === currentShips?.type);
+
+            planetQueRes.queueRes.forEach((res, i) => {
+                const planetRes = planet.resources[i];
+
+                planetRes.stored += res;
+
+                if(currentShips) {
+                    planetRes.stored -= currentShips.amount * currentShipsInfo[planetRes.type];
                 }
-
-                this.times[name] = time;
-            })
-            .then(() => this.tryGeneratingAccountData())
-            .catch(this.handle)
-    }
-
-    tryGeneratingAccountData() {
-        return this.database.getAll("Raw")
-            .then((rawPages) => {
-                rawPages = rawPages.filter((page) => page.name !== 'landing');
-                if(rawPages.length < 5) return;
-
-                const find = (name) => rawPages.find((raw) => raw.name === name);
-                const overviewString = find("overview");
-                const overviewHtml = find("overviewHtml");
-                const researchString = find("research");
-                const statsString = find("stats");
-                const landingHtml = find("landingHtml");
-
-                const state = this.accountState(landingHtml.value, overviewString.value, overviewHtml.value, researchString.value, statsString.value);
-                this.database.add("AccountData", state)
-                    .catch(this.handle);
-            })
-            .catch(this.handle)
-    }
-
-    accountState(landingHtml, overviewString, overviewHtml, researchString, statsString) {
-        const landingPage = new LandingHtml(landingHtml);
-        const overview = new OverviewPage(overviewString, overviewHtml);
-        const research = new ResearchPage(researchString);
-        const stats = new StatsPage(statsString);
-
-        const shipQueue = overview.shipQueue();
-
-        const planets = overview.planets.map((coords) => {
-            const current = [];
-            if(landingPage.currentResearch?.coords === coords) {
-                current.push(landingPage.currentResearch);
-            }
-
-            const building = overview.currentBuilding(coords);
-            if(Object.keys(building).length > 0) {
-                current.push(building);
-            }
-
-            const planetQueue = shipQueue[coords];
-            if(planetQueue) {
-                current.push(planetQueue);
-            }
-
-            const resources = overview.toResoures(coords);
-            const queueRes = stats.resFor(coords);
-
-            resources.forEach((res, i) => {
-                res.stored += queueRes?.[i] ?? 0;
-
-                if(planetQueue) {
-                    res.stored -= planetQueue.amount * technologies.shipDescribes.find(({type}) => type === planetQueue.type)[res.type];
-                }
-            })
-
-            return {
-                coords,
-                current,
-                infra: overview.toInfra(coords),
-                resources,
-            };
+            });
         });
 
         return {
-            uni: landingPage.uni,
-            player: landingPage.player,
-            serverTime: landingPage.serverTime,
+            uni: landing.uni,
+            player: landing.player,
+            serverTime: landing.serverTime,
             planets,
             research: research.plain(),
         };
+    }
+
+    loadStoredAccounts() {
+        this.savedAccounts = ['Default']
+        return this.database.getAll('AccountData')
+                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
+                   .catch(this.handle);
+    }
+
+    selectAccount({ detail: player }) {
+        this.selectedAccount = player;
+    }
+
+    uploadAccount({ target, target: {value} }) {
+        if(!value) return;
+        target.value = "";
+
+        try {
+            const account = JSON.parse(value);
+            this.database.add("AccountData", account)
+                .then(() => this.toast(account.player + ' account erfolgreich hochgeladen'))
+                .catch(this.handle);
+        }
+        catch(e) {
+            this.error('Kein valider Account');
+        }
+    }
+
+    copyAccount(evt) {
+        this.clip(JSON.stringify(this.accountState));
+    }
+
+    clip(string) {
+        navigator.clipboard.writeText(string)
+                 .then(() => this.toast('Erfolgreich kopiert!'))
+                 .catch(() => this.error('Fehler beim kopieren!'));
     }
 
     clear(evt) {
@@ -120,30 +140,6 @@ export default class Uploads extends LightningElement {
 
     copy() {
         navigator.clipboard.writeText(this.template.querySelector('.path').value);
-    }
-
-    get researchPlaceholder() {
-        return this.placeholder("1. Forschung (Strg + A dann Strg + C)", "research");
-    }
-
-    get overviewPlaceholder() {
-        return this.placeholder("2. Gesamtübersicht", "overview");
-    }
-
-    get overviewHtmlPlaceholder() {
-        return this.placeholder("3. Gesamtübersicht (html: body element)", "overviewHtml");
-    }
-
-    get statsPlaceholder() {
-        return this.placeholder("4. Statistik (Rohstoffe)", "stats");
-    }
-
-    get landingHtmlPlaceholder() {
-        return this.placeholder("5. Flottenübersicht (html: body element)", "landingHtml");
-    }
-
-    placeholder(name, css_class) {
-        return name + "\n(" + ((this.times[css_class]) ? new Date(this.times[css_class]).toLocaleString() : "unbekannt") + ")";
     }
 
     handle = (error) => {

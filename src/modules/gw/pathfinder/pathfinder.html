@@ -1,7 +1,7 @@
 <template>
     <div class="slds-grid">
         <lightning-accordion allow-multiple-sections-open class="slds-col slds-size_2-of-6" active-section-name="Gebäude">
-            <base-toast class="slds-is-absolute slds-m-top_large"></base-toast>
+            <base-toast class="slds-m-top_xx-small"></base-toast>
 
             <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                          label={construction.label} name={construction.label}>

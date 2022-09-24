@@ -1,7 +1,7 @@
 import gwTimestamp from '../../../../classes/framwork/misc/gwTimestamp';
 import { FACTORY } from '../../../../classes/model/static/types';
 
-export default class LandingHtml {
+export default class Landing {
     uni;
     player;
     serverTime;
@@ -10,9 +10,9 @@ export default class LandingHtml {
 
     constructor(raw) {
         this.uni = raw.match(/https:\/\/(.*)\.gigrawars\.de/)?.[1];
-
         raw = raw.replaceAll(new RegExp('<img[^>]+src="([^">]+)".*>', 'g'), '');
         raw = raw.replaceAll(/gigrawars\.de/g, '');
+
         const tables = [...raw.matchAll(/<table.*?<\/table>/gs)];
 
         const serverInfo = document.createElement('p');
