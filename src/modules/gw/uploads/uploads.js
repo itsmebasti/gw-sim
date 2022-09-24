@@ -1,37 +1,50 @@
 import { LightningElement, track } from 'lwc';
+import { CacheMixin } from '../../../classes/framwork/cache/cache';
 import Database from '../../../classes/framwork/database/database';
+import UNI, { accountState } from '../../../classes/model/infra/uni';
 import Landing from './parser/landing';
 import Overview from './parser/overview';
 import ResourceStats from './parser/resourceStats';
 import Research from './parser/research';
 import technologies from '../../../classes/model/static/technologies';
 import { FACTORY } from '../../../classes/model/static/types';
-import toHHMMSS from '../../../classes/framwork/misc/toHHMMSS';
+import Account from '../../../classes/model/infra/account';
 
-export default class Uploads extends LightningElement {
+export default class Uploads extends CacheMixin(LightningElement) {
     database = new Database();
-
-    @track latestUpload;
-
     @track savedAccounts;
-    selectedAccount = 'Default';
+
+    latestUpload;
+    accountData;
+
+    @track cache = this.cached({
+        selectedAccount: 'Default',
+    });
 
     connectedCallback() {
-        this.database.get("AccountData", this.selectedAccount)
-            .then((account) => this.latestUpload = toHHMMSS(account?.serverTime))
-            .catch(this.handle);
-
         this.loadStoredAccounts();
+        this.selectAccount();
     }
 
-
-    pasteDom(evt) {
-        evt.preventDefault();
-        evt.target.value = evt.clipboardData.getData('text/html');
-
-        evt.target.nextSibling.focus();
+    loadStoredAccounts() {
+        this.savedAccounts = ['Default']
+        return this.database.getAll('AccountData')
+                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
+                   .catch(this.handle);
     }
 
+    selectAccount({ detail: player } = { detail: this.cache.selectedAccount}) {
+        this.database.get("AccountData", player)
+            .then((accountData) => {
+                accountData = accountData ?? accountState(UNI.default.NAME);
+
+                this.cache.selectedAccount = player;
+                this.accountData = new Account(accountData).state;
+                this.latestUpload = new Date(accountData.serverTime)
+                            .toLocaleDateString("de-DE", { year: 'numeric', month: '2-digit', day: '2-digit', hour:'2-digit', minute: '2-digit', second: '2-digit' });
+            })
+            .catch(this.handle);
+    }
 
     upload(evt) {
         const [research, overview, reourceStats, landing] = [...this.template.querySelectorAll('textarea.upload')].map((element) => element.value);
@@ -44,17 +57,15 @@ export default class Uploads extends LightningElement {
         }
 
         try{
-            this.database.add("AccountData", this.accountState(landing, overview, research, reourceStats))
-                .then(() => this.toast("Account erfolgreich hochgeladen, seite neu laden!"))
-                .catch(this.handle);
+            this.store(this.accountStateFor(landing, overview, research, reourceStats));
         }
         catch(e) {
-            this.error('Daten fehlerhaft!')
+            this.error('Daten fehlerhaft!');
         }
     }
 
 
-    accountState(landingDom, overviewDom, researchDom, reourceStatsDom) {
+    accountStateFor(landingDom, overviewDom, researchDom, reourceStatsDom) {
         const landing = new Landing(landingDom);
         const overview = new Overview(overviewDom, this.template.querySelector('p.temp'));
         const research = new Research(researchDom);
@@ -93,51 +104,97 @@ export default class Uploads extends LightningElement {
         };
     }
 
-    loadStoredAccounts() {
-        this.savedAccounts = ['Default']
-        return this.database.getAll('AccountData')
-                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
-                   .catch(this.handle);
-    }
-
-    selectAccount({ detail: player }) {
-        this.selectedAccount = player;
-    }
-
-    uploadAccount({ target, target: {value} }) {
-        if(!value) return;
-        target.value = "";
-
-        try {
-            const account = JSON.parse(value);
-            this.database.add("AccountData", account)
-                .then(() => this.toast(account.player + ' account erfolgreich hochgeladen'))
-                .catch(this.handle);
-        }
-        catch(e) {
-            this.error('Kein valider Account');
+    uploadFullAccount(evt) {
+        const textarea = this.template.querySelector('lightning-textarea.json');
+        if(textarea.value) {
+            try {
+                this.store(JSON.parse(textarea.value));
+            }
+            catch(e) {
+                this.error('Kein valider Account');
+            }
         }
     }
 
-    copyAccount(evt) {
-        this.clip(JSON.stringify(this.accountState));
-    }
+    store(accountData = this.accountData) {
+        this.database.add("AccountData", new Account(accountData).state)
+            .then(() => {
+                this.toast(accountData.player + ' Account erfolgreich hochgeladen');
+                this.loadStoredAccounts();
+                this.selectAccount({detail: accountData.player});
 
-    clip(string) {
-        navigator.clipboard.writeText(string)
-                 .then(() => this.toast('Erfolgreich kopiert!'))
-                 .catch(() => this.error('Fehler beim kopieren!'));
+                this.dispatchEvent(new CustomEvent('datachange', { detail: accountData.player }));
+            })
+            .catch(this.handle);
     }
 
     clear(evt) {
         this.database.clear("Fleets").catch(this.handle);
         this.database.clear("AccountData").catch(this.handle);
 
+        this.loadStoredAccounts();
+        this.selectAccount({detail: 'Default'});
+
         this.toast('Daten erfolgreich Gelöscht!');
     }
 
-    copy() {
-        navigator.clipboard.writeText(this.template.querySelector('.path').value);
+    pasteDom(evt) {
+        evt.preventDefault();
+        evt.target.value = evt.clipboardData.getData('text/html');
+
+        evt.target.nextSibling.focus();
+    }
+
+    setUni({ detail : name }) {
+        this.store(accountState(name));
+    }
+
+    changeTime(evt) {
+        const dateControl = this.template.querySelector('input.date');
+        const timeControl = this.template.querySelector('input.time');
+        const date = new Date(dateControl.valueAsNumber + timeControl.valueAsNumber);
+
+        this.serverTime = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+    }
+
+    resetTime(evt) {
+        this.serverTime = UNI[this.selectedUni].START_DATE.getTime();
+    }
+
+    set serverTime(value) {
+        this.accountData.serverTime = value;
+        this.store();
+    }
+
+
+    // Getters
+
+    get date() {
+        return this.startDate?.toISOString().slice(0,10)
+    }
+
+    get time() {
+        return this.startDate?.toLocaleTimeString('de-DE');
+    }
+
+    get startDate() {
+        return this.accountData && new Date(this.accountData.serverTime);
+    }
+
+    get defaultSelected() {
+        return (this.cache.selectedAccount === 'Default');
+    }
+
+    get selectedUni() {
+        return this.accountData?.uni;
+    }
+
+    get beautifiedJson() {
+        return JSON.stringify(this.accountData, null, 4);
+    }
+
+    get unis() {
+        return ['uni4', 'uni3', 'speed3'];
     }
 
     handle = (error) => {

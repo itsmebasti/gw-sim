@@ -12,7 +12,7 @@ export default class Research {
         const result = technologiesByType.research.reduce((result, type) => (result[type] = 0, result), {});
 
         this.table.querySelectorAll('.itemname').forEach(({innerText}) => {
-            const [type, level] = innerText.split(/\sStufe\s/gs);
+            const [type, level] = innerText.replace('\n', '').trim().split(/\sStufe\s/gs);
             result[type] = parseInt(level);
         });
 

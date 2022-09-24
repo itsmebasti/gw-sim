@@ -264,7 +264,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     selectAccount({ detail: player }) {
-        this.saveAccountState();
         this.refresh(player);
     }
 
@@ -388,36 +387,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.cache.hideDetails = !this.cache.hideDetails;
     }
 
-    setUni({ detail : name }) {
-        this.load(accountState(name));
-    }
-
     updateJsonOutput() {
         this.template.querySelector('.path').value = (this.steps.length) ? JSON.stringify(this.steps) : '';
     }
 
     copy(evt) {
         this.clip(this.template.querySelector('.path').value);
-    }
-
-    copyAccount(evt) {
-        this.clip(JSON.stringify(this.accountState));
-    }
-
-    uploadAccount({ target, target: {value} }) {
-        if(!value) return;
-        target.value = "";
-
-        try {
-            const account = JSON.parse(value);
-            this.database.add("AccountData", account)
-                .then(() => this.refresh(account.player))
-                .then(() => this.toast(account.player + ' account erfolgreich hochgeladen'))
-                .catch(this.handle);
-        }
-        catch(e) {
-            this.error('Kein valider Account');
-        }
     }
 
     clip(string) {
@@ -432,43 +407,8 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.toast('Pfad wird ausgeführt');
     }
 
-    changeTime(evt) {
-        const dateControl = this.template.querySelector('input.date');
-        const timeControl = this.template.querySelector('input.time');
-        const date = new Date(dateControl.valueAsNumber + timeControl.valueAsNumber);
-
-        this.serverTime = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
-    }
-
-    resetTime(evt) {
-        this.serverTime = UNI[this.selectedUni].START_DATE.getTime();
-    }
-
-    set serverTime(value) {
-        this.accountState.serverTime = value;
-        this.saveAccountState();
-        this.load(this.accountState);
-    }
-
-    saveAccountState() {
-        return this.database.add("AccountData", new Account(this.accountState).state)
-            .catch(this.handle);
-    }
-
 
     // Getters
-
-    get date() {
-        return this.startDate?.toISOString().slice(0,10)
-    }
-
-    get time() {
-        return this.startDate?.toLocaleTimeString('de-DE');
-    }
-
-    get startDate() {
-        return this.accountState && new Date(this.accountState.serverTime);
-    }
 
     get constructions() {
         return [
@@ -508,16 +448,8 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         return !this.cache.hideDetails;
     }
 
-    get defaultSelected() {
-        return (this.cache.selectedAccount === 'Default');
-    }
-
     get unis() {
         return ['uni4', 'uni3', 'speed3'];
-    }
-
-    get selectedUni() {
-        return this.accountState?.uni;
     }
 
     get undoDisabled() {

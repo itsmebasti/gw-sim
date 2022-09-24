@@ -15,18 +15,14 @@ input.path-name {
   width: 200px;
 }
 
+.account-select {
+  display: block;
+}
+
 base-toast {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-}
-
-input.date {
-  width: 8rem;
-}
-
-input.time {
-  width: 7rem;
 }
 
 a {

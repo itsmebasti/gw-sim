@@ -1,40 +1,25 @@
 <template>
     <div class="slds-grid">
-        <lightning-accordion allow-multiple-sections-open class="slds-col slds-size_2-of-6" active-section-name="Gebäude">
-            <base-toast class="slds-m-top_xx-small"></base-toast>
-
-            <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
-                                         label={construction.label} name={construction.label}>
-                <a href="javascript:void(0)" class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small" for:each={construction.options} for:item="option" key={option} onclick={build}>{option}</a>
-            </lightning-accordion-section>
-            <lightning-accordion-section label="Account Konfigurieren">
-                <textarea placeholder="Kompletten Account hochladen" rows="2" cols="20" onblur={uploadAccount} class="slds-theme_offline slds-m-bottom--x-small"></textarea>
-                <template if:true={defaultSelected}>
-                    <section class=" slds-p-bottom--x-small">
-                        Uni:<base-select class="slds-show_inline-block slds-m-left--small"
-                                        value={selectedUni} options={unis} onchange={setUni}></base-select>
-                    </section>
-                    <section class=" slds-p-bottom--x-small">
-                        Start:<input class="date slds-input slds-m-left--small" value={date} type="date" />
-                        <input class="time slds-input slds-m-left--small" value={time} type="time" step="1" />
-                        <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left--small"></lightning-button>
-                    </section>
-                    <lightning-button variant="brand" onclick={resetTime} label="Uni Start"></lightning-button>
-                </template>
-            </lightning-accordion-section>
-        </lightning-accordion>
-
-        <div class="slds-col slds-size_4-of-6 slds-p-horizontal--medium">
-            <section class="slds-p-bottom--x-small">
+        <div class="slds-col slds-size_1-of-3">
+            <section class="account-select slds-p-bottom--x-small">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal--small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
-                <lightning-button-icon icon-name="utility:copy" variant="bare" onclick={copyAccount} title="kopieren"></lightning-button-icon>
                 <span class="slds-m-horizontal--small">Planet:</span>
                 <lightning-button-icon icon-name="utility:back" variant="bare" onclick={previousPlanet}></lightning-button-icon>
                 <base-select class="planets slds-show_inline-block slds-m-horizontal--xx-small"
                             value={cache.coords} options={planets} onchange={changePlanet}></base-select>
                 <lightning-button-icon icon-name="utility:forward" variant="bare" onclick={nextPlanet}></lightning-button-icon>
             </section>
+            <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
+                <base-toast class="slds-m-top_xx-small"></base-toast>
+
+                <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
+                                            label={construction.label} name={construction.label}>
+                    <a href="javascript:void(0)" class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small" for:each={construction.options} for:item="option" key={option} onclick={build}>{option}</a>
+                </lightning-accordion-section>
+            </lightning-accordion>
+        </div>
+        <div class="slds-col slds-size_2-of-3 slds-p-horizontal--medium">
             <section class="slds-p-bottom--x-small">
                 <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
                 Summe: ({generated})&nbsp;&nbsp;

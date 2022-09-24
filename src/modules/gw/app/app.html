@@ -10,11 +10,11 @@
             <gw-overview></gw-overview>
         </base-tab> -->
 
-        <base-tab label="Uploads" icon="standard:work_queue">
-            <gw-uploads></gw-uploads>
+        <base-tab label="Account Konfig" icon="standard:custom">
+            <gw-uploads ondatachange={reloadData}></gw-uploads>
         </base-tab>
 
-        <base-tab label="Konfiguration" icon="standard:settings">
+        <base-tab label="Einstellungen" icon="standard:settings">
             <lightning-button label="Theme wechseln" onclick={toggleTheme}></lightning-button>
         </base-tab>
 

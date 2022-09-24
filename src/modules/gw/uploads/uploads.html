@@ -1,26 +1,52 @@
 <template>
     <base-toast></base-toast>
-
-    <!-- Account: <base-select value={selectedAccount} options={savedAccounts} onchange={selectAccount} class="slds-show_inline-block"></base-select>
-    <br>
-    <br> -->
-    <a href="https://uni4.gigrawars.de/game_research_index/" target="_blank" class="slds-m-horizontal--x-small">Forschung</a>/
-    <a href="https://uni4.gigrawars.de/game_empire_index/" target="_blank" class="slds-m-horizontal--x-small">Gesamtübersicht</a>/
-    <a href="https://uni4.gigrawars.de/game_statistic_resource/" target="_blank" class="slds-m-horizontal--x-small">Rohstoffe</a>/
-    <a href="https://uni4.gigrawars.de/game_dashboard_index/" target="_blank" class="slds-m-horizontal--x-small">Startseite</a>
-    <textarea placeholder="Forschung" name="research" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
-    <textarea placeholder="Gesamtübersicht" name="overviewDom" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
-    <textarea placeholder="Statistik -> Rohstoffe" name="stats" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
-    <textarea placeholder="Startseite" name="landingHtml" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
-
-    <lightning-button label="Hochladen" variant="success" onclick={upload}></lightning-button>
-    Nach dem Hochladen bitte kurz die Seite neuladen (das kommt noch weg), dann könnt ihr den Account im Pathfinder oben mittig auswählen.
-    <br>
-    <lightning-button label="Alle Accountdaten Löschen" variant="success" onclick={clear}></lightning-button> (Pfade sind nicht betroffen)
-    <!-- <br>
-    <textarea placeholder="Kompletten Account hochladen" rows="2" cols="20" onblur={uploadAccount} class="slds-theme_offline slds-m-bottom--x-small"></textarea>
-    <br>
-    <lightning-button-icon icon-name="utility:copy" variant="bare" onclick={copyAccount} title="kopieren"></lightning-button-icon> -->
-
     <p class="temp" lwc:dom="manual"></p>
+
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-3">
+            <section class="slds-p-bottom--x-small">
+                Account:<base-select class="slds-show_inline-block slds-m-horizontal--small"
+                            value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
+                <span class="slds-m-horizontal--small">Start / Upload: {latestUpload}</span>
+            </section>
+
+            <lightning-accordion allow-multiple-sections-open active-section-name="Upload">
+                <lightning-accordion-section label="Start Anpassen" name="Start" if:true={defaultSelected}>
+                    <section class=" slds-p-bottom--x-small">
+                        Uni:<base-select class="slds-show_inline-block slds-m-left--small"
+                                        value={selectedUni} options={unis} onchange={setUni}></base-select>
+                    </section>
+                    <section class=" slds-p-bottom--x-small">
+                        Start:<input class="date slds-input slds-m-left--small" value={date} type="date" />
+                        <input class="time slds-input slds-m-left--small" value={time} type="time" step="1" />
+                        <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left--small"></lightning-button>
+                    </section>
+                    <lightning-button variant="brand" onclick={resetTime} label="Zeit auf Uni Start setzen"></lightning-button>
+                </lightning-accordion-section>
+                <lightning-accordion-section label="Upload" name="Upload">
+                    <section class="slds-p-bottom--x-small">
+                        <a href="https://uni4.gigrawars.de/game_research_index/" target="_blank" class="slds-m-right--x-small">Forschung</a>
+                        <a href="https://uni4.gigrawars.de/game_empire_index/" target="_blank" class="slds-m-right--x-small">Gesamtübersicht</a>
+                        <a href="https://uni4.gigrawars.de/game_statistic_resource/" target="_blank" class="slds-m-right--x-small">Rohstoffe</a>
+                        <a href="https://uni4.gigrawars.de/game_dashboard_index/" target="_blank" class="slds-m-right--x-small">Startseite</a>
+                        <textarea placeholder="Forschung" name="research" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
+                        <textarea placeholder="Gesamtübersicht" name="overviewDom" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
+                        <textarea placeholder="Statistik -> Rohstoffe" name="stats" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
+                        <textarea placeholder="Startseite" name="landingHtml" onpaste={pasteDom} class="upload slds-theme_offline" rows="3" cols="40"></textarea>
+
+                        <lightning-button label="Hochladen" variant="success" onclick={upload}></lightning-button>
+                    </section>
+                </lightning-accordion-section>
+            </lightning-accordion>
+
+            <section class="slds-p-bottom--x-small">
+                <lightning-button label="Alle Accountdaten Löschen" variant="success" onclick={clear} class="slds-m-right--small"></lightning-button>
+                (Pfade sind hiervon nicht betroffen)
+            </section>
+        </div>
+        <div class="slds-col slds-size_2-of-3 slds-p-horizontal--medium">
+            <lightning-textarea variant="label-hidden" value={beautifiedJson} class="json slds-theme_offline"></lightning-textarea>
+            <lightning-button label="Speichern" variant="success" onclick={uploadFullAccount}></lightning-button>
+        </div>
+    </div>
 </template>

@@ -11,7 +11,11 @@ export default class App extends CacheMixin(LightningElement) {
         this.cache.darkmode && this.setAttribute('dark-mode', 'dark-mode');
     }
 
-    toggleTheme() {
+    reloadData({detail: player}) {
+        this.template.querySelector('gw-pathfinder').refresh(player);
+    }
+
+    toggleTheme(evt) {
         if(this.getAttribute('dark-mode')) {
             this.cache.darkmode = false;
             this.removeAttribute('dark-mode');
