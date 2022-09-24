@@ -130,10 +130,8 @@ export default class Uploads extends LightningElement {
     }
 
     clear(evt) {
-        this.database.clear("Raw").catch(this.handle);
         this.database.clear("Fleets").catch(this.handle);
         this.database.clear("AccountData").catch(this.handle);
-        this.times = {};
 
         this.toast('Daten erfolgreich Gelöscht!');
     }

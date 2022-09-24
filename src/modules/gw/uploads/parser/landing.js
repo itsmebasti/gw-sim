@@ -9,7 +9,7 @@ export default class Landing {
     nextBuilding;
 
     constructor(raw) {
-        this.uni = raw.match(/https:\/\/(.*)\.gigrawars\.de/)?.[1];
+        this.uni = raw.match(/https:\/\/([^.]+)\.gigrawars\.de/)?.[1];
         raw = raw.replaceAll(new RegExp('<img[^>]+src="([^">]+)".*>', 'g'), '');
         raw = raw.replaceAll(/gigrawars\.de/g, '');
 
