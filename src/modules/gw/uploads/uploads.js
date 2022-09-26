@@ -1,13 +1,15 @@
 import { LightningElement, track } from 'lwc';
-import { CacheMixin } from '../../../classes/framwork/cache/cache';
+import { CacheMixin } from 'lwc-base';
 import Database from '../../../classes/framwork/database/database';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
 import Landing from './parser/landing';
 import Overview from './parser/overview';
 import ResourceStats from './parser/resourceStats';
 import Research from './parser/research';
+import Fleets from './parser/fleets';
 import technologies from '../../../classes/model/static/technologies';
-import { FACTORY } from '../../../classes/model/static/types';
+import levelFactor from '../../../classes/model/static/levelFactor.json';
+import { FACTORY, RESOURCES } from '../../../classes/model/static/types';
 import Account from '../../../classes/model/infra/account';
 
 export default class Uploads extends CacheMixin(LightningElement) {
@@ -15,7 +17,10 @@ export default class Uploads extends CacheMixin(LightningElement) {
     @track savedAccounts;
 
     latestUpload;
-    accountData;
+    @track accountData;
+    _coords;
+
+    @track removedQueueTypes = [];
 
     @track cache = this.cached({
         selectedAccount: 'Default',
@@ -34,14 +39,15 @@ export default class Uploads extends CacheMixin(LightningElement) {
     }
 
     selectAccount({ detail: player } = { detail: this.cache.selectedAccount}) {
-        this.database.get("AccountData", player)
+        this.database.get('AccountData', player)
             .then((accountData) => {
                 accountData = accountData ?? accountState(UNI.default.NAME);
 
                 this.cache.selectedAccount = player;
+                this.coords = accountData.planets[0].coords;
                 this.accountData = new Account(accountData).state;
                 this.latestUpload = new Date(accountData.serverTime)
-                            .toLocaleDateString("de-DE", { year: 'numeric', month: '2-digit', day: '2-digit', hour:'2-digit', minute: '2-digit', second: '2-digit' });
+                            .toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit', hour:'2-digit', minute: '2-digit', second: '2-digit' });
             })
             .catch(this.handle);
     }
@@ -58,26 +64,45 @@ export default class Uploads extends CacheMixin(LightningElement) {
 
         try{
             this.store(this.accountStateFor(landing, overview, research, reourceStats));
+            // new Fleets(landing).store();
         }
         catch(e) {
-            this.error('Daten fehlerhaft!');
+            this.error('Daten fehlerhaft!', e, 'error');
         }
     }
 
 
     accountStateFor(landingDom, overviewDom, researchDom, reourceStatsDom) {
         const landing = new Landing(landingDom);
-        const overview = new Overview(overviewDom, this.template.querySelector('p.temp'));
+        const overview = new Overview(overviewDom);
         const research = new Research(researchDom);
         const reourceStats = new ResourceStats(reourceStatsDom);
 
         const planets = overview.planets;
+        const { timeLeft, coords } = landing.buildings[0];
+        const sameBuildingFinishiInOverview = overview.buildingTimeLeft(coords, this.template.querySelector('p.temp'));
 
-        const planetFor = (toFind) => planets.find(({coords}) => coords === toFind);
+        const uploadSecondsDiff = sameBuildingFinishiInOverview - timeLeft;
 
-        if(landing.research) {
-            planetFor(landing.research.coords).current.push(landing.research)
+        if(uploadSecondsDiff < 0) {
+            throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!'
         }
+
+        const overviewAccount = new Account({
+            uni: landing.uni,
+            player: landing.player,
+            serverTime: landing.serverTime - uploadSecondsDiff,
+            planets,
+            research: research.plain()
+        });
+
+        overviewAccount.continue(uploadSecondsDiff);
+
+        const result = overviewAccount.state;
+        const planetFor = (toFind) => result.planets.find(({coords}) => coords === toFind);
+
+        landing.research && planetFor(landing.research.coords).current.push(landing.research);
+        landing.buildings.forEach((building) => planetFor(building.coords).current.push(building));
 
         reourceStats.queueResources().forEach((planetQueRes) => {
             const planet = planetFor(planetQueRes.coords);
@@ -86,22 +111,11 @@ export default class Uploads extends CacheMixin(LightningElement) {
 
             planetQueRes.queueRes.forEach((res, i) => {
                 const planetRes = planet.resources[i];
-
-                planetRes.stored += res;
-
-                if(currentShips) {
-                    planetRes.stored -= currentShips.amount * currentShipsInfo[planetRes.type];
-                }
+                planetRes.stored += res - currentShipsInfo[planetRes.type] ?? 0;
             });
         });
 
-        return {
-            uni: landing.uni,
-            player: landing.player,
-            serverTime: landing.serverTime,
-            planets,
-            research: research.plain(),
-        };
+        return result;
     }
 
     uploadFullAccount(evt) {
@@ -117,7 +131,7 @@ export default class Uploads extends CacheMixin(LightningElement) {
     }
 
     store(accountData = this.accountData) {
-        this.database.add("AccountData", new Account(accountData).state)
+        this.database.add('AccountData', new Account(accountData).state)
             .then(() => {
                 this.toast(accountData.player + ' Account erfolgreich hochgeladen');
                 this.loadStoredAccounts();
@@ -129,8 +143,8 @@ export default class Uploads extends CacheMixin(LightningElement) {
     }
 
     clear(evt) {
-        this.database.clear("Fleets").catch(this.handle);
-        this.database.clear("AccountData").catch(this.handle);
+        this.database.clear('Fleets').catch(this.handle);
+        this.database.clear('AccountData').catch(this.handle);
 
         this.loadStoredAccounts();
         this.selectAccount({detail: 'Default'});
@@ -166,8 +180,40 @@ export default class Uploads extends CacheMixin(LightningElement) {
         this.store();
     }
 
+    setPlanet({details: coords}) {
+        this.coords = coords;
+    }
+
+    set coords(value) {
+        this._coords = value;
+        this.abortQueueCleanup();
+    }
+
+    cleanupQueue({ target: { label: construction } }) {
+        this.removedQueueTypes.push(construction);
+    }
+
+    acceptQueueCleanup(evt) {
+        const planet = this.accountData.planets.find(({coords}) => coords === this.coords);
+
+        planet.current = planet.current.filter(({type}) => !this.removedQueueTypes.includes(type));
+        const cleanupRes = this.queueCleanupRes;
+
+        planet.resources.forEach((resource) => resource.stored += cleanupRes[resource.type]);
+
+        this.store();
+    }
+
+    abortQueueCleanup(evt) {
+        this.removedQueueTypes = [];
+    }
+
 
     // Getters
+
+    get coords() {
+        return this._coords;
+    }
 
     get date() {
         return this.startDate?.toISOString().slice(0,10)
@@ -197,6 +243,33 @@ export default class Uploads extends CacheMixin(LightningElement) {
         return ['uni4', 'uni3', 'speed3'];
     }
 
+    get planets() {
+        return this.accountData?.planets.map(({coords}) => coords) ?? [];
+    }
+
+    get queueItems() {
+        return this.accountData?.planets
+            .find(({coords}) => coords === this.coords).current
+            .map(({type}) => type)
+            .filter((type) => !this.removedQueueTypes.includes(type)) ?? [];
+    }
+
+    get queueCleanupRes() {
+        const result = { fe: 0, lut: 0, h2o: 0, h2: 0 };
+
+        if(this.accountData) {
+            const account = new Account(this.accountData);
+
+            technologies.all
+                .filter(({type}) => this.removedQueueTypes.includes(type))
+                .forEach((info) => {
+                    RESOURCES.forEach((resType) => result[resType] += info[resType] / 400 * levelFactor.values[account.level(info.type) + 1])
+                });
+        }
+
+        return result;
+    }
+
     handle = (error) => {
         this.template.querySelector('base-toast').display('error', error);
     }
@@ -205,7 +278,7 @@ export default class Uploads extends CacheMixin(LightningElement) {
         this.handle(error);
     }
 
-    toast = (message, details) => {
-        this.template.querySelector('base-toast').display('success', message, details);
+    toast = (message, details, severity = 'success') => {
+        this.template.querySelector('base-toast').display(severity, message, details);
     }
 }

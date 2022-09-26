@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import toHHMMSS from '../../../classes/framwork/misc/toHHMMSS';
+import { toHHMMSS } from '../../../classes/framwork/misc/timeConverters';
 import { E } from '../../../classes/model/static/types';
 
 export default class PathLogger extends LightningElement {

@@ -35,6 +35,10 @@ a {
   background: var(--gw-light-grey, #eee);
 }
 
+a:hover {
+  background: var(--gw-passive-grey, #eee);
+}
+
 lightning-accordion {
   background: var(--gw-dark-grey, white);
 }

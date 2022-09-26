@@ -7,7 +7,7 @@
             <section class="slds-p-bottom--x-small">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal--small"
                             value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
-                <span class="slds-m-horizontal--small">Start / Upload: {latestUpload}</span>
+                <span class="slds-m-left--x-small">Start / Upload: {latestUpload}</span>
             </section>
 
             <lightning-accordion allow-multiple-sections-open active-section-name="Upload">
@@ -22,6 +22,21 @@
                         <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left--small"></lightning-button>
                     </section>
                     <lightning-button variant="brand" onclick={resetTime} label="Zeit auf Uni Start setzen"></lightning-button>
+                </lightning-accordion-section>
+                <lightning-accordion-section label="Bauschleifen Anpassen" name="Bauschleifen">
+                    <section class=" slds-p-bottom--x-small">
+                        Planet:<base-select class="slds-show_inline-block slds-m-left--small"
+                                        value={coords} options={planets} onchange={setPlanet}></base-select>
+                        <b class="slds-m-left--medium">Rohstoffe: {queueCleanupRes.fe} / {queueCleanupRes.lut} / {queueCleanupRes.h2o} / {queueCleanupRes.h2}</b>
+                    </section>
+                    <section class=" slds-p-bottom--x-small">
+                        <lightning-pill for:each={queueItems} for:item="type" key={type}
+                                        onremove={cleanupQueue} label={type} class="slds-m-right--xxx-small"></lightning-pill>
+                    </section>
+                    <section class=" slds-p-bottom--x-small">
+                        <lightning-button label="Speichern" variant="success" onclick={acceptQueueCleanup}></lightning-button>
+                        <lightning-button label="Abbrechen" variant="error" onclick={abortQueueCleanup}></lightning-button>
+                    </section>
                 </lightning-accordion-section>
                 <lightning-accordion-section label="Upload" name="Upload">
                     <section class="slds-p-bottom--x-small">

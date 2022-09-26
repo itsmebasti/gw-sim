@@ -1,5 +1,5 @@
 import { LightningElement } from 'lwc';
-import { CacheMixin } from '../../../classes/framwork/cache/cache';
+import { CacheMixin } from 'lwc-base';
 
 export default class App extends CacheMixin(LightningElement) {
 

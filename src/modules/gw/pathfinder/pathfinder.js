@@ -1,12 +1,12 @@
 import { LightningElement, api, track } from 'lwc';
+import { CacheMixin } from 'lwc-base';
+import { toHHMMSS } from '../../../classes/framwork/misc/timeConverters';
 
 import technologies from '../../../classes/model/static/technologies';
-import Account from '../../../classes/model/infra/account'
 import UNI, { accountState } from '../../../classes/model/infra/uni';
-import toHHMMSS from '../../../classes/framwork/misc/toHHMMSS';
+import Account from '../../../classes/model/infra/account'
 import Database from '../../../classes/framwork/database/database';
 import InfraEvent from '../../../classes/framwork/events/infraEvent';
-import { CacheMixin } from '../../../classes/framwork/cache/cache';
 import { E } from '../../../classes/model/static/types';
 import { ResourceError } from '../../../classes/model/resources/resourceStorage';
 
@@ -223,6 +223,21 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.print(this.steps)
     }
 
+    loadStoredPaths() {
+        this.savedPaths;
+
+        return this.database.getAll('Paths')
+                   .then((paths) => this.savedPaths = paths.map(({ name }) => name))
+                   .catch(this.handle);
+    }
+
+    loadStoredAccounts() {
+        this.savedAccounts = ['Default']
+        return this.database.getAll('AccountData')
+                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
+                   .catch(this.handle);
+    }
+
 
     // Infra event handler
 
@@ -239,21 +254,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                 this.requested[i] += res[i];
             }
         }
-    }
-
-    loadStoredPaths() {
-        this.savedPaths = [];
-
-        return this.database.getAll('Paths')
-                   .then((paths) => this.savedPaths = paths.map(({ name }) => name))
-                   .catch(this.handle);
-    }
-
-    loadStoredAccounts() {
-        this.savedAccounts = ['Default']
-        return this.database.getAll('AccountData')
-                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
-                   .catch(this.handle);
     }
 
 
@@ -293,8 +293,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     deletePath(evt) {
         return this.database.delete('Paths', this.selectedPath)
-                   .then(() => this.loadStoredPaths())
-                   .then(() => this.toast('Pfad gelöscht'))
+                   .then(() => {
+                        this.loadStoredPaths();
+                        this.toast('Pfad gelöscht');
+                   })
                    .catch(this.handle);
     }
 
@@ -446,10 +448,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     get showDetails() {
         return !this.cache.hideDetails;
-    }
-
-    get unis() {
-        return ['uni4', 'uni3', 'speed3'];
     }
 
     get undoDisabled() {

@@ -20,6 +20,7 @@
 
     --gw-dark-blue: #162C36;
     --gw-dark-grey: #333333;
+    --gw-passive-grey: #666666;
     --gw-light-grey: #808080;
     --gw-header-blue: #2c3e50;
     --gw-navigation-header: #2b89c6;
@@ -121,7 +122,8 @@
     --slds-c-icon-color-foreground-active: var(--text);
 
     --slds-c-pill-action-color-border: var(--borders);
-    --slds-c-pill-color-background: var(--gw-navigation-header);
+    --slds-c-pill-color-background: var(--gw-light-grey);
+    --sds-c-pill-color-background-hover: var(--gw-passive-grey);
     --slds-c-pill-color-border: var(--borders);
     --slds-c-pill-container-color-background: var(--gw-navigation);
     --slds-c-pill-error-color-border: var(--borders);

@@ -1,12 +1,12 @@
-import gwTimestamp from '../../../../classes/framwork/misc/gwTimestamp';
+import { gwToMilliseconds } from '../../../../classes/framwork/misc/timeConverters';
 import { FACTORY } from '../../../../classes/model/static/types';
 
 export default class Landing {
     uni;
     player;
     serverTime;
-    currentResearch;
-    nextBuilding;
+    research;
+    buildings = [];
 
     constructor(raw) {
         this.uni = raw.match(/https:\/\/([^.]+)\.gigrawars\.de/)?.[1];
@@ -20,24 +20,25 @@ export default class Landing {
         serverInfo.innerHTML = tables.shift();
         events.innerHTML = tables.pop();
 
-        const firstBuilding = events.querySelector(".itemBuildingList")?.children;
-        const researchRow = events.querySelector("span[data-page='game_research_index']")?.parentNode.parentNode.children;
+        const buildingRows = events.querySelectorAll(".itemBuildingList");
+        const researchRow = events.querySelector("span[data-page='game_research_index']")?.parentNode.parentNode;
 
-        this.serverTime = gwTimestamp(serverInfo.querySelectorAll("td")[1].textContent);
+        this.serverTime = gwToMilliseconds(serverInfo.querySelector("td:nth-child(2)").textContent);
         this.player = serverInfo.querySelector("b").textContent;
 
-        if(researchRow) {
-            this.currentResearch = {
-                timeLeft: (gwTimestamp(researchRow[0].getAttribute("original-title")) - this.serverTime) / 1000,
-                coords: researchRow[2].childNodes[1].dataset.coordinate,
-                type: /.+?(?=Stufe)/.exec(researchRow[1].textContent)[0].trim(),
-                factory: FACTORY.FZ
-            };
-        }
+        this.research = researchRow && this.queueEntry(researchRow, FACTORY.FZ);
 
-        // this.nextBuilding = {
-        //     time: gwTimestamp(firstBuilding[0].getAttribute("original-title")),
-        //     coords: firstBuilding[0].dataset.coordinate,
-        // };
+        buildingRows.forEach((row) =>
+            this.buildings.push(this.queueEntry(row, FACTORY.KZ))
+        )
+    }
+
+    queueEntry(row, factory) {
+        return {
+            timeLeft: row.querySelector('.countTime').dataset.time - (this.serverTime / 1000),
+            coords: row.querySelector('.switchToCoordinate').dataset.coordinate,
+            type: row.querySelector("td:nth-child(2)").textContent.split(' Stufe')[0].trim(),
+            factory
+        };
     }
 }

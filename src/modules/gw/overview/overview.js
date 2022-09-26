@@ -1,13 +1,12 @@
 import { LightningElement, api, track } from 'lwc';
+import { CacheMixin, trueTypeOf } from 'lwc-base';
+import { toHHMMSS, toSeconds } from '../../../classes/framwork/misc/timeConverters';
 import Database from '../../../classes/framwork/database/database';
 import Account from '../../../classes/model/infra/account';
-import toHHMMSS from '../../../classes/framwork/misc/toHHMMSS';
-import { CHANGE, RESOURCES, E } from '../../../classes/model/static/types';
 import InfraEvent from '../../../classes/framwork/events/infraEvent';
 import ResourceChanges from '../../../classes/model/resources/resourceChanges';
-import { trueTypeOf } from '../../../classes/framwork/misc/trueTypeOf';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
-import { CacheMixin } from '../../../classes/framwork/cache/cache';
+import { CHANGE, RESOURCES, E } from '../../../classes/model/static/types';
 
 export default class Overview extends CacheMixin(LightningElement) {
     selectedTime;
@@ -245,11 +244,11 @@ export default class Overview extends CacheMixin(LightningElement) {
     }
 
     jumpTo({ target : {textContent : timeString} }) {
-        return this.goTo(this.serverTime + this.timeToSeconds(timeString));
+        return this.goTo(this.serverTime + toSeconds(timeString));
     }
 
     continueFor({ target : {textContent : timeString} }) {
-        return this.goTo(this.selectedTime + this.timeToSeconds(timeString));
+        return this.goTo(this.selectedTime + toSeconds(timeString));
     }
 
     changeTime({ target: {seconds} }) {
@@ -290,11 +289,6 @@ export default class Overview extends CacheMixin(LightningElement) {
 
     get serverTime() {
         return ((this.accountState?.serverTime ?? Date.now()) / 1000) | 0;
-    }
-
-    timeToSeconds(string) {
-        const [h, m, s] = string.split(':');
-        return (+h) * 60 * 60 + (+m) * 60 + (+s);
     }
 
     formatNumbers(any) {

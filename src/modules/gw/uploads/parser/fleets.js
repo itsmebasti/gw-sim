@@ -1,5 +1,5 @@
 import Fleet from '../../../../classes/model/fleet/fleet';
-import gwTimestamp from '../../../../classes/framwork/misc/gwTimestamp';
+import { gwToMilliseconds } from '../../../../classes/framwork/misc/timeConverters';
 import Database from '../../../../classes/framwork/database/database';
 
 export default class Fleets {
@@ -7,13 +7,12 @@ export default class Fleets {
     database = new Database();
 
     constructor(raw) {
+        raw = raw.replaceAll(new RegExp('<img[^>]+src="([^">]+)".*>', 'g'), '');
         raw = raw.replaceAll(/gigrawars\.de/g, '');
         const tables = [...raw.matchAll(/<table.*?<\/table>/gs)];
 
-        const serverTable = document.createElement('p');
         const infraTable = document.createElement('p');
-        serverTable.innerHTML = tables[0];
-        infraTable.innerHTML = tables[2];
+        infraTable.innerHTML = tables.pop();
 
         const own = [...infraTable.querySelectorAll(".itemOwnFleet")];
         const back = [...infraTable.querySelectorAll(".itemComebackFleet")];
@@ -44,13 +43,8 @@ export default class Fleets {
 
         return {
             id: row.querySelector("i").dataset.id,
-            arrival: gwTimestamp(dateString) / 1000 | 0,
+            arrival: gwToMilliseconds(dateString) / 1000 | 0,
             mission: row.querySelector("td:nth-of-type(3) span").textContent.trim(),
         };
-    }
-
-    timestamp(dateString) {
-        const val = /(\d+)\.(\d+)\.(\d+) - (\d+)\:(\d+)\:(\d+)/.exec(dateString);
-        return new Date(val[3], Number(val[2])-1, val[1], val[4], val[5], val[6]).getTime();
     }
 }
