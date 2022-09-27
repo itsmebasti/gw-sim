@@ -1,18 +1,13 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { CacheMixin } from 'lwc-base';
 import Database from '../../../classes/framwork/database/database';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
-import Landing from './parser/landing';
-import Overview from './parser/overview';
-import ResourceStats from './parser/resourceStats';
-import Research from './parser/research';
-import Fleets from './parser/fleets';
 import technologies from '../../../classes/model/static/technologies';
 import levelFactor from '../../../classes/model/static/levelFactor.json';
-import { FACTORY, RESOURCES } from '../../../classes/model/static/types';
+import { RESOURCES } from '../../../classes/model/static/types';
 import Account from '../../../classes/model/infra/account';
 
-export default class Uploads extends CacheMixin(LightningElement) {
+export default class AccountConfig extends CacheMixin(LightningElement) {
     database = new Database();
     @track savedAccounts;
 
@@ -27,8 +22,12 @@ export default class Uploads extends CacheMixin(LightningElement) {
     });
 
     connectedCallback() {
+        this.reload();
+    }
+
+    @api reload(player = this.cache.selectedAccount ?? 'Default') {
         this.loadStoredAccounts();
-        this.selectAccount();
+        this.selectAccount({ detail: player });
     }
 
     loadStoredAccounts() {
@@ -38,7 +37,7 @@ export default class Uploads extends CacheMixin(LightningElement) {
                    .catch(this.handle);
     }
 
-    selectAccount({ detail: player } = { detail: this.cache.selectedAccount}) {
+    selectAccount({ detail: player }) {
         this.database.get('AccountData', player)
             .then((accountData) => {
                 accountData = accountData ?? accountState(UNI.default.NAME);
@@ -50,84 +49,6 @@ export default class Uploads extends CacheMixin(LightningElement) {
                             .toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit', hour:'2-digit', minute: '2-digit', second: '2-digit' });
             })
             .catch(this.handle);
-    }
-
-    upload(evt) {
-        const [research, overview, reourceStats, landing] = [...this.template.querySelectorAll('textarea.upload')].map((element) => element.value);
-
-        for(let value of [research, overview, reourceStats, landing]) {
-            if(value === '') {
-                this.error('Bitte kopiere erst alle vier Seiten in die felder!');
-                return;
-            }
-        }
-
-        try{
-            this.store(this.accountStateFor(landing, overview, research, reourceStats));
-            // new Fleets(landing).store();
-        }
-        catch(e) {
-            this.error('Daten fehlerhaft!', e, 'error');
-        }
-    }
-
-
-    accountStateFor(landingDom, overviewDom, researchDom, reourceStatsDom) {
-        const landing = new Landing(landingDom);
-        const overview = new Overview(overviewDom);
-        const research = new Research(researchDom);
-        const reourceStats = new ResourceStats(reourceStatsDom);
-
-        const result = this.synchronizedData(landing, overview, research);
-
-        const planetFor = (toFind) => result.planets.find(({coords}) => coords === toFind);
-
-        landing.research && planetFor(landing.research.coords).current.push(landing.research);
-        landing.buildings.forEach((building) => planetFor(building.coords).current.push(building));
-
-        reourceStats.queueResources().forEach((planetQueRes) => {
-            const planet = planetFor(planetQueRes.coords);
-            const currentShips = planet.current.find(({factory}) => factory === FACTORY.SF);
-            const currentShipsInfo = technologies.shipDescribes.find(({type}) => type === currentShips?.type);
-
-            planetQueRes.queueRes.forEach((res, i) => {
-                const planetRes = planet.resources[i];
-                planetRes.stored += res - currentShipsInfo[planetRes.type] ?? 0;
-            });
-        });
-
-        return result;
-    }
-
-    synchronizedData(landing, overview, research) {
-        let accountData = {
-            uni: landing.uni,
-            player: landing.player,
-            serverTime: landing.serverTime,
-            planets: overview.planets,
-            research: research.plain()
-        };
-
-        const nextBuilding = landing.buildings[0];
-
-        if(nextBuilding) {
-            const sameBuildingFinishiInOverview = overview.buildingTimeLeft(nextBuilding.coords, this.template.querySelector('p.temp'));
-
-            const uploadSecondsDiff = sameBuildingFinishiInOverview - nextBuilding.timeLeft;
-
-            if(uploadSecondsDiff < 0) {
-                throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!'
-            }
-            else if(uploadSecondsDiff > 0) {
-                accountData.serverTime = landing.serverTime - uploadSecondsDiff;
-                const overviewAccount = new Account(accountData);
-                overviewAccount.continue(uploadSecondsDiff);
-
-                accountData = overviewAccount.state;
-            }
-        }
-
-        return accountData;
     }
 
     uploadFullAccount(evt) {
@@ -146,10 +67,8 @@ export default class Uploads extends CacheMixin(LightningElement) {
         this.database.add('AccountData', new Account(accountData).state)
             .then(() => {
                 this.toast(accountData.player + ' Account erfolgreich hochgeladen');
-                this.loadStoredAccounts();
-                this.selectAccount({detail: accountData.player});
 
-                this.dispatchEvent(new CustomEvent('datachange', { detail: accountData.player }));
+                this.dispatchEvent(new CustomEvent('accountchange', { detail: accountData.player }));
             })
             .catch(this.handle);
     }
@@ -158,17 +77,9 @@ export default class Uploads extends CacheMixin(LightningElement) {
         this.database.clear('Fleets').catch(this.handle);
         this.database.clear('AccountData').catch(this.handle);
 
-        this.loadStoredAccounts();
-        this.selectAccount({detail: 'Default'});
-
         this.toast('Daten erfolgreich Gelöscht!');
-    }
 
-    pasteDom(evt) {
-        evt.preventDefault();
-        evt.target.value = evt.clipboardData.getData('text/html');
-
-        evt.target.nextSibling.focus();
+        this.reload('Default');
     }
 
     setUni({ detail : name }) {
@@ -252,7 +163,7 @@ export default class Uploads extends CacheMixin(LightningElement) {
     }
 
     get unis() {
-        return ['uni4', 'uni3', 'speed3'];
+        return UNI.list;
     }
 
     get planets() {

@@ -13,6 +13,7 @@ export function accountState(uniName) {
 
 const UNI = {
     get default() {return this.uni4},
+    get list() { return ['uni4', 'uni3', 'speed3']; },
     uni3: {
         NAME: 'uni3',
         SPEED: 1,

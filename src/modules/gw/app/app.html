@@ -11,7 +11,7 @@
         </base-tab> -->
 
         <base-tab label="Account Konfigurieren" icon="standard:custom">
-            <gw-uploads ondatachange={reloadData}></gw-uploads>
+            <gw-account-config onaccountchange={reloadData}></gw-account-config>
         </base-tab>
 
         <base-tab label="Einstellungen" icon="standard:settings">
@@ -19,33 +19,7 @@
         </base-tab>
 
         <base-tab label="Info" icon="standard:question_feed">
-            <div class="slds-text-longform">
-                <h2>Pathfinder</h2>
-                Willkommen im Pathfinder, ich werde euch hier ein paar Worte hinterlassen um euch das Tool etwas näher zu bringen.<br>
-                Wenn ihr fragen habt, meldet euch gern auch bei mir im Discord (Gaxkiller).<br>
-
-
-                <h2>Basics</h2>
-
-                Das Tool soll euch helfen eure Aufbaupläne in allen Phasen des Spiels zu optimieren, es hilft euch den Account effizienter auszubauen.<br>
-                <br>
-                Ihr könnt unten rechts unter "Account Konfigurieren" eintragen, wann ihr in das Uni starten wollt und dann die Gebäude klicken, die ihr vor habt zu bauen.<br>
-                Im recht "Log" solltet ihr dann sehen, zu welchem Zeitpunkt die Gebäude gebaut werden können und wann wieviele Rohstoffe zur verfügung stehen.<br>
-                Der Vorteil dieses Tools ist, dass ihr die Bauaufträge jetzt bequem per drag and drop oder mit den kleinen blauen buttons hoch und runter schieben könnt,<br>
-                um zu sehen, was das an der rechts neben den aktuellen Rohstoffen angezeigten Zeit verändert.<br>
-                So findet ihr zum Beispiel heraus, wann es am sinnvollsten ist, eine neue Stufe Kommandozentrale zu bauen.
-
-
-                <h2>Account Upload</h2>
-
-                Ihr öffnet alle vier Seiten über die links und drückt dort [strg] [a] + [strg] [c], fügt es in die felder ein und drückt hochladen.<br>
-                Seite kurz neuladen (das kommt noch weg) und ihr könnt den Account im Pathfinder oben mittig auswählen.<br>
-                <br>
-                Gebäude, Forschung und Schiffe die gerade im Bau sind (also nicht nur in der Bauschleife) werden vom Tool erkannt und für euch weitergebaut.<br>
-                Ressourcen aus Verteidigungs- und Schiffsbauschleifen werden also mit Ausnahme des ersten Schiffauftrags zu den resourcen hinzugefügt,<br>
-                so wird beispielsweise euer Kolo erkannt und weitergebaut. Solltet ihr das nicht brauchen, müsst ihr die Rohstoffe erstmal noch manuell wieder hinzufügen,<br>
-                oder vor dem Upload kurz die Rohstoffe freilegen.
-            </div>
+            <gw-info></gw-info>
         </base-tab>
     </base-vertical-tabs>
 </template>

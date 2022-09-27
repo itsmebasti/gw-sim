@@ -1,0 +1,10 @@
+.slds-text-longform h1,
+.slds-text-longform h2,
+.slds-text-longform h3,
+.slds-text-longform h4,
+.slds-text-longform h5 {
+    font-size: revert;
+    font-weight: revert;
+    margin: revert;
+    padding: revert;
+}

@@ -7,8 +7,9 @@ import UNI, { accountState } from '../../../classes/model/infra/uni';
 import Account from '../../../classes/model/infra/account'
 import Database from '../../../classes/framwork/database/database';
 import InfraEvent from '../../../classes/framwork/events/infraEvent';
-import { E } from '../../../classes/model/static/types';
+import { CHANGE, E } from '../../../classes/model/static/types';
 import { ResourceError } from '../../../classes/model/resources/resourceStorage';
+import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
@@ -16,6 +17,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     @track savedAccounts;
     @track savedPaths;
     @track accountState;
+    resFleets;
     selectedPath;
     account;
 
@@ -55,21 +57,25 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             }
         });
 
-        this.refresh();
+        this.reload();
     }
 
-    @api refresh(accountName = this.cache.selectedAccount ?? 'Default') {
+    @api reload(player = this.cache.selectedAccount ?? 'Default') {
         this.loadStoredPaths();
         this.loadStoredAccounts();
 
-        this.database.get('AccountData', accountName)
+        this.database.get('AccountData', player)
             .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
-            .catch(() => this.load(accountState(UNI.default.NAME)));
+            .catch(() => this.load(accountState(UNI.default.NAME)))
     }
 
-    load(accountState) {
+    async load(accountState) {
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
+
+        await this.database.getAllBy('Fleets', 'deliveryTime', IDBKeyRange.lowerBound(accountState.serverTime/1000))
+                    .then((resFleets) => this.resFleets = resFleets
+                            ?.filter(({player, havingRes, delivery: {planet: {isOwnPlanet}}}) => havingRes && isOwnPlanet && player === this.cache.selectedAccount));
 
         this.loadPlanet(this.cache.coords);
     }
@@ -80,12 +86,19 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         }
         catch(e) {
             this.handle(e);
-            this.load(accountState('speed3'));
+            this.load(accountState(UNI.default.NAME));
             return;
         }
 
         this.account.current = this.cache.coords;
         this.account.subscribe(E.RESOURCE_REQUEST, this.handleResourceRequest, this.cache.coords);
+
+        this.resFleets?.forEach((fleet) => {
+            const time = fleet.delivery.time - this.accountState.serverTime/1000;
+            const resourceChanges = new ResourceChanges(...Object.values(fleet.res), this.resChangeType(fleet));
+
+            this.account.register(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, fleet.delivery.planet.coords), {time});
+        })
 
         this.requested = [0, 0, 0, 0];
         this.steps = [];
@@ -99,6 +112,15 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             this.updateJsonOutput();
             this.timePassed = toHHMMSS(this.account.passed);
         }
+    }
+
+    resChangeType({mission, source, target, friendly}) {
+        return (mission === 'Transport' && source.isOwnPlanet) ? CHANGE.TRANSPORT :
+                (mission === 'Stationierung') ? CHANGE.TRANSPORT :
+                (friendly && !target.exists) ? CHANGE.TRANSPORT :
+                (!friendly && source.isOwnPlanet) ? CHANGE.FARM :
+                (mission === 'Transport' && !source.isOwnPlanet) ? CHANGE.TRADE :
+                (mission === 'Transport' && !target.isOwnPlanet && target.exists) ? CHANGE.TRADE_OUT : '';
     }
 
     add(step) {
@@ -264,7 +286,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     selectAccount({ detail: player }) {
-        this.refresh(player);
+        this.reload(player);
     }
 
     savePath(evt) {

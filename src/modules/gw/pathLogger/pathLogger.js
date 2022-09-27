@@ -136,9 +136,11 @@ export default class PathLogger extends LightningElement {
     handleResourceChange = ({resourceChanges}) => {
         const now = this.account.planet.resources.state.map(({stored}) => stored | 0);
         const changes = resourceChanges.toArray();
-        const before = now.map((stored, i) => stored - changes[i]);
+        const before = now.map((stored, i) => stored - +changes[i]);
 
-        this.log('RESS ', before.join('/') + ' => ' + changes.join('/'), 'res');
+        const changesString = changes.map((value) => (value > 0) ? '+'+value : value).join('/');
+
+        this.log('RESS ', before.join('/') + ' => ' + changesString, 'res');
     }
 
     handleFailed = ({error}) => {

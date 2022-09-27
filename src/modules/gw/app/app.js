@@ -12,7 +12,8 @@ export default class App extends CacheMixin(LightningElement) {
     }
 
     reloadData({detail: player}) {
-        this.template.querySelector('gw-pathfinder').refresh(player);
+        this.template.querySelector('gw-pathfinder').reload(player);
+        this.template.querySelector('gw-account-config').reload(player);
     }
 
     toggleTheme(evt) {

@@ -2,24 +2,13 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.slds-text-longform h1,
-.slds-text-longform h2,
-.slds-text-longform h3,
-.slds-text-longform h4,
-.slds-text-longform h5 {
-    font-size: revert;
-    font-weight: revert;
-    margin: revert;
-    padding: revert;
-}
-
 :host[dark-mode] {
     --borders: black;
     --text: white;
     --text-dark: #ccc;
-    --cancel-red: #cf6679;
-    --cancel-red-dark: #c95368;
-    --cancel-red-border: #b1384d;
+    --cancel-red: #a94442;
+    --cancel-red-dark: #570004;
+    --cancel-red-border: #CF000F;
 
     --gw-dark-blue: #162C36;
     --gw-dark-grey: #333333;
@@ -29,6 +18,7 @@
     --gw-header-blue: #2c3e50;
     --gw-navigation-header: #2b89c6;
     --gw-navigation: #226d9d;
+    --gw-uni-ali: #3498DB;
 
     --gw-res-odd: #263545;
     --gw-res-even: #202d3b;
@@ -53,26 +43,26 @@
     --slds-c-button-inverse-shadow-focus: var(--gw-navigation);
     --slds-c-button-shadow: var(--gw-navigation);
     --slds-c-button-shadow-focus: var(--gw-navigation);
-    --slds-c-button-brand-color-background: var(--gw-navigation);
-    --slds-c-button-brand-color-background-active: var(--gw-navigation-header);
-    --slds-c-button-brand-color-background-hover: var(--gw-navigation-header);
-    --slds-c-button-brand-color-border: var(--gw-dark-blue);
+    --slds-c-button-brand-color-background: var(--gw-navigation-header);
+    --slds-c-button-brand-color-background-active: var(--gw-navigation);
+    --slds-c-button-brand-color-background-hover: var(--gw-navigation);
+    --slds-c-button-brand-color-border: var(--gw-uni-ali);
     --slds-c-button-brand-color-border-hover: var(--gw-dark-blue);
     --slds-c-button-brand-text-color: var(--text);
     --slds-c-button-brand-text-color-active: var(--text-dark);
     --slds-c-button-brand-text-color-hover: var(--text-dark);
-    --slds-c-button-color-background: var(--gw-navigation);
-    --slds-c-button-color-background-active: var(--gw-navigation-header);
-    --slds-c-button-color-background-hover: var(--gw-navigation-header);
-    --slds-c-button-color-border: var(--gw-navigation-header);
+    --slds-c-button-color-background: var(--gw-navigation-header);
+    --slds-c-button-color-background-active: var(--gw-navigation);
+    --slds-c-button-color-background-hover: var(--gw-navigation);
+    --slds-c-button-color-border: var(--gw-uni-ali);
     --slds-c-button-color-border-active: var(--gw-navigation);
     --slds-c-button-color-border-hover: var(--gw-navigation);
     --slds-c-button-destructive-color-background: var(--cancel-red);
     --slds-c-button-destructive-color-background-active: var(--cancel-red-dark);
     --slds-c-button-destructive-color-background-hover: var(--cancel-red-dark);
     --slds-c-button-destructive-color-border: var(--cancel-red-border);
-    --slds-c-button-destructive-color-border-active: var(--cancel-red-border);
-    --sds-c-button-destructive-color-border-hover: var(--cancel-red-border);
+    --slds-c-button-destructive-color-border-active: var(--cancel-red-dark);
+    --sds-c-button-destructive-color-border-hover: var(--cancel-red-dark);
     --sds-c-button-destructive-text-color-hover: var(--text-dark);
     --slds-c-button-destructive-text-color: var(--text);
     --slds-c-button-destructive-text-color-active: var(--text-dark);
@@ -102,12 +92,12 @@
     --slds-c-button-stateful-color-background-selected-hover: var(--gw-navigation-header);
     --slds-c-button-stateful-color-border-selected: var(--borders);
     --slds-c-button-stateful-color-border-selected-hover: var(--borders);
-    --slds-c-button-success-color-background: var(--gw-navigation);
-    --slds-c-button-success-color-background-active: var(--gw-navigation-header);
+    --slds-c-button-success-color-background: var(--gw-unread-green);
+    /* --slds-c-button-success-color-background-active: var(--gw-navigation-header);
     --slds-c-button-success-color-background-hover: var(--gw-navigation-header);
     --slds-c-button-success-color-border: var(--gw-navigation);
     --slds-c-button-success-color-border-active: var(--gw-navigation-header);
-    --slds-c-button-success-color-border-hover: var(--gw-navigation-header);
+    --slds-c-button-success-color-border-hover: var(--gw-navigation-header); */
     --slds-c-button-success-text-color: var(--text);
     --slds-c-button-success-text-color-active: var(--text-dark);
     --slds-c-button-success-text-color-hover: var(--text-dark);

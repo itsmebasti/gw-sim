@@ -12,21 +12,10 @@ lightning-accordion {
   background: var(--gw-dark-grey, white);
 }
 
-textarea.upload {
-    display: block;
-}
-
 input.date {
   width: 8rem;
 }
 
 input.time {
   width: 7rem;
-}
-
-p.temp {
-    position: fixed;
-    top: -10000px;
-    z-index: -9999;
-    opacity: 0;
 }
