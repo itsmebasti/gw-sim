@@ -78,27 +78,8 @@ export default class Uploads extends CacheMixin(LightningElement) {
         const research = new Research(researchDom);
         const reourceStats = new ResourceStats(reourceStatsDom);
 
-        const planets = overview.planets;
-        const { timeLeft, coords } = landing.buildings[0];
-        const sameBuildingFinishiInOverview = overview.buildingTimeLeft(coords, this.template.querySelector('p.temp'));
+        const result = this.synchronizedData(landing, overview, research);
 
-        const uploadSecondsDiff = sameBuildingFinishiInOverview - timeLeft;
-
-        if(uploadSecondsDiff < 0) {
-            throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!'
-        }
-
-        const overviewAccount = new Account({
-            uni: landing.uni,
-            player: landing.player,
-            serverTime: landing.serverTime - uploadSecondsDiff,
-            planets,
-            research: research.plain()
-        });
-
-        overviewAccount.continue(uploadSecondsDiff);
-
-        const result = overviewAccount.state;
         const planetFor = (toFind) => result.planets.find(({coords}) => coords === toFind);
 
         landing.research && planetFor(landing.research.coords).current.push(landing.research);
@@ -116,6 +97,37 @@ export default class Uploads extends CacheMixin(LightningElement) {
         });
 
         return result;
+    }
+
+    synchronizedData(landing, overview, research) {
+        let accountData = {
+            uni: landing.uni,
+            player: landing.player,
+            serverTime: landing.serverTime,
+            planets: overview.planets,
+            research: research.plain()
+        };
+
+        const nextBuilding = landing.buildings[0];
+
+        if(nextBuilding) {
+            const sameBuildingFinishiInOverview = overview.buildingTimeLeft(nextBuilding.coords, this.template.querySelector('p.temp'));
+
+            const uploadSecondsDiff = sameBuildingFinishiInOverview - nextBuilding.timeLeft;
+
+            if(uploadSecondsDiff < 0) {
+                throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!'
+            }
+            else if(uploadSecondsDiff > 0) {
+                accountData.serverTime = landing.serverTime - uploadSecondsDiff;
+                const overviewAccount = new Account(accountData);
+                overviewAccount.continue(uploadSecondsDiff);
+
+                accountData = overviewAccount.state;
+            }
+        }
+
+        return accountData;
     }
 
     uploadFullAccount(evt) {
@@ -268,6 +280,10 @@ export default class Uploads extends CacheMixin(LightningElement) {
         }
 
         return result;
+    }
+
+    get queueUnchanged() {
+        return (this.removedQueueTypes.length === 0);
     }
 
     handle = (error) => {

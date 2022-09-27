@@ -34,8 +34,10 @@
                                         onremove={cleanupQueue} label={type} class="slds-m-right--xxx-small"></lightning-pill>
                     </section>
                     <section class=" slds-p-bottom--x-small">
-                        <lightning-button label="Speichern" variant="success" onclick={acceptQueueCleanup}></lightning-button>
-                        <lightning-button label="Abbrechen" variant="error" onclick={abortQueueCleanup}></lightning-button>
+                        <lightning-button-group>
+                            <lightning-button label="Speichern" variant="success" onclick={acceptQueueCleanup} disabled={queueUnchanged}></lightning-button>
+                            <lightning-button label="Abbrechen" variant="destructive" onclick={abortQueueCleanup} disabled={queueUnchanged}></lightning-button>
+                        </lightning-button-group>
                     </section>
                 </lightning-accordion-section>
                 <lightning-accordion-section label="Upload" name="Upload">
@@ -55,7 +57,7 @@
             </lightning-accordion>
 
             <section class="slds-p-bottom--x-small">
-                <lightning-button label="Alle Accountdaten Löschen" variant="success" onclick={clear} class="slds-m-right--small"></lightning-button>
+                <lightning-button label="Alle Accountdaten Löschen" variant="destructive" onclick={clear} class="slds-m-right--small"></lightning-button>
                 (Pfade sind hiervon nicht betroffen)
             </section>
         </div>
