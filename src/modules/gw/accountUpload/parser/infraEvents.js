@@ -5,8 +5,8 @@ export default class InfraEvents {
     buildings = [];
 
     constructor(raw, serverInfo) {
-        raw = raw.replaceAll(/'<img[^>]+src="([^">]+)".*>/g, '');
-        raw = raw.replaceAll(/gigrawars\.de/g, '');
+        raw = raw.replaceAll(/'<img[^>]+>/g, '');
+        raw = raw.replaceAll(/https:\/\/[^ "]+/g, '');
 
         const events = document.createElement('p');
         events.innerHTML = [...raw.matchAll(/<table.*?<\/table>/gs)].pop();

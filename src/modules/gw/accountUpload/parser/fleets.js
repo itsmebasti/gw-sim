@@ -10,9 +10,9 @@ export default class Fleets {
     constructor(raw) {
         const serverInfo = new ServerInfo(raw);
         this.serverSeconds = serverInfo.serverTime/1000;
-
-        raw = raw.replaceAll(/'<img[^>]+src="([^">]+)".*>/g, '');
-        raw = raw.replaceAll(/gigrawars\.de/g, '');
+        
+        raw = raw.replaceAll(/'<img[^>]+>/g, '');
+        raw = raw.replaceAll(/https:\/\/[^ "]+/g, '');
 
         const events = document.createElement('p');
         events.innerHTML = [...raw.matchAll(/<table.*?<\/table>/gs)].pop();
