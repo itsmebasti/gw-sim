@@ -57,9 +57,9 @@ export default class AccountUpload extends LightningElement {
             const currentShips = planet.current.find(({factory}) => factory === FACTORY.SF);
             const currentShipsInfo = technologies.shipDescribes.find(({type}) => type === currentShips?.type);
 
-            currentShipsInfo && planetQueRes.queueRes.forEach((res, i) => {
+            planetQueRes.queueRes.forEach((res, i) => {
                 const planetRes = planet.resources[i];
-                planetRes.stored += res - currentShipsInfo[planetRes.type] ?? 0;
+                planetRes.stored += res - (currentShipsInfo?.[planetRes.type] ?? 0);
             });
         });
 
