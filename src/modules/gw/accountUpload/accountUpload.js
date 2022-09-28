@@ -32,7 +32,7 @@ export default class AccountUpload extends LightningElement {
             new Fleets(landing).store();
         }
         catch(e) {
-            this.toast('Daten fehlerhaft!', e.message, 'error');
+            this.toast('Daten fehlerhaft!', e.message ?? e, 'error');
             console.error(e);
         }
     }

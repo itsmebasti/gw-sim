@@ -1,4 +1,6 @@
 <template>
+    <base-toast></base-toast>
+
     <div class="slds-grid">
         <div class="slds-col slds-size_1-of-3">
             <section class="account-select slds-p-bottom--x-small">
@@ -11,8 +13,6 @@
                 <lightning-button-icon icon-name="utility:forward" variant="bare" onclick={nextPlanet}></lightning-button-icon>
             </section>
             <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
-                <base-toast class="slds-m-top_xx-small"></base-toast>
-
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                             label={construction.label} name={construction.label}>
                     <a href="javascript:void(0)" class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small" for:each={construction.options} for:item="option" key={option} onclick={build}>{option}</a>
