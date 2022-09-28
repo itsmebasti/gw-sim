@@ -14,10 +14,10 @@ export default class InfraEvents {
         const buildingRows = events.querySelectorAll(".itemBuildingList");
         const researchRow = events.querySelector("span[data-page='game_research_index']")?.parentNode.parentNode;
 
-        this.research = researchRow && this.queueEntry(researchRow, FACTORY.FZ);
+        this.research = researchRow && this.queueEntry(researchRow, FACTORY.FZ, serverInfo.serverTime);
 
         buildingRows.forEach((row) =>
-            this.buildings.push(this.queueEntry(row, FACTORY.KZ, serverInfo.serverTime))
+            this.buildings.push(this.queueEntry(row, FACTORY.KZ, serverInfo.serverTime));
         )
     }
 

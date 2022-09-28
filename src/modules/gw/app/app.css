@@ -6,9 +6,21 @@
     --borders: black;
     --text: white;
     --text-dark: #ccc;
-    --cancel-red: #a94442;
-    --cancel-red-dark: #570004;
-    --cancel-red-border: #CF000F;
+
+    --gw-galaxy-ali: #3498DB;
+    --gw-galaxy-own: #1F3A93;
+    --gw-galaxy-admin: #570004;
+    --gw-galaxy-umod: #ce7600;
+    --gw-galaxy-newbe: #795548;
+
+    --gw-res-green: #27ae60;
+    --gw-res-yellow: #f1c40f;
+    --gw-res-orange: #e67e22;
+    --gw-res-red: #f11818;
+
+    --gw-navigatio-info:#CF000F;
+    --gw-alert: #a94442;
+    --gw-error: #BF002C;
 
     --gw-dark-blue: #162C36;
     --gw-dark-grey: #333333;
@@ -18,7 +30,6 @@
     --gw-header-blue: #2c3e50;
     --gw-navigation-header: #2b89c6;
     --gw-navigation: #226d9d;
-    --gw-uni-ali: #3498DB;
 
     --gw-res-odd: #263545;
     --gw-res-even: #202d3b;
@@ -46,7 +57,7 @@
     --slds-c-button-brand-color-background: var(--gw-navigation-header);
     --slds-c-button-brand-color-background-active: var(--gw-navigation);
     --slds-c-button-brand-color-background-hover: var(--gw-navigation);
-    --slds-c-button-brand-color-border: var(--gw-uni-ali);
+    --slds-c-button-brand-color-border: var(--gw-galaxy-ali);
     --slds-c-button-brand-color-border-hover: var(--gw-dark-blue);
     --slds-c-button-brand-text-color: var(--text);
     --slds-c-button-brand-text-color-active: var(--text-dark);
@@ -54,15 +65,15 @@
     --slds-c-button-color-background: var(--gw-navigation-header);
     --slds-c-button-color-background-active: var(--gw-navigation);
     --slds-c-button-color-background-hover: var(--gw-navigation);
-    --slds-c-button-color-border: var(--gw-uni-ali);
+    --slds-c-button-color-border: var(--gw-galaxy-ali);
     --slds-c-button-color-border-active: var(--gw-navigation);
     --slds-c-button-color-border-hover: var(--gw-navigation);
-    --slds-c-button-destructive-color-background: var(--cancel-red);
-    --slds-c-button-destructive-color-background-active: var(--cancel-red-dark);
-    --slds-c-button-destructive-color-background-hover: var(--cancel-red-dark);
-    --slds-c-button-destructive-color-border: var(--cancel-red-border);
-    --slds-c-button-destructive-color-border-active: var(--cancel-red-dark);
-    --sds-c-button-destructive-color-border-hover: var(--cancel-red-dark);
+    --slds-c-button-destructive-color-background: var(--gw-alert);
+    --slds-c-button-destructive-color-background-active: var(--gw-galaxy-admin);
+    --slds-c-button-destructive-color-background-hover: var(--gw-galaxy-admin);
+    --slds-c-button-destructive-color-border: var(--gw-navigatio-info);
+    --slds-c-button-destructive-color-border-active: var(--gw-galaxy-admin);
+    --sds-c-button-destructive-color-border-hover: var(--gw-galaxy-admin);
     --sds-c-button-destructive-text-color-hover: var(--text-dark);
     --slds-c-button-destructive-text-color: var(--text);
     --slds-c-button-destructive-text-color-active: var(--text-dark);
