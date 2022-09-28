@@ -32,7 +32,8 @@ export default class AccountUpload extends LightningElement {
             new Fleets(landing).store();
         }
         catch(e) {
-            this.error('Daten fehlerhaft!', e, 'error');
+            this.toast('Daten fehlerhaft!', e.message, 'error');
+            console.error(e);
         }
     }
 
@@ -56,7 +57,7 @@ export default class AccountUpload extends LightningElement {
             const currentShips = planet.current.find(({factory}) => factory === FACTORY.SF);
             const currentShipsInfo = technologies.shipDescribes.find(({type}) => type === currentShips?.type);
 
-            planetQueRes.queueRes.forEach((res, i) => {
+            currentShipsInfo && planetQueRes.queueRes.forEach((res, i) => {
                 const planetRes = planet.resources[i];
                 planetRes.stored += res - currentShipsInfo[planetRes.type] ?? 0;
             });
