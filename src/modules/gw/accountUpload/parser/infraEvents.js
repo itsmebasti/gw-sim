@@ -17,7 +17,7 @@ export default class InfraEvents {
         this.research = researchRow && this.queueEntry(researchRow, FACTORY.FZ, serverInfo.serverTime);
 
         buildingRows.forEach((row) =>
-            this.buildings.push(this.queueEntry(row, FACTORY.KZ, serverInfo.serverTime));
+            this.buildings.push(this.queueEntry(row, FACTORY.KZ, serverInfo.serverTime))
         )
     }
 
