@@ -69,6 +69,10 @@ export default class Account extends EventBus {
         this.flush();
     }
     
+    complete(factory) {
+        this.planet.complete(factory);
+    }
+
     completeAllOn(coords) {
         this.continueWhile(() => this.queue.some(({event: {scope}}) => scope === coords || scope === "global"))
     }

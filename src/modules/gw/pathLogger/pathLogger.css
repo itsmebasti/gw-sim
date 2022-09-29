@@ -1,3 +1,4 @@
+
 ul {
   list-style-type: none;
   font-family: 'Roboto Mono', monospace;
@@ -12,6 +13,28 @@ ul {
   padding: 0 1px;
 
   position: relative;
+}
+
+div.slds-drop-zone lightning-button-icon {
+    --slds-c-button-sizing-border: 0px;
+}
+
+div.slds-drop-zone lightning-button-icon.red {
+    --slds-c-icon-color-foreground: red;
+    --slds-c-icon-color-foreground-active: red;
+    --slds-c-icon-color-foreground-hover: red;
+}
+
+div.slds-drop-zone lightning-button-icon.yellow {
+    --slds-c-icon-color-foreground: yellow;
+    --slds-c-icon-color-foreground-active: yellow;
+    --slds-c-icon-color-foreground-hover: yellow;
+}
+
+div.slds-drop-zone lightning-button-icon.green {
+    --slds-c-icon-color-foreground: green;
+    --slds-c-icon-color-foreground-active: green;
+    --slds-c-icon-color-foreground-hover: green;
 }
 
 ul.temp {
@@ -37,6 +60,7 @@ li {
 
 .slds-drop-zone::after {
   outline: initial;
+  pointer-events: none;
 }
 
 .dragged {

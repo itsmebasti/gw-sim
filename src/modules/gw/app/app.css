@@ -62,12 +62,12 @@
     --slds-c-button-brand-text-color: var(--text);
     --slds-c-button-brand-text-color-active: var(--text-dark);
     --slds-c-button-brand-text-color-hover: var(--text-dark);
-    --slds-c-button-color-background: var(--gw-navigation-header);
+    /* --slds-c-button-color-background: var(--gw-navigation-header);
     --slds-c-button-color-background-active: var(--gw-navigation);
     --slds-c-button-color-background-hover: var(--gw-navigation);
     --slds-c-button-color-border: var(--gw-galaxy-ali);
     --slds-c-button-color-border-active: var(--gw-navigation);
-    --slds-c-button-color-border-hover: var(--gw-navigation);
+    --slds-c-button-color-border-hover: var(--gw-navigation); */
     --slds-c-button-destructive-color-background: var(--gw-alert);
     --slds-c-button-destructive-color-background-active: var(--gw-galaxy-admin);
     --slds-c-button-destructive-color-background-hover: var(--gw-galaxy-admin);

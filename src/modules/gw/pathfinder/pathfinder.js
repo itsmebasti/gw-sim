@@ -7,7 +7,7 @@ import UNI, { accountState } from '../../../classes/model/infra/uni';
 import Account from '../../../classes/model/infra/account'
 import Database from '../../../classes/framwork/database/database';
 import InfraEvent from '../../../classes/framwork/events/infraEvent';
-import { CHANGE, E } from '../../../classes/model/static/types';
+import { CHANGE, E, FACTORY } from '../../../classes/model/static/types';
 import { ResourceError } from '../../../classes/model/resources/resourceStorage';
 import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 
@@ -162,8 +162,20 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.add({ type: 'start', tec: evt.target.innerText, produce: this.cache.produce });
     }
 
-    complete(evt) {
+    completeAll(evt) {
         this.add({ type: 'complete' });
+    }
+
+    completeBuilding(evt) {
+        this.add({ type: 'complete', factory: FACTORY.KZ });
+    }
+
+    completeResearch(evt) {
+        this.add({ type: 'complete', factory: FACTORY.FZ });
+    }
+
+    completeShip(evt) {
+        this.add({ type: 'complete', factory: FACTORY.SF });
     }
 
     resetCount() {
@@ -179,8 +191,8 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                     this.logger.markAsSucceeded();
                     break;
                 case 'start':
-                    this.logger.command('Starte ' + step.tec + ' ' + this.levelFor(step.tec));
                     this.produceResForNextBuild = step.produce ?? true;
+                    this.logger.command('Starte ' + step.tec + ' ' + this.levelFor(step.tec), this.buildSettings(this.produceResForNextBuild));
                     this.account.completeAndEnqueue(step.tec);
                     this.produceResForNextBuild = true;
                     break;
@@ -189,8 +201,14 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                     this.account.continue(step.seconds);
                     break;
                 case 'complete':
-                    this.logger.command('Fertig Bauen');
-                    this.account.completeAllOn(this.cache.coords);
+                    if(step.factory) {
+                        this.logger.command(step.factory + ': Auftrag abschließen');
+                        this.account.complete(step.factory);
+                    }
+                    else {
+                        this.logger.command('Alle Aufträge abschließen');
+                        this.account.completeAllOn(this.cache.coords);
+                    }
                     break;
                 case 'resetCount':
                     this.logger.command('Bis hier werden (' + this.generated + ') benötigt');
@@ -207,6 +225,26 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
         this.timePassed = toHHMMSS(this.account.passed);
         this.updateJsonOutput();
+    }
+
+    buildSettings(produceResForNextBuild) {
+        return [
+            produceResForNextBuild && { action: 'generateRes', tooltip: "Rostoffe werden selbst produziert", color:"yellow", icon: 'utility:clock' },
+            !produceResForNextBuild && { action: 'produceRes', tooltip: "Rostoffe werden anderweitig beschafft", color:"green", icon: 'utility:add' },
+        ].filter(Boolean)
+    }
+
+    handleSettingClick({detail: {action, id}}) {
+        switch (action) {
+            case 'generateRes':
+                this.steps[id].produce = false;
+                break;
+            case 'produceRes':
+                this.steps[id].produce = true;
+                break;
+        }
+
+        this.print(this.steps)
     }
 
     levelFor(tech) {
@@ -234,14 +272,14 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.print(steps);
     }
 
-    move({ detail: { from, to, tec } }) {
-        if(to < -1) return;
+    move({ detail: { id, dropAt, tec } }) {
+        if(dropAt < -1) return;
         const steps = this.steps;
 
-        const element = (tec) ? {type: 'start', tec, produce: this.cache.produce } : steps.splice(from, 1)[0];
-        const deletedOffset = (from <= to) ? 0 : 1;
+        const element = (tec) ? {type: 'start', tec, produce: this.cache.produce } : steps.splice(id, 1)[0];
+        const removedOffset = (id <= dropAt) ? 0 : 1;
 
-        steps.splice(to + deletedOffset, 0, element);
+        steps.splice(dropAt + removedOffset, 0, element);
 
         this.print(steps);
     }

@@ -19,6 +19,13 @@
             <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1">
                 {log.message}
 
+                <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="container" size="small"
+                    class={setting.color}
+                    icon-name={setting.icon}
+                    tooltip={setting.tooltip}
+                    data-action={setting.action}
+                    onclick={handleSettingClick}></lightning-button-icon>
+
                 <div class="slds-drop-zone__actions">
                     <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={duplicate} icon-name="utility:layers" tooltip="Duplizieren"></lightning-button-icon>

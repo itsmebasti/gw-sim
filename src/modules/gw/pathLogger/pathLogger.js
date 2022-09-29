@@ -2,14 +2,40 @@ import { LightningElement, api, track } from 'lwc';
 import { toHHMMSS } from '../../../classes/framwork/misc/timeConverters';
 import { E } from '../../../classes/model/static/types';
 
+const DIRECTION = { UP: Symbol(), DOWN: Symbol() };
+
 export default class PathLogger extends LightningElement {
     @api hideDetails = false;
     @track logs = [];
     account
-    idCounter;
-    lastCommand;
-    start;
     serverTime;
+    start;
+
+    idCounter;
+    commandCounter;
+    lastKeyMove;
+
+    connectedCallback() {
+        document.addEventListener('keydown', (evt) => {
+            if (!evt.ctrlKey) {
+                switch(evt.key) {
+                    case 'ArrowUp': case 'w': case 'W':
+                        this.move(evt, DIRECTION.UP);
+                        break;
+                    case 'ArrowDown': case 's': case 'S':
+                        this.move(evt, DIRECTION.DOWN);
+                        break;
+                }
+            }
+        });
+    }
+
+    renderedCallback() {
+        if(this.lastKeyMove !== undefined) {
+            this.template.querySelector(`li.command[data-command='${this.lastKeyMove}'] div`)?.focus();
+            this.lastKeyMove = undefined;
+        }
+    }
 
     @api
     reset(account) {
@@ -17,18 +43,19 @@ export default class PathLogger extends LightningElement {
         this.account = account;
         this.logs = [];
         this.idCounter = 0;
-        this.lastCommand = -1;
+        this.commandCounter = -1;
         this.startListening(account);
         this.setServerTime();
     }
 
     @api
-    command(message) {
+    command(message, settings = []) {
         this.logs.unshift({
             id: this.idCounter++,
-            command: ++this.lastCommand,
+            command: ++this.commandCounter,
             severity: 'command',
             message,
+            settings,
             isCommand: true,
             cssClass: 'command'});
     }
@@ -38,7 +65,8 @@ export default class PathLogger extends LightningElement {
         details.reverse().forEach((detail) => {
             this.logs.unshift({
                 id: this.idCounter++,
-                command: this.lastCommand,
+                command: this.commandCounter,
+                settings: [],
                 message: detail,
                 isDetail: true,
                 cssClass: 'detail'});
@@ -50,7 +78,8 @@ export default class PathLogger extends LightningElement {
     log(msgType, message, cssClass = '') {
         this.logs.unshift({
             id: this.idCounter++,
-            command: this.lastCommand,
+            command: this.commandCounter,
+            settings: [],
             time: this.serverTime,
             msgType,
             message,
@@ -63,6 +92,23 @@ export default class PathLogger extends LightningElement {
 
     clear() {
         this.logs = [];
+    }
+
+    move(evt, direction) {
+        const liElement = this.template.activeElement?.parentElement;
+        const command = +liElement?.dataset.command;
+        const up = direction === DIRECTION.UP;
+
+        if(!isNaN(command)) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            this.dispatchEvent(new CustomEvent('move', { detail:{ id: command, dropAt: command + ((up) ? 1 : -2) } }));
+            this.lastKeyMove = (up) ? command+1 : command-1;
+        }
+    }
+
+    handleSettingClick(evt) {
+        this.dispatchEvent(new CustomEvent('settingclick', { detail: { action: evt.target.dataset.action, id: this.commandId(evt) } }));
     }
 
     remove(evt) {
@@ -78,18 +124,18 @@ export default class PathLogger extends LightningElement {
     }
 
     up(evt) {
-        const from = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { from, to: from+1 } }));
+        const id = this.commandId(evt);
+        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: id+1 } }));
     }
 
     down(evt) {
-        const from = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { from, to: from-2 } }));
+        const id = this.commandId(evt);
+        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: id-2 } }));
     }
 
     toEnd(evt) {
-        const from = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { from, to: -1 } }));
+        const id = this.commandId(evt);
+        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: -1 } }));
     }
 
     commandId(evt) {
@@ -192,10 +238,10 @@ export default class PathLogger extends LightningElement {
     drop(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        const from = parseInt(evt.dataTransfer.getData('command') ?? this.lastCommand);
-        const to = parseInt(evt.currentTarget.dataset.command ?? -1);
+        const id = parseInt(evt.dataTransfer.getData('command') ?? this.commandCounter);
+        const dropAt = parseInt(evt.currentTarget.dataset.command ?? -1);
         const tec = evt.dataTransfer.getData('tec');
-        this.dispatchEvent(new CustomEvent('move', { detail:{ from, to, tec } }));
+        this.dispatchEvent(new CustomEvent('move', { detail:{ id, dropAt, tec } }));
     }
 
     allowDrop(evt) {

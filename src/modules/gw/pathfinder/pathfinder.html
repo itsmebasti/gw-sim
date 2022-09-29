@@ -50,7 +50,11 @@
             </section>
 
             <section>
-                <lightning-button variant="brand" onclick={complete} label="Alles fertig bauen"></lightning-button>
+                Abschließen:
+                <a onclick={completeBuilding} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Gebäude</a>
+                <a onclick={completeResearch} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Forschung</a>
+                <a onclick={completeShip} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Schiff</a>
+                <a onclick={completeAll} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Alles</a>
                 <base-toggle label="Details" class="slds-show_inline-block slds-m-left--small" checked={showDetails} onchange={toggleDetails}></base-toggle>
                 <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
                 <lightning-button-icon icon-name="utility:undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left--small"></lightning-button-icon>
@@ -58,6 +62,7 @@
             </section>
 
             <gw-path-logger hide-details={cache.hideDetails}
+                            onsettingclick={handleSettingClick}
                             onjumpto={jumpTo}
                             onmove={move}
                             onremove={remove}

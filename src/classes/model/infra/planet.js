@@ -86,6 +86,10 @@ export default class Planet {
         this.factoryFor(construction).enqueue(construction);
     }
     
+    complete(factory) {
+        this.get(factory).completeCurrent();
+    }
+
     completeAndEnqueue(construction) {
         construction = this.reference(construction);
         this.factoryFor(construction).completeAndEnqueue(construction);
