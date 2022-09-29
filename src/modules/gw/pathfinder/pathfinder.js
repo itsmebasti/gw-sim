@@ -217,6 +217,11 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     // Step re-ordering
 
+    drag(evt) {
+        const tec = evt.currentTarget.innerText;
+        evt.dataTransfer.setData('tec', tec);
+    }
+
     jumpTo(evt) {
         const steps = this.steps;
         steps.splice(evt.detail.id + 1);
@@ -229,15 +234,16 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.print(steps);
     }
 
-    move({ detail: {from, to} }) {
+    move({ detail: { from, to, tec } }) {
         if(to < -1) return;
         const steps = this.steps;
 
-        const element = steps.splice(from, 1)[0];
+        const element = (tec) ? {type: 'start', tec, produce: this.cache.produce } : steps.splice(from, 1)[0];
         const deletedOffset = (from <= to) ? 0 : 1;
 
         steps.splice(to + deletedOffset, 0, element);
-        this.print(steps)
+
+        this.print(steps);
     }
 
     duplicate({ detail: {id} }) {
@@ -457,7 +463,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     get generated() {
-        return this.requested.map((res) => res.toLocaleString('de-DE')).join('|');
+        return this.requested.map((res) => res.toLocaleString('de-DE')).join(' | ');
     }
 
     get planets() {

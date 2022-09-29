@@ -26,7 +26,7 @@
                     <section class=" slds-p-bottom--x-small">
                         Planet:<base-select class="slds-show_inline-block slds-m-left--small"
                                         value={coords} options={planets} onchange={setPlanet}></base-select>
-                        <b class="slds-m-left--medium">Rohstoffe: {queueCleanupRes.fe} / {queueCleanupRes.lut} / {queueCleanupRes.h2o} / {queueCleanupRes.h2}</b>
+                        <b class="slds-m-left--medium">Rohstoffe: {queueCleanupRes.fe} | {queueCleanupRes.lut} | {queueCleanupRes.h2o} | {queueCleanupRes.h2}</b>
                     </section>
                     <section class=" slds-p-bottom--x-small">
                         <lightning-pill for:each={queueItems} for:item="type" key={type}

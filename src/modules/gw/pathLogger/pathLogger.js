@@ -138,9 +138,9 @@ export default class PathLogger extends LightningElement {
         const changes = resourceChanges.toArray();
         const before = now.map((stored, i) => stored - +changes[i]);
 
-        const changesString = changes.map((value) => (value > 0) ? '+'+value : value).join('/');
+        const changesString = changes.map((value) => (value > 0) ? '+'+value : value).join('|');
 
-        this.log('RESS ', before.join('/') + ' => ' + changesString, 'res');
+        this.log('RESS ', before.join('|') + ' => ' + changesString, 'res');
     }
 
     handleFailed = ({error}) => {
@@ -177,7 +177,7 @@ export default class PathLogger extends LightningElement {
     drag(evt) {
         const li = evt.currentTarget;
         evt.dataTransfer.setData('command', li.dataset.command);
-        const dragImage = this.template.querySelector('ul').appendChild(li.cloneNode(true));
+        const dragImage = this.template.querySelector('ul.temp').appendChild(li.cloneNode(true));
         dragImage.classList.add('drag-image');
         evt.dataTransfer.setDragImage(dragImage, evt.offsetX, evt.offsetY);
 
@@ -192,9 +192,10 @@ export default class PathLogger extends LightningElement {
     drop(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        const from = parseInt(evt.dataTransfer.getData('command'));
+        const from = parseInt(evt.dataTransfer.getData('command') ?? this.lastCommand);
         const to = parseInt(evt.currentTarget.dataset.command ?? -1);
-        this.dispatchEvent(new CustomEvent('move', { detail:{ from, to } }));
+        const tec = evt.dataTransfer.getData('tec');
+        this.dispatchEvent(new CustomEvent('move', { detail:{ from, to, tec } }));
     }
 
     allowDrop(evt) {

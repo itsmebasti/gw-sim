@@ -15,14 +15,18 @@
             <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                             label={construction.label} name={construction.label}>
-                    <a href="javascript:void(0)" class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small" for:each={construction.options} for:item="option" key={option} onclick={build}>{option}</a>
+                    <a for:each={construction.options} for:item="option" key={option} onclick={build}
+                        href="javascript:void(0)"
+                        class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small"
+                        ondragstart={drag}
+                        draggable>{option}</a>
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
         <div class="slds-col slds-size_2-of-3 slds-p-horizontal--medium">
             <section class="slds-p-bottom--x-small">
                 <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
-                Summe: ({generated})&nbsp;&nbsp;
+                <b class="slds-m-horizontal--medium">Summe: ( {generated} )</b>
                 <lightning-button-group>
                     <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
                     <lightning-button variant="brand" onclick={rerender} label="Auf alles anwenden"></lightning-button>
