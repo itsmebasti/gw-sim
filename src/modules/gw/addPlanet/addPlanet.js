@@ -55,7 +55,7 @@ export default class AddPlanet extends LightningElement {
                 this.toast('Planet ' + planet.coords + ' erfolgreich hinzugefügt');
                 this.planet = planet;
                 
-                this.dispatchEvent(new CustomEvent('accountchange', { detail: this.player }));
+                this.dispatchEvent(new CustomEvent('accountchange', { detail: this.player, bubbles: true, composed: true }));
                 this.loadStoredPlanets();
             })
             .catch(this.handle);
