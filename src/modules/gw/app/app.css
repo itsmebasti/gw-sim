@@ -165,7 +165,7 @@
     --slds-c-input-color-background-focus: var(--gw-light-grey);
     --slds-c-input-color-border: var(--borders);
     --slds-c-input-color-border-focus: var(--borders);
-    --slds-c-input-text-color: var(--gw-text);
+    --slds-c-input-text-color: var(--text);
     --slds-c-input-text-color-focus: var(--text);
 
     --slds-c-checkbox-toggle-color-background: var(--gw-navigation);

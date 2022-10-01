@@ -39,7 +39,7 @@ export default class PathLogger extends LightningElement {
 
     @api
     reset(account) {
-        this.start = account.serverTime;
+        this.start = account.serverTime + (account.passed*1000);
         this.account = account;
         this.logs = [];
         this.idCounter = 0;

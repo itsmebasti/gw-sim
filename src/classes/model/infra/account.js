@@ -25,18 +25,26 @@ export default class Account extends EventBus {
         this.planets = this.planetObjects(data.planets, this.uni.SPEED);
         
         this.current = this.planets[0].coords;
+        
+        this.subscribe(E.NEW_PLANET, this.addNewPlanet);
     }
     
-    researchObject(plain, speed) {
+    addNewPlanet = ({coords}) => {
+        if(!this.planets.map(({coords}) => coords).includes(coords)) {
+            this.planets.push(new Planet({coords, infra: this.uni.START_INFRA, resources: this.uni.START_RES, current: []}, this, this.uni.SPEED));
+        }
+    }
+    
+    researchObject(plain) {
         return technologies.researchDescribes.reduce((result, describe) => {
-            result[describe.type] = new Research(describe, plain[describe.type], speed);
+            result[describe.type] = new Research(describe, plain[describe.type], this.uni.SPEED);
             
             return result;
         }, {});
     }
     
     planetObjects(plain, speed) {
-        return plain.map((planet) => new Planet(planet, this, speed))
+        return plain.map((planet) => new Planet(planet, this, this.uni.SPEED))
     }
     
     get state() {

@@ -61,10 +61,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     @api reload(player = this.cache.selectedAccount ?? 'Default') {
-        this.loadStoredPaths();
-        this.loadStoredAccounts();
-
-        this.database.get('AccountData', player)
+        this.loadStoredAccounts()
+            .then(() => this.loadStoredPaths())
+            .then(() => this.loadStoredPlanets(player))
+            .then(() => this.database.get('AccountData', player))
             .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
             .catch(() => this.load(accountState(UNI.default.NAME)))
     }
@@ -99,6 +99,20 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
             this.account.register(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, fleet.delivery.planet.coords), {time});
         })
+        
+        const newPlanet = this.newPlanets?.planets.find(({coords}) => coords === this.cache.coords);
+        if(newPlanet) {            
+            let time = (newPlanet.startTime - this.accountState.serverTime)/1000;
+            
+            if(time < 0) {
+                this.error('Kolonisation muss in der Zukunft liegen!');
+                time = 0;
+            }
+            
+            this.account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time});
+            this.account.continue(time);
+            this.account.passed = 0;
+        }
 
         this.requested = [0, 0, 0, 0];
         this.steps = [];
@@ -303,6 +317,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                    .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
                    .catch(this.handle);
     }
+    
+    loadStoredPlanets(player) {
+        this.database.get('NewPlanets', player)
+            .then((data) => this.newPlanets = data )
+            .catch(this.handle);
+    }
 
 
     // Infra event handler
@@ -505,7 +525,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     get planets() {
-        return this.accountState?.planets.map(({coords}) => coords) ?? [];
+        const result = [];
+        
+        result.push(...this.accountState?.planets ?? []);
+        result.push(...this.newPlanets?.planets ?? []);
+        
+        return result.map(({coords}) => coords);
     }
 
     get logger() {

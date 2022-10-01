@@ -54,6 +54,7 @@ export const E = {
     STARTED: Symbol(),
     FINISHED: Symbol(),
     FAILED: Symbol(),
+    NEW_PLANET: Symbol(),
     
     EVENT_CHANGE: Symbol(),
     WAITING: Symbol()

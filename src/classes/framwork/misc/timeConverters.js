@@ -18,3 +18,7 @@ export function toHHMMSS(secs) {
         .map(v => v < 10 ? "0" + v : v)
         .join(":")
 }
+
+export function dateString(datetime) {
+    return (datetime) ? new Date(datetime.getTime() - (datetime.getTimezoneOffset() * 60000)).toISOString().slice(0, 10) : '';
+}

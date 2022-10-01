@@ -1,7 +1,7 @@
 export default class Database {
     static NO_DB_SUPPORT = 'Dein Browser unterstützt keine Zwischenspeicherung!'
     static NAME = 'SIM';
-    version = 5;
+    version = 6;
 
     constructor() {
         const openRequest = window.indexedDB.open(Database.NAME, this.version);
@@ -11,8 +11,8 @@ export default class Database {
             if(oldVersion < 1) {
                 db.createObjectStore('Raw', { keyPath: 'name' });
                 db.createObjectStore('Queue', { keyPath: 'coords' });
+                
                 const fleets = db.createObjectStore('Fleets', { keyPath: 'id' });
-
                 fleets.createIndex('deliveryCoords', 'delivery.planet.coords');
                 fleets.createIndex('deployCoords', 'deploy.planet.coords');
                 fleets.createIndex('deliveryTime', 'delivery.time');
@@ -33,6 +33,9 @@ export default class Database {
             }
             if(oldVersion < 5) {
                 db.deleteObjectStore('Raw');
+            }
+            if(oldVersion < 6) {
+                db.createObjectStore('NewPlanets', { keyPath: 'player' });
             }
 
             db.close();
