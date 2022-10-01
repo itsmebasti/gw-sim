@@ -9,7 +9,8 @@
                 <span class="slds-m-left--x-small">Start / Upload: {latestUpload}</span>
             </section>
 
-            <lightning-accordion active-section-name="Upload">
+            <lightning-accordion allow-multiple-sections-open active-section-name="Upload">
+                
                 <lightning-accordion-section label="Start Anpassen" name="Start" if:true={defaultSelected}>
                     <section class=" slds-p-bottom--x-small">
                         Uni:<base-select class="slds-show_inline-block slds-m-left--small"
@@ -22,6 +23,7 @@
                     </section>
                     <lightning-button variant="brand" onclick={resetTime} label="Zeit auf Uni Start setzen"></lightning-button>
                 </lightning-accordion-section>
+                
                 <lightning-accordion-section label="Bauschleifen Anpassen" name="Bauschleifen">
                     <section class=" slds-p-bottom--x-small">
                         Planet:<base-select class="slds-show_inline-block slds-m-left--small"
@@ -39,11 +41,13 @@
                         </lightning-button-group>
                     </section>
                 </lightning-accordion-section>
-                <lightning-accordion-section label="Upload" name="Upload">
-                    <gw-account-upload class="slds-p-bottom--x-small"></gw-account-upload>
-                </lightning-accordion-section>
+                
                 <lightning-accordion-section label="Kolonialisieren" name="AddPlanet">
                     <gw-add-planet player={cache.selectedAccount}></gw-add-planet>
+                </lightning-accordion-section>
+                
+                <lightning-accordion-section label="Upload" name="Upload">
+                    <gw-account-upload class="slds-p-bottom--x-small"></gw-account-upload>
                 </lightning-accordion-section>
             </lightning-accordion>
 
