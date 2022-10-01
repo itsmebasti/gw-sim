@@ -77,6 +77,7 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
     clear(evt) {
         this.database.clear('Fleets').catch(this.handle);
         this.database.clear('AccountData').catch(this.handle);
+        this.database.clear('NewPlanets').catch(this.handle);
 
         this.toast('Daten erfolgreich Gelöscht!');
 
