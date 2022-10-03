@@ -35,6 +35,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         coords: '1:1:1',
         produce: true,
         hideDetails: false,
+        reverse: false
     });
 
     connectedCallback() {
@@ -472,8 +473,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.cache.produce = !this.cache.produce;
     }
 
-    toggleDetails() {
+    toggleDetails(evt) {
         this.cache.hideDetails = !this.cache.hideDetails;
+    }
+    
+    toggleDirection(evt) {
+        this.cache.reverse = !this.cache.reverse;
     }
 
     updateJsonOutput() {

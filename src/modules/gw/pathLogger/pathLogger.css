@@ -1,5 +1,5 @@
 
-ul {
+ol {
   list-style-type: none;
   font-family: 'Roboto Mono', monospace;
   font-size: 12px;
@@ -13,6 +13,27 @@ ul {
   padding: 0 1px;
 
   position: relative;
+}
+
+ol.reverse { 
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+}
+
+ol.temp {
+    position: fixed;
+    top: -10000px;
+    z-index: -9999;
+    opacity: 0;
+    width: 100%;
+}
+
+li {
+  color: white;
+  border-bottom: solid 1px #80808038;
+  position: relative;
+  margin-right: 10px;
 }
 
 div.slds-drop-zone lightning-button-icon {
@@ -35,21 +56,6 @@ div.slds-drop-zone lightning-button-icon.green {
     --slds-c-icon-color-foreground: green;
     --slds-c-icon-color-foreground-active: green;
     --slds-c-icon-color-foreground-hover: green;
-}
-
-ul.temp {
-    position: fixed;
-    top: -10000px;
-    z-index: -9999;
-    opacity: 0;
-    width: 100%;
-}
-
-li {
-  color: white;
-  border-bottom: solid 1px #80808038;
-  position: relative;
-  margin-right: 10px;
 }
 
 .slds-drop-zone {

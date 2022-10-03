@@ -7,6 +7,7 @@ const DIRECTION = { UP: Symbol(), DOWN: Symbol() };
 export default class PathLogger extends LightningElement {
     @api hideDetails = false;
     @track logs = [];
+    @api reverse;
     account
     serverTime;
     start;
@@ -97,13 +98,13 @@ export default class PathLogger extends LightningElement {
     move(evt, direction) {
         const liElement = this.template.activeElement?.parentElement;
         const command = +liElement?.dataset.command;
-        const up = direction === DIRECTION.UP;
+        const earlier = (direction === (this.reverse ? DIRECTION.UP : DIRECTION.DOWN));
 
         if(!isNaN(command)) {
             evt.preventDefault();
             evt.stopPropagation();
-            this.dispatchEvent(new CustomEvent('move', { detail:{ id: command, dropAt: command + ((up) ? 1 : -2) } }));
-            this.lastKeyMove = (up) ? command+1 : command-1;
+            this.dispatchEvent(new CustomEvent('move', { detail:{ id: command, dropAt: command + ((earlier) ? -2 : 1) } }));
+            this.lastKeyMove = (earlier) ? command-1 : command+1;
         }
     }
 
@@ -223,7 +224,7 @@ export default class PathLogger extends LightningElement {
     drag(evt) {
         const li = evt.currentTarget;
         evt.dataTransfer.setData('command', li.dataset.command);
-        const dragImage = this.template.querySelector('ul.temp').appendChild(li.cloneNode(true));
+        const dragImage = this.template.querySelector('ol.temp').appendChild(li.cloneNode(true));
         dragImage.classList.add('drag-image');
         evt.dataTransfer.setDragImage(dragImage, evt.offsetX, evt.offsetY);
 
@@ -246,5 +247,9 @@ export default class PathLogger extends LightningElement {
 
     allowDrop(evt) {
         evt.preventDefault();
+    }
+    
+    get direction() {
+        return (this.reverse) ? 'reverse' : '';
     }
 }
