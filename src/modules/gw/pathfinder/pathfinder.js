@@ -111,6 +111,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             
             this.account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time});
             this.account.continue(time);
+            this.account.serverTime += this.account.passed * 1000;
             this.account.passed = 0;
         }
 

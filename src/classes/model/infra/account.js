@@ -51,7 +51,7 @@ export default class Account extends EventBus {
         return {
             uni: this.uni.NAME,
             player: this.player,
-            serverTime: this.serverTime + this.passed,
+            serverTime: this.serverTime + this.passed * 1000,
             planets: this.planets.map(({ state }) => state),
             research: Object.values(this.research).reduce((result, {type, level}) => (result[type] = level, result), {})
         };
