@@ -6,36 +6,35 @@
             Damit ist es nun auch möglich Rohstoff Transporte und Zeit Anpassungen direkt an der richtigen Stelle im Pfad zu platzieren.
         </gw-timeline-item> -->
         <gw-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022" open>
-            xetys hat uns ein Tutorial gedreht das ich euch hier bereit Stellen darf. Ihr findet es unter <a>Info</a>.
+            Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
             Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
-            Es lohnt sich also die Info mal durchzulesen und den ein oder anderen Tipp aufzuschnappen.
+            Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Changelog hinzugefügt" date="04.10.2022" open>
             Ich habe mich entschieden diesen <a>Changelog</a> einzuführen, damit ihr besser nachvollziehen könnt, 
-            was neu ist und wie ihr die neuen features nutzen könnt.
-            Um vorab auf dem aktuellen Stand zu sein, solltet ihr evtl. mal die Info durchlesen.
+            was neu ist und wie ihr die neuen Features nutzen könnt.
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Umgekehrtes Log implementiert" date="03.10.2022" open>
             Ab jetzt ist es möglich das Log im Pathfinder einfach umzukehren, 
             unter <a>Einstellungen</a> könnt ihr euch nun entscheiden was euch besser gefällt.
             <br>
             <br>
-            <base-toggle label="Beispiel: Pfad Umkehren" onchange={toggleDirection} checked={reverse}></base-toggle>
+            <base-toggle label="Demo: Pfad Umkehren" onchange={toggleDirection} checked={reverse}></base-toggle>
             <gw-path-logger class="revert slds-show slds-size--x-large" reverse={reverse}></gw-path-logger>
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Planeten Hinzufügen" date="01.10.2022">
             Ab heute könnt ihr unter <a>Account Konfigurieren -> Kolonialisieren</a>  Planeten hinzufügen.
             Planeten die bereits existieren, werden selbstverständlich nicht hinzugefügt und einfach ignoriert.
-            Hinweis: Stand heute wird nur Forschung erkannt, die Tatsächlich im Account zu findet ist oder im Bau ist.
+            Hinweis: Stand heute wird nur Forschung erkannt, die tatsächlich im Account zu findet ist oder im Bau ist.
             Forschung die auf einem anderen Planten lediglich im Pfad steht wird vorerst nicht berücksichtigt, das kommt irgendwann mit einem größeren Update.
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Neue Pfad Interaktion" date="05.10.2022">
             Mit den Tasten [▲], [▼] bzw. [w], [s] könnt ihr ausgewählte Aufträge im Pfad (blau umrandet)
             hoch und runter schieben. Damit spart ihr euch einige Klicks.
             <br>
-            Außerdem habt ihr nun die Möglichkeit im Auftrag anzupassen, ob die Rohstoffe Produziert werden sollen, 
+            Außerdem habt ihr nun die Möglichkeit im Auftrag anzupassen, ob die Rohstoffe produziert werden sollen, 
             sodass automatisch Zeit vergeht, oder ob ihr davon ausgeht, dass sie anders beschafft werden, 
-            in diesem Fall werden sie zum Planeten hinzugefügt und oben im Counter angerechnet. 
+            in diesem Fall werden sie zum Planeten hinzugefügt und oben im Counter angerechnet damit ihr wisst wie viel ihr am ende in Summe braucht.
             Im Pfad könnt ihr das mit diesen Buttons steuern 
             <lightning-button-icon variant="container" size="small" style="--slds-c-icon-color-foreground:yellow" icon-name="utility:clock" tooltip="Rostoffe werden selbst produziert"></lightning-button-icon>
             <lightning-button-icon variant="container" size="small" style="--slds-c-icon-color-foreground:green" icon-name="utility:add" tooltip="Rostoffe werden anderweitig beschafft"></lightning-button-icon>
@@ -53,7 +52,7 @@
             und müsst sie nichtmehr mit 20 Klicks an die gewünschte Stelle im Pfad bringen.
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Flotten werden im Pfad berücksichtigt" date="28.09.2022">
-            Ab jetzt werden eigene und Fremde Flotten im Pfad berücksichtigt, sodass Ressourcen die gerade in der Luft sind auch mit in die Planung einfließen.
+            Ab jetzt werden eigene sowie fremde Flotten automatisch im Pfad berücksichtigt, sodass Ressourcen die gerade in der Luft sind auch mit in die Planung einfließen.
         </gw-timeline-item>
         <gw-timeline-item icon="standard:topic" label="Laufende Bauschleifen Abbrechen" date="27.09.2022">
             Schiffe, Gebäude und Forschung, die aktuell im Account aktiv abgearbeitet werden,
