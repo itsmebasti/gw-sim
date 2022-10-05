@@ -6,3 +6,13 @@ gw-path-logger {
     
     pointer-events: none;
 }
+
+:host {
+    --slds-lwc-base-timeline-item-trigger-color: var(--gw-messages-high-severity);
+    --slds-lwc-base-timeline-item-trigger-color-hover: var(--gw-galaxy-ali);
+    --slds-lwc-base-timeline-item-trigger-color-background: transparent;
+    --slds-lwc-base-timeline-item-trigger-color-background-hover: var(--gw-res-even);
+    --slds-lwc-base-timeline-item-icon-color-border: var(--borders);
+    --slds-lwc-base-timeline-item-vertical-line-color: var(--gw-galaxy-ali);
+    --slds-lwc-base-timeline-item-details-color-background: var(--gw-table-grey-dark);
+}

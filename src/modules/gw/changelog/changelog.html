@@ -1,34 +1,34 @@
 <template>
-    <gw-timeline>
-        <!-- <gw-timeline-item icon="standard:topic" label="Aktives Element im Log" date="05.10.2022" open>
+    <base-timeline>
+        <!-- <base-timeline-item icon="standard:topic" label="Aktives Element im Log" date="05.10.2022" open>
             Diese Änderung betrifft den Log rechts im <a target="_self" href="javascript:void(0)">Pathfinder</a>,
             Der aktiv ausgewählte Auftrag im Log ist blau umrandet. Neue Items werden ab jetzt automatisch nach diesem aktiven Element eingefügt und das neue Element wird zum aktiven Element.
             Damit ist es nun auch möglich Rohstoff Transporte und Zeit Anpassungen direkt an der richtigen Stelle im Pfad zu platzieren.
-        </gw-timeline-item> -->
-        <gw-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022" open>
+        </base-timeline-item> -->
+        <base-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022" open>
             Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
             Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
             Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Changelog hinzugefügt" date="04.10.2022" open>
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Changelog hinzugefügt" date="04.10.2022" open>
             Ich habe mich entschieden diesen <a>Changelog</a> einzuführen, damit ihr besser nachvollziehen könnt, 
             was neu ist und wie ihr die neuen Features nutzen könnt.
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Umgekehrtes Log implementiert" date="03.10.2022" open>
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Umgekehrtes Log implementiert" date="03.10.2022" open>
             Ab jetzt ist es möglich das Log im Pathfinder einfach umzukehren, 
             unter <a>Einstellungen</a> könnt ihr euch nun entscheiden was euch besser gefällt.
             <br>
             <br>
             <base-toggle label="Demo: Pfad Umkehren" onchange={toggleDirection} checked={reverse}></base-toggle>
-            <gw-path-logger class="revert slds-show slds-size--x-large" reverse={reverse}></gw-path-logger>
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Planeten Hinzufügen" date="01.10.2022">
+            <gw-path-logger class="revert slds-show slds-size_x-large" reverse={reverse}></gw-path-logger>
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Planeten Hinzufügen" date="01.10.2022">
             Ab heute könnt ihr unter <a>Account Konfigurieren -> Kolonialisieren</a>  Planeten hinzufügen.
             Planeten die bereits existieren, werden selbstverständlich nicht hinzugefügt und einfach ignoriert.
             Hinweis: Stand heute wird nur Forschung erkannt, die tatsächlich im Account zu findet ist oder im Bau ist.
             Forschung die auf einem anderen Planten lediglich im Pfad steht wird vorerst nicht berücksichtigt, das kommt irgendwann mit einem größeren Update.
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Neue Pfad Interaktion" date="05.10.2022">
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Neue Pfad Interaktion" date="05.10.2022">
             Mit den Tasten [▲], [▼] bzw. [w], [s] könnt ihr ausgewählte Aufträge im Pfad (blau umrandet)
             hoch und runter schieben. Damit spart ihr euch einige Klicks.
             <br>
@@ -45,20 +45,20 @@
             <b>Ressourcen selbst Produzieren [=o] Summe: ( 101 | 1337 | 0 | 255 )</b>
             <br>
             Dort könnt ihr dieses Feature auch auf den ganzen Pfad anwenden.
-            <gw-path-logger class="interaction slds-show slds-size--x-large" reverse={reverse}></gw-path-logger>
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Drag Drop vervollständigt" date="29.09.2022">
+            <gw-path-logger class="interaction slds-show slds-size_x-large" reverse={reverse}></gw-path-logger>
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Drag Drop vervollständigt" date="29.09.2022">
             Ihr könnt ab jetzt auch dir Items von links nach rechts direkt in den Pfad drag-droppen wo ihr so braucht 
             und müsst sie nichtmehr mit 20 Klicks an die gewünschte Stelle im Pfad bringen.
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Flotten werden im Pfad berücksichtigt" date="28.09.2022">
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Flotten werden im Pfad berücksichtigt" date="28.09.2022">
             Ab jetzt werden eigene sowie fremde Flotten automatisch im Pfad berücksichtigt, sodass Ressourcen die gerade in der Luft sind auch mit in die Planung einfließen.
-        </gw-timeline-item>
-        <gw-timeline-item icon="standard:topic" label="Laufende Bauschleifen Abbrechen" date="27.09.2022">
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Laufende Bauschleifen Abbrechen" date="27.09.2022">
             Schiffe, Gebäude und Forschung, die aktuell im Account aktiv abgearbeitet werden,
             können nach dem Upload unter <a>Account Konfigurieren -> Bauschleifen Anpassen</a> direkt gelöscht werden, falls sie nur zu Save-zwecken in Auftrag gegeben wurden.
             Die Rohstoffe werden in diesem Fall selbstverständlich angerechnet.
             Außerdem habt ihr die Möglichkeit links im sog. JSON direkt die Werte des Accounts anzupassen und zu speichern.
-        </gw-timeline-item>
-    </gw-timeline>
+        </base-timeline-item>
+    </base-timeline>
 </template>

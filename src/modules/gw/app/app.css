@@ -3,6 +3,9 @@
 }
 
 :host[dark-mode] {
+    color: var(--text);
+    background-color: black;
+    
     --borders: black;
     --text: white;
     --text-dark: #ccc;
@@ -15,10 +18,10 @@
     --gw-navigation: #226d9d;
     
     --gw-table-blue-header: #162C36;
-    --gw-table-grey: #808080;
     --gw-table-grey-hover: #888888;
-    --gw-table-grey-dark: #333333;
+    --gw-table-grey: #808080;
     --gw-table-grey-passive: #666666;
+    --gw-table-grey-dark: #333333;
     --gw-table-green-unread: #019875;
     --gw-table-red-destructive: #CF000F;
     
@@ -47,15 +50,14 @@
     --gw-start-enabled: #00ff00;
     --gw-start-disabled: #D91E18;
 
-    /* these are custom defined inside the lwc-base project */
-    --slds-c-vertical-tabs-nav-color-background: var(--gw-navigation);
-    --slds-c-vertical-tabs-nav-color-border: var(--gw-navigation);
-    --slds-c-vertical-tabs-text-color: var(--text);
-    --slds-c-vertical-tabs-nav-item-color-background: var(--gw-navigation-header);
-    --slds-c-vertical-tabs-nav-item-color-background-active: black;
-    --slds-c-vertical-tabs-nav-item-color-background-hover: var(--gw-navigation);
-    --slds-c-vertical-tabs-nav-item-color-border: var(--gw-navigation);
-    --slds-c-vertical-tabs-content-color-background: black;
+    --slds-lwc-base-vertical-tabs-nav-color-background: var(--gw-navigation);
+    --slds-lwc-base-vertical-tabs-nav-color-border: var(--gw-navigation);
+    --slds-lwc-base-vertical-tabs-text-color: var(--text);
+    --slds-lwc-base-vertical-tabs-nav-item-color-background: var(--gw-navigation-header);
+    --slds-lwc-base-vertical-tabs-nav-item-color-background-active: black;
+    --slds-lwc-base-vertical-tabs-nav-item-color-background-hover: var(--gw-navigation);
+    --slds-lwc-base-vertical-tabs-nav-item-color-border: var(--gw-navigation);
+    --slds-lwc-base-vertical-tabs-content-color-background: black;
 
     --slds-c-accordion-color-border: var(--borders);
     --slds-c-accordion-heading-text-color: var(--text);
@@ -187,7 +189,4 @@
     --slds-c-checkbox-toggle-mark-color-foreground: var(--text);
     --slds-c-checkbox-toggle-switch-color-background: var(--text);
     --slds-c-checkbox-toggle-switch-color-background-checked: var(--text);
-
-    color: var(--text);
-    background-color: black;
 }
