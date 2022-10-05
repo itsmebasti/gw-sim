@@ -14,6 +14,7 @@ import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
 
+    @api pathDirectionReverse = false;
     @track savedAccounts;
     @track savedPaths;
     @track accountState;
@@ -35,7 +36,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         coords: '1:1:1',
         produce: true,
         hideDetails: false,
-        reverse: false
     });
 
     connectedCallback() {
@@ -475,10 +475,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     toggleDetails(evt) {
         this.cache.hideDetails = !this.cache.hideDetails;
-    }
-    
-    toggleDirection(evt) {
-        this.cache.reverse = !this.cache.reverse;
     }
 
     updateJsonOutput() {

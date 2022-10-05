@@ -1,29 +1,57 @@
 <template>
-    <div class="slds-text-longform">
+    <div class="slds-text-longform slds-size--x-large">
         <h2>Pathfinder</h2>
-        Willkommen im Pathfinder, ich werde euch hier ein paar Worte hinterlassen um euch das Tool etwas näher zu bringen.<br>
-        Wenn ihr fragen habt, meldet euch gern auch bei mir im Discord (Gaxkiller).<br>
-
-
-        <h2>Basics</h2>
-
-        Das Tool soll euch helfen eure Aufbaupläne in allen Phasen des Spiels zu optimieren, es hilft euch den Account effizienter auszubauen.<br>
-        <br>
-        Ihr könnt unten rechts unter "Account Konfigurieren" eintragen, wann ihr in das Uni starten wollt und dann die Gebäude klicken, die ihr vor habt zu bauen.<br>
-        Im recht "Log" solltet ihr dann sehen, zu welchem Zeitpunkt die Gebäude gebaut werden können und wann wieviele Rohstoffe zur verfügung stehen.<br>
-        Der Vorteil dieses Tools ist, dass ihr die Bauaufträge jetzt bequem per drag and drop oder mit den kleinen blauen buttons hoch und runter schieben könnt,<br>
-        um zu sehen, was das an der rechts neben den aktuellen Rohstoffen angezeigten Zeit verändert.<br>
-        So findet ihr zum Beispiel heraus, wann es am sinnvollsten ist, eine neue Stufe Kommandozentrale zu bauen.
-
-
-        <h2>Account Upload</h2>
-
-        Ihr öffnet alle vier Seiten über die links und drückt dort [strg] [a] + [strg] [c], fügt es in die felder ein und drückt hochladen.<br>
-        Seite kurz neuladen (das kommt noch weg) und ihr könnt den Account im Pathfinder oben mittig auswählen.<br>
-        <br>
-        Gebäude, Forschung und Schiffe die gerade im Bau sind (also nicht nur in der Bauschleife) werden vom Tool erkannt und für euch weitergebaut.<br>
-        Ressourcen aus Verteidigungs- und Schiffsbauschleifen werden also mit Ausnahme des ersten Schiffauftrags zu den resourcen hinzugefügt,<br>
-        so wird beispielsweise euer Kolo erkannt und weitergebaut. Solltet ihr das nicht brauchen, müsst ihr die Rohstoffe erstmal noch manuell wieder hinzufügen,<br>
-        oder vor dem Upload kurz die Rohstoffe freilegen.
+        <p>
+            Willkommen im Pathfinder, ich werde euch hier ein paar Worte hinterlassen um euch das Tool etwas näher zu bringen.
+            Wenn ihr fragen habt, meldet euch gern auch bei mir im Discord (Gaxkiller).
+            <br><br>
+            Der gute xetys hat uns für die Grundfunktionalität ein 7 minütiges Tutorial zur Verfügung gestellt:
+            
+            <iframe class="slds-show slds-p-around_large" width="623" height="350" frameborder="0"
+            src="https://www.youtube-nocookie.com/embed/mcp8xj5c79A" title="Pathfinder Tutorial"></iframe>
+ 
+            Das Tool soll euch helfen eure Aufbaupläne in allen Phasen des Spiels zu optimieren, es hilft euch den Account effizienter 
+            auszubauen. <b class="highlight">Es werden keine Daten von euch hochgeladen oder anderweitig verarbeitet, 
+            das Tool läuft zu 100% lokal und der Code ist open source jederzeit einsehbar.</b>
+            <br><br>
+            Wenn ihr noch nichts im Pathfinder gemacht habt, befindet ihr euch in einem leeren Account den ich Default genannt habe.
+            Unter <b>Account Konfigurieren</b> könnt ihr eintragen, 
+            wann ihr in das Uni starten wollt und dann unter Pathfinder die Gebäude klicken, 
+            die ihr vor habt zu bauen. Im recht "Log" solltet ihr dann sehen, 
+            zu welchem Zeitpunkt die Gebäude gebaut werden können und wann wie viele Rohstoffe zur Verfügung stehen.
+            Der Vorteil dieses Tools ist, dass ihr die Bauaufträge jetzt bequem per drag and drop, 
+            mit den Pfeiltasten oder am Handy mit den kleinen blauen buttons hoch und runter schieben könnt,
+            um unmittelbar zu sehen, was das an der rechts neben den aktuellen Rohstoffen angezeigten Zeit verändert.
+            So findet ihr zum Beispiel heraus, wann es am sinnvollsten ist, eine neue Stufe Kommandozentrale zu bauen, 
+            oder wann ihr euch den Wecker stellen müsst um das nächste Gebäude rein zu klicken.
+        </p>
+        <h2>Account Konfigurieren</h2>
+        <p>
+            Um das Tool besser auf eure aktuelle Situation anzupassen könnt ihr auch euren Account Hochladen.
+            Ihr öffnet alle vier Seiten über die Links und drückt dort [strg] [a] + [strg] [c], 
+            fügt es in die Felder ein und drückt hochladen.
+            <br><br>
+            Gebäude, Forschung und Schiffe die gerade im Bau sind (also nicht nur in der Bauschleife) werden vom Tool erkannt und für euch weitergebaut.
+            Ressourcen aus Verteidigungs- und Schiffsbauschleifen werden also mit Ausnahme des ersten Schiffsbauauftrags zu den Ressourcen hinzugefügt,
+            so wird beispielsweise euer Kolo erkannt und weitergebaut. Wenn das nicht gewollt ist, 
+            findet ihr unter <b>Bauschleifen Anpassen</b> alles was aktuell gebaut wird und könnt es dort direkt abbrechen.
+        </p>
+        <h2>Tipps und Tricks</h2>
+        <section>
+            <ul>
+                <li>Wenn Ihr nach einem Schiff nochmal eine SF baut, wird die restliche Bauzeit automatisch angepasst.</li>
+                <li>Wenn es schneller ist vor dem Forschen noch das im Bau befindliche FZ fertig zu bauen wird das Tool das für euch tun</li>
+                <li>Wenn ihr kurz ein Gebäude in Auftrag gebt, bevor ihr hochladet, 
+                    habe ich genug Informationen um die Startseite mit der Gesamtübersicht zu synchronisieren und die Daten sind noch genauer.</li>
+                <li>Tasten Kombinationen:</li>
+                <ul class="slds-list_dotted slds-is-nested">
+                    <li><b>[strg] [S]</b> - Speichern</li>
+                    <li><b>[strg] [Z]</b> - Pfadänderung rückgängig machen</li>
+                    <li><b>[strg] [Y]</b> - Pfadänderung zurückholen</li>
+                    <li><b>[▲]</b> - Bauauftrag im Pfad hochschieben</li>
+                    <li><b>[▼]</b> - Bauauftrag im Pfad hochschieben</li>
+                </ul>
+            </ul>
+        </section>
     </div>
 </template>

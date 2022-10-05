@@ -9,7 +9,7 @@ ol {
   overflow-y: scroll;
   overflow-x: auto;
   resize: vertical;
-  background-color: var(--gw-dark-grey, black);
+  background-color: var(--gw-table-grey-dark, black);
   padding: 0 1px;
 
   position: relative;
@@ -18,7 +18,10 @@ ol {
 ol.reverse { 
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-end;
+}
+
+ol.reverse > li:first-child {
+    margin-bottom: auto;
 }
 
 ol.temp {

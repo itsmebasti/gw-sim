@@ -7,6 +7,26 @@
     --text: white;
     --text-dark: #ccc;
 
+    --gw-header-blue: #2c3e50;
+    --gw-res-odd: #263545;
+    --gw-res-even: #202d3b;
+    
+    --gw-navigation-header: #2b89c6;
+    --gw-navigation: #226d9d;
+    
+    --gw-table-blue-header: #162C36;
+    --gw-table-grey: #808080;
+    --gw-table-grey-hover: #888888;
+    --gw-table-grey-dark: #333333;
+    --gw-table-grey-passive: #666666;
+    --gw-table-green-unread: #019875;
+    --gw-table-red-destructive: #CF000F;
+    
+    --gw-button-grey: #444444;
+    --gw-button-grey-hover: #333333;
+    --gw-link: #FFFFFF;
+    --gw-link-hover: #FFFF00;
+
     --gw-galaxy-ali: #3498DB;
     --gw-galaxy-own: #1F3A93;
     --gw-galaxy-admin: #570004;
@@ -18,21 +38,12 @@
     --gw-res-orange: #e67e22;
     --gw-res-red: #f11818;
 
-    --gw-navigatio-info:#CF000F;
+    --gw-navigation-info:#CF000F;
     --gw-alert: #a94442;
     --gw-error: #BF002C;
-
-    --gw-dark-blue: #162C36;
-    --gw-dark-grey: #333333;
-    --gw-passive-grey: #666666;
-    --gw-light-grey: #808080;
-    --gw-unread-green: #019875;
-    --gw-header-blue: #2c3e50;
-    --gw-navigation-header: #2b89c6;
-    --gw-navigation: #226d9d;
-
-    --gw-res-odd: #263545;
-    --gw-res-even: #202d3b;
+    --gw-messages-warning: #E87E04;
+    --gw-messages-high-severity: #337ab7;
+    
     --gw-start-enabled: #00ff00;
     --gw-start-disabled: #D91E18;
 
@@ -47,9 +58,9 @@
     --slds-c-vertical-tabs-content-color-background: black;
 
     --slds-c-accordion-color-border: var(--borders);
-    --slds-c-accordion-heading-text-color: var(--text-dark);
+    --slds-c-accordion-heading-text-color: var(--text);
     --sds-c-accordion-heading-text-color-hover: var(--text);
-    --slds-c-accordion-summary-color-background: var(--gw-dark-blue);
+    --slds-c-accordion-summary-color-background: var(--gw-table-blue-header);
 
     --slds-c-button-inverse-shadow-focus: var(--gw-navigation);
     --slds-c-button-shadow: var(--gw-navigation);
@@ -58,7 +69,7 @@
     --slds-c-button-brand-color-background-active: var(--gw-navigation);
     --slds-c-button-brand-color-background-hover: var(--gw-navigation);
     --slds-c-button-brand-color-border: var(--gw-galaxy-ali);
-    --slds-c-button-brand-color-border-hover: var(--gw-dark-blue);
+    --slds-c-button-brand-color-border-hover: var(--gw-table-blue-header);
     --slds-c-button-brand-text-color: var(--text);
     --slds-c-button-brand-text-color-active: var(--text-dark);
     --slds-c-button-brand-text-color-hover: var(--text-dark);
@@ -103,7 +114,7 @@
     --slds-c-button-stateful-color-background-selected-hover: var(--gw-navigation-header);
     --slds-c-button-stateful-color-border-selected: var(--borders);
     --slds-c-button-stateful-color-border-selected-hover: var(--borders);
-    --slds-c-button-success-color-background: var(--gw-unread-green);
+    --slds-c-button-success-color-background: var(--gw-table-green-unread);
     /* --slds-c-button-success-color-background-active: var(--gw-navigation-header);
     --slds-c-button-success-color-background-hover: var(--gw-navigation-header);
     --slds-c-button-success-color-border: var(--gw-navigation);
@@ -128,41 +139,41 @@
     --slds-c-icon-color-foreground-active: var(--text);
 
     --slds-c-pill-action-color-border: var(--borders);
-    --slds-c-pill-color-background: var(--gw-light-grey);
-    --sds-c-pill-color-background-hover: var(--gw-passive-grey);
+    --slds-c-pill-color-background: var(--gw-table-grey);
+    --sds-c-pill-color-background-hover: var(--gw-table-grey-passive);
     --slds-c-pill-color-border: var(--borders);
     --slds-c-pill-container-color-background: var(--gw-navigation);
     --slds-c-pill-error-color-border: var(--borders);
     --slds-c-pill-error-color-border-active: var(--borders);
     --slds-c-pill-error-text-color: var(--text);
 
-    --slds-c-tabs-item-color-border-active: var(--gw-dark-grey);
-    --slds-c-tabs-item-color-border-hover: var(--gw-dark-grey);
-    --slds-c-tabs-item-text-color: var(--gw-light-grey);
-    --slds-c-tabs-item-text-color-active: var(--gw-light-grey);
-    --slds-c-tabs-list-color-border: var(--gw-dark-grey);
+    --slds-c-tabs-item-color-border-active: var(--gw-table-grey-dark);
+    --slds-c-tabs-item-color-border-hover: var(--gw-table-grey-dark);
+    --slds-c-tabs-item-text-color: var(--gw-table-grey);
+    --slds-c-tabs-item-text-color-active: var(--gw-table-grey);
+    --slds-c-tabs-list-color-border: var(--gw-table-grey-dark);
 
-    --slds-c-tooltip-color-background: var(--gw-dark-grey);
-    --slds-c-tooltip-text-color: var(--gw-light-grey);
+    --slds-c-tooltip-color-background: var(--gw-table-grey-dark);
+    --slds-c-tooltip-text-color: var(--gw-table-grey);
 
-    --slds-c-textarea-color-background: var(--gw-dark-grey);
-    --slds-c-textarea-color-background-error-focus: var(--gw-dark-grey);
-    --slds-c-textarea-color-background-focus: var(--gw-dark-grey);
+    --slds-c-textarea-color-background: var(--gw-table-grey-dark);
+    --slds-c-textarea-color-background-error-focus: var(--gw-table-grey-dark);
+    --slds-c-textarea-color-background-focus: var(--gw-table-grey-dark);
     --slds-c-textarea-color-border: var(--borders);
     --slds-c-textarea-color-border-focus: var(--borders);
     --slds-c-textarea-text-color: var(--text);
     --slds-c-textarea-text-color-error-focus: var(--text);
     --slds-c-textarea-text-color-focus: var(--text);
 
-    --slds-c-select-color-background: var(--gw-light-grey);
-    --slds-c-select-color-background-focus: var(--gw-light-grey);
+    --slds-c-select-color-background: var(--gw-table-grey);
+    --slds-c-select-color-background-focus: var(--gw-table-grey);
     --slds-c-select-color-border: var(--borders);
     --slds-c-select-color-border-focus: var(--borders);
     --slds-c-select-text-color: var(--text);
     --slds-c-select-text-color-focus: var(--text);
 
-    --slds-c-input-color-background: var(--gw-light-grey);
-    --slds-c-input-color-background-focus: var(--gw-light-grey);
+    --slds-c-input-color-background: var(--gw-table-grey);
+    --slds-c-input-color-background-focus: var(--gw-table-grey);
     --slds-c-input-color-border: var(--borders);
     --slds-c-input-color-border-focus: var(--borders);
     --slds-c-input-text-color: var(--text);

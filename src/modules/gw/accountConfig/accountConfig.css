@@ -10,7 +10,7 @@ base-toast {
 }
 
 lightning-accordion {
-  background: var(--gw-dark-grey, white);
+  background: var(--gw-table-grey-dark, white);
 }
 
 input.date {
@@ -18,5 +18,6 @@ input.date {
 }
 
 input.time {
-  width: 7rem;
+  width: 6rem;
+  padding-right: 0;
 }

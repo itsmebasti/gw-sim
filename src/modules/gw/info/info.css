@@ -5,6 +5,16 @@
 .slds-text-longform h5 {
     font-size: revert;
     font-weight: revert;
-    margin: revert;
-    padding: revert;
+    margin: 0;
+    padding: 0.5rem;
+    background-color: var(--gw-table-blue-header, );
+}
+
+p, section {
+    padding: 0.5rem;
+    background-color: var(--gw-table-grey);
+}
+
+.highlight {
+    color: var(--gw-link-hover, darkblue);
 }

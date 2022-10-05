@@ -3,7 +3,7 @@
 
     <div class="slds-grid">
         <div class="slds-col slds-size_1-of-3">
-            <section class="account-select slds-p-bottom--x-small">
+            <section>
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal--small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
                 <span class="slds-m-horizontal--small">Planet:</span>
@@ -23,30 +23,30 @@
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
-        <div class="slds-col slds-size_2-of-3 slds-p-horizontal--medium">
-            <section class="slds-p-bottom--x-small">
-                <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
-                <b class="slds-m-horizontal--medium">Summe: ( {generated} )</b>
-                <lightning-button-group>
-                    <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
-                    <lightning-button variant="brand" onclick={rerender} label="Auf alles anwenden"></lightning-button>
-                </lightning-button-group>
-            </section>
-            <section class="ressources slds-grid slds-grid--vertical-stretch slds-size_small slds-p-bottom--x-small">
+        <div class="slds-col slds-size_1-of-2 slds-p-left--medium">
+            <section class="ressources slds-grid slds-grid--vertical-stretch">
                 <div if:true={account} for:each={resources} for:item="res" key={res.name}
                         class="slds-col slds-p-horizontal--xxx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>
                     <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
-                    <input type="number" step="1" class="res slds-input" value="0" />
+                    <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" />
                 </div>
                 <div class="slds-col slds-p-horizontal--xxx-small">
                     <span class="slds-align_absolute-center">Zeit</span>
                     <span class="slds-align_absolute-center">{timePassed}</span>
-                    <input type="time" step="1" value="00:00:00" class="wait slds-input" required/>
+                    <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required/>
                 </div>
                 <div class="slds-col slds-p-horizontal--xxx-small allign-bottom">
                     <lightning-button variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
                 </div>
+            </section>
+            <section>
+                <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
+                <b class="slds-m-right--small">Summe: ( {generated} )</b>
+                <lightning-button-group>
+                    <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
+                    <lightning-button variant="brand" onclick={rerender} label="Auf alles anwenden"></lightning-button>
+                </lightning-button-group>
             </section>
 
             <section>
@@ -56,14 +56,13 @@
                 <a onclick={completeShip} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Schiff</a>
                 <a onclick={completeAll} class="slds-show_inline-block slds-m-around--xxx-small slds-p-horizontal--xx-small">Alles</a>
                 <base-toggle label="Details" class="slds-show_inline-block slds-m-left--x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
-                <base-toggle label="Umgekehrt" class="slds-show_inline-block" checked={cache.reverse} onchange={toggleDirection}></base-toggle>
                 <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
                 <lightning-button-icon icon-name="utility:undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left--small"></lightning-button-icon>
                 <lightning-button-icon icon-name="utility:redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left--small"></lightning-button-icon>
             </section>
 
             <gw-path-logger hide-details={cache.hideDetails}
-                            reverse={cache.reverse}
+                            reverse={pathDirectionReverse}
                             onsettingclick={handleSettingClick}
                             onjumpto={jumpTo}
                             onmove={move}
@@ -76,7 +75,7 @@
                         <input value={selectedPath} class="path-name slds-input slds-m-right--small"/>
                         <lightning-button variant="success" onclick={savePath} label="Speichern"></lightning-button>
                     </section>
-                    <section class="slds-p-bottom--x-small">
+                    <section>
                         <base-select class="slds-show_inline-block"
                                     value={selectedPath} options={savedPaths} onchange={selectPath}></base-select>
                         <span class="slds-m-horizontal--x-small">vom Speicher</span>
@@ -86,7 +85,7 @@
                             <lightning-button variant="destructive" onclick={deletePaths} label="Alle Pfade löschen"></lightning-button>
                         </lightning-button-group>
                     </section>
-                    <section class="slds-p-bottom--x-small">
+                    <section>
                         <textarea class="path slds-theme_offline slds-" rows="1" cols="40"></textarea>
                         <lightning-button-group class="slds-m-left--small">
                             <lightning-button variant="brand" onclick={executePasted} label="Ausführen"></lightning-button>

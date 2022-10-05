@@ -1,0 +1,22 @@
+.slds-timeline__trigger, .slds-timeline__date {
+    font-weight: bold;
+    color: var(--gw-messages-high-severity, black);
+    cursor: pointer;
+}
+
+.slds-timeline__trigger:hover {
+    background-color: var(--gw-res-even, lightgrey);
+    color: var(--gw-galaxy-ali, darkblue);
+}
+
+.slds-timeline__icon {
+    border-color: var(--borders, white);
+}
+
+.slds-timeline__item_expandable::before {
+    background-color: var(--gw-galaxy-ali, lightblue);
+}
+
+.slds-timeline__item_details {
+    background-color: var(--gw-table-grey-dark, lightgray);
+}

@@ -1,0 +1,8 @@
+gw-path-logger {
+    border: 2px solid var(--gw-galaxy-ali, black);
+    margin: 5px;
+    height: 210px;
+    overflow: hidden;
+    
+    pointer-events: none;
+}

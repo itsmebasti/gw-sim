@@ -1,6 +1,21 @@
-input.res {
-    text-align: right;
-    width: 90px;
+section {
+    padding-bottom: .5rem;
+}
+
+base-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+lightning-accordion {
+  background: var(--gw-table-grey-dark, white);
+}
+
+gw-path-logger {
+    display: block;
+    border: 5px solid var(--gw-table-blue-header, black);
 }
 
 .ressources > div:nth-child(odd) {
@@ -11,19 +26,29 @@ input.res {
   background: var(--gw-res-even, white);
 }
 
+input.wait {
+    padding-right: 0;
+    width: 6rem;
+}
+
+input.res {
+    width: 6rem;
+    text-align: right;
+    
+    /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+    /* Firefox */
+    -moz-appearance: textfield;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.res::-webkit-outer-spin-button,
+input.res::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input.path-name {
   width: 200px;
-}
-
-.account-select {
-  display: block;
-}
-
-base-toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 a {
@@ -33,31 +58,10 @@ a {
   font-weight: 400;
   border: 1px solid var(--borders, grey);
   border-radius: 3px;
-  background: var(--gw-light-grey, #eee);
-}
-
-a:hover {
-  background: var(--gw-passive-grey, #eee);
-}
-
-lightning-accordion {
-  background: var(--gw-dark-grey, white);
+  background: var(--gw-table-grey, #eee);
 }
 
 .allign-bottom {
   display: flex;
   align-items: flex-end;
-}
-
-/* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
 }

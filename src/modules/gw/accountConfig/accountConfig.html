@@ -18,7 +18,7 @@
                     </section>
                     <section class=" slds-p-bottom--x-small">
                         Start:<input class="date slds-input slds-m-left--small" value={date} type="date" />
-                        <input class="time slds-input slds-m-left--small" value={time} type="time" step="1" />
+                        <input type="time" step="1" value={time} class="time slds-input slds-m-left--small" required/>
                         <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left--small"></lightning-button>
                     </section>
                     <lightning-button variant="brand" onclick={resetTime} label="Zeit auf Uni Start setzen"></lightning-button>
@@ -56,7 +56,7 @@
                 (Pfade sind hiervon nicht betroffen)
             </section>
         </div>
-        <div class="slds-col slds-size_2-of-3 slds-p-horizontal--medium">
+        <div class="slds-col slds-size_1-of-2 slds-p-horizontal--medium">
             <lightning-textarea variant="label-hidden" value={beautifiedJson} class="json"></lightning-textarea>
             <lightning-button label="Speichern" variant="success" onclick={uploadFullAccount}></lightning-button>
         </div>

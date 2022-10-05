@@ -1,0 +1,13 @@
+gw-path-logger {
+    display: block;
+    border: 2px solid var(--gw-galaxy-ali, black);
+    margin: 5px;
+    height: 210px;
+    overflow: hidden;
+    
+    pointer-events: none;
+}
+
+lightning-accordion {
+  background: var(--gw-table-grey-dark, white);
+}
