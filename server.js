@@ -13,6 +13,7 @@ express()
             imgSrc: ["'self'"],
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
+            frameSrc: ["youtube-nocookie.com", "www.youtube-nocookie.com"]
         }
     }))
     .get('*', express.static('dist'))
