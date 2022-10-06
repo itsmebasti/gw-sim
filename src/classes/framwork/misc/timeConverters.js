@@ -22,3 +22,20 @@ export function toHHMMSS(secs) {
 export function dateString(datetime) {
     return (datetime) ? new Date(datetime.getTime() - (datetime.getTimezoneOffset() * 60000)).toISOString().slice(0, 10) : '';
 }
+
+export function timeString(datetime) {
+    return datetime?.toLocaleTimeString('de-DE');
+}
+
+export function dateTimeString(milliseconds) {
+    const date = new Date(milliseconds);
+    
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+
+    return date.toLocaleDateString('de-DE', options);
+}
+
+export function compactString(milliseconds) {
+    const date = new Date(milliseconds);
+    return `${date.getMonth()+1}.${date.getDate()} ${timeString(date)}`;
+}

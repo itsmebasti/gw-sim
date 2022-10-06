@@ -1,10 +1,28 @@
 gw-path-logger {
     border: 2px solid var(--gw-galaxy-ali, black);
     margin: 5px;
-    height: 210px;
+    height: 235px;
     overflow: hidden;
     
     pointer-events: none;
+}
+
+gw-path-logger.inline {
+    height: 97px;
+}
+
+a[possible] {
+  color: var(--gw-start-disabled);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  border: 1px solid var(--borders, grey);
+  border-radius: 3px;
+  background: var(--gw-table-grey, #eee);
+}
+
+a[possible=true] {
+  color: var(--gw-start-enabled);
 }
 
 :host {

@@ -18,6 +18,10 @@ gw-path-logger {
     border: 5px solid var(--gw-table-blue-header, black);
 }
 
+.left {
+    max-width: 670px;
+}
+
 .ressources > div:nth-child(odd) {
   background: var(--gw-res-odd, white);
 }
@@ -52,7 +56,7 @@ input.path-name {
 }
 
 a {
-  color: var(--gw-start-enabled);
+  color: var(--gw-start-disabled);
   text-decoration: none;
   font-size: 13px;
   font-weight: 400;
@@ -61,7 +65,15 @@ a {
   background: var(--gw-table-grey, #eee);
 }
 
+a[possible=true] {
+  color: var(--gw-start-enabled);
+}
+
 .allign-bottom {
   display: flex;
   align-items: flex-end;
+}
+
+.error {
+    color: var(--gw-messages-warning, orange);
 }

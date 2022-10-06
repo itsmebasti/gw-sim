@@ -5,11 +5,28 @@
             Der aktiv ausgewählte Auftrag im Log ist blau umrandet. Neue Items werden ab jetzt automatisch nach diesem aktiven Element eingefügt und das neue Element wird zum aktiven Element.
             Damit ist es nun auch möglich Rohstoff Transporte und Zeit Anpassungen direkt an der richtigen Stelle im Pfad zu platzieren.
         </base-timeline-item> -->
-        <base-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022" open>
-            Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
-            Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
-            Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
-        </base-timeline-item>
+    <base-timeline-item icon="standard:topic" label="Verbessertes Pathfinder Interface" date="05.10.2022" open>
+        Ab jetzt könnt ihr im Pathfinder sehen, welche Technologie ihr bauen könnt, oder nicht.
+        <br>
+        <a possible="true" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenmine</a>
+        <a possible="false" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenspeicher</a>
+        <br>
+        Außerdem ist ab jetzt die Serverzeit rot hinterlegt, wenn es irgendwo im Pfad einen Fehler gab.
+        So könnt ihr ohne den ganzen Pfad zu sehen im Pfad herumspielen und wisst, ob er auch valide ist und bis zu eurem Ziel durchläuft.
+    </base-timeline-item>
+    <base-timeline-item icon="standard:topic" label="Inline Details" date="05.10.2022" open>
+        Damit mit während die Details ausgeblendet sind trotzdem die wichtigsten Informationen hat, 
+        gibt es ab jetzt einen "Inline" toggle, mit dem ihr euch start und bauzeit, sowie fehlende Ressourcen anzeigen lassen könnt.
+        <br>
+        <br>
+        <base-toggle label="Demo: Inline Info aktivieren" onchange={toggleInline} checked={inline}></base-toggle>
+        <gw-path-logger class="inline slds-show slds-size_x-large" reverse={reverse} hide-details inline-details={inline}></gw-path-logger>
+    </base-timeline-item>
+    <base-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022" open>
+        Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
+        Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
+        Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
+    </base-timeline-item>
         <base-timeline-item icon="standard:topic" label="Changelog hinzugefügt" date="04.10.2022" open>
             Ich habe mich entschieden diesen <a>Changelog</a> einzuführen, damit ihr besser nachvollziehen könnt, 
             was neu ist und wie ihr die neuen Features nutzen könnt.

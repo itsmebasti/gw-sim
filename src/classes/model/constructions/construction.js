@@ -14,8 +14,8 @@ export default class Construction {
         this.type = describe.type;
         this.factoryType = factoryType;
         this.describe = describe;
-        this.level = level;
-        this.speed = speed;
+        this.level = +level;
+        this.speed = +speed;
     }
     
     increaseLevel() {

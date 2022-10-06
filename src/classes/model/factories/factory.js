@@ -74,8 +74,7 @@ export default class Factory extends Building {
         this.timeLeft = next.increaseSeconds(this.level);
     
         this.account.publish(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, this.coords));
-        this.account.publish( new InfraEvent(E.STARTED,
-            { construction: next, duration: this.timeLeft }), this.coords);
+        this.account.publish(new InfraEvent(E.STARTED, { construction: next, duration: this.timeLeft }), this.coords);
         
         this.registerCurrentForCompletion();
     }

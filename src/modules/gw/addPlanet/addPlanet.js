@@ -1,5 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
-import { dateString } from '../../../classes/framwork/misc/timeConverters';
+import { dateString, timeString } from '../../../classes/framwork/misc/timeConverters';
 import Database from '../../../classes/framwork/database/database';
 
 const DEFAULT_PLANET = {coords: '50:100:1', startTime: Date.now()};
@@ -100,7 +100,7 @@ export default class AddPlanet extends LightningElement {
     }
 
     get time() {
-        return new Date(this.planet.startTime).toLocaleTimeString('de-DE');
+        return timeString(new Date(this.planet.startTime));
     }
 
     handle = (error) => {

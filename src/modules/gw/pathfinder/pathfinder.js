@@ -13,7 +13,8 @@ import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
-
+    
+    constructions = [];
     @api pathDirectionReverse = false;
     @track savedAccounts;
     @track savedPaths;
@@ -26,6 +27,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     history = {};
     pointer = -1;
     timeTraveling = false;
+    pathHasErrors = false;
 
     @track requested = [0, 0, 0, 0];
     timePassed = '00:00:00';
@@ -36,6 +38,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         coords: '1:1:1',
         produce: true,
         hideDetails: false,
+        inlineDetails: true,
     });
 
     connectedCallback() {
@@ -83,51 +86,59 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     print(steps) {
         try {
-            this.account = new Account(this.accountState);
+            this.account = this.preparedAccount(this.accountState);
         }
         catch(e) {
             this.handle(e);
             this.load(accountState(UNI.default.NAME));
             return;
         }
-
-        this.account.current = this.cache.coords;
-        this.account.subscribe(E.RESOURCE_REQUEST, this.handleResourceRequest, this.cache.coords);
-
-        this.resFleets?.forEach((fleet) => {
-            const time = fleet.delivery.time - this.accountState.serverTime/1000;
-            const resourceChanges = new ResourceChanges(...Object.values(fleet.res), this.resChangeType(fleet));
-
-            this.account.register(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, fleet.delivery.planet.coords), {time});
-        })
         
-        const newPlanet = this.newPlanets?.planets.find(({coords}) => coords === this.cache.coords);
-        if(newPlanet) {            
-            let time = (newPlanet.startTime - this.accountState.serverTime)/1000;
-            
-            if(time < 0) {
-                this.error('Kolonisation muss in der Zukunft liegen!');
-                time = 0;
-            }
-            
-            this.account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time});
-            this.account.continue(time);
-            this.account.serverTime += this.account.passed * 1000;
-            this.account.passed = 0;
-        }
-
+        this.account.subscribe(E.FAILED, () => this.pathHasErrors = true, this.account.current);
+        this.account.subscribe(E.RESOURCE_REQUEST, this.handleResourceRequest, this.account.current);
+        
         this.requested = [0, 0, 0, 0];
         this.steps = [];
         this.steps = steps;
         this.updateHistory();
 
         this.logger.reset(this.account);
+        this.pathHasErrors = false;
         steps.forEach(this.execute);
 
         if(steps.length === 0) {
-            this.updateJsonOutput();
-            this.timePassed = toHHMMSS(this.account.passed);
+            this.updateUI();
         }
+    }
+    
+    preparedAccount(state) {
+        const account = new Account(state);
+        
+        account.current = this.cache.coords;
+
+        this.resFleets?.forEach((fleet) => {
+            const time = fleet.delivery.time - account.serverTime/1000;
+            const resourceChanges = new ResourceChanges(...Object.values(fleet.res), this.resChangeType(fleet));
+
+            account.register(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, fleet.delivery.planet.coords), {time});
+        })
+        
+        const newPlanet = this.newPlanets?.planets.find(({coords}) => coords === this.cache.coords);
+        if(newPlanet) {            
+            let time = (newPlanet.startTime - account.serverTime)/1000;
+            
+            if(time < 0) {
+                this.error('Kolonisation muss in der Zukunft liegen!');
+                time = 0;
+            }
+            
+            account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time});
+            account.continue(time);
+            account.serverTime += account.passed * 1000;
+            account.passed = 0;
+        }
+        
+        return account;
     }
 
     resChangeType({mission, source, target, friendly}) {
@@ -208,7 +219,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                     break;
                 case 'start':
                     this.produceResForNextBuild = step.produce ?? true;
-                    this.logger.command('Starte ' + step.tec + ' ' + this.levelFor(step.tec), this.buildSettings(this.produceResForNextBuild));
+                    this.logger.command('Starte ' + step.tec + ' ' + (this.levelFor(step.tec) + 1), this.buildSettings(this.produceResForNextBuild));
                     this.account.completeAndEnqueue(step.tec);
                     this.produceResForNextBuild = true;
                     break;
@@ -236,11 +247,11 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             if(error instanceof ResourceError) {
                 this.logger.markAsRejected();
             }
+            this.pathHasErrors = true;
             this.logger.printError(error);
         }
 
-        this.timePassed = toHHMMSS(this.account.passed);
-        this.updateJsonOutput();
+        this.updateUI();
     }
 
     buildSettings(produceResForNextBuild) {
@@ -265,7 +276,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     levelFor(tech) {
         const construction = this.account.get(tech);
-        return 1 + construction.level + this.account.get(construction.factoryType).queue.filter(({type}) => type === tech).length;
+        return construction.level + this.account.get(construction.factoryType).queue.filter(({type}) => type === tech).length;
     }
 
 
@@ -477,8 +488,37 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.cache.hideDetails = !this.cache.hideDetails;
     }
 
+    toggleInlineDetails(evt) {
+        this.cache.inlineDetails = !this.cache.inlineDetails;
+    }
+    
+    updateUI() {
+        this.updateJsonOutput();
+        this.updateLinkValidity();
+        this.timePassed = toHHMMSS(this.account.passed);
+    }
+
     updateJsonOutput() {
         this.template.querySelector('.path').value = (this.steps.length) ? JSON.stringify(this.steps) : '';
+    }
+
+    updateLinkValidity() {
+        const validated = (construction) => ({
+            construction, 
+            possible: this.account.get(construction).dependencies().every(({ type, level }) => (this.levelFor(type) >= level))
+        });
+        
+        this.constructions = [
+            {label: 'Gebäude', options: technologies.buildings.map(validated) },
+            {label: 'Forschung', options: technologies.research.map(validated) },
+            {label: 'Schiffe', options: technologies.ships.map(validated) },
+            {label: 'Türme', options: technologies.towers.map(validated) },
+        ];
+        
+        this.completeBuildingPossible = (this.account.planet.kz.queue.length > 0);
+        this.completeResearchPossible = (this.account.planet.fz.queue.length > 0);
+        this.completeShipPossible = (this.account.planet.sf.queue.length > 0);
+        this.completeAllPossible = (this.completeBuildingPossible || this.completeResearchPossible || this.completeShipPossible);
     }
 
     copy(evt) {
@@ -499,15 +539,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
 
     // Getters
-
-    get constructions() {
-        return [
-            {label: 'Gebäude', options: technologies.buildings },
-            {label: 'Forschung', options: technologies.research },
-            {label: 'Schiffe', options: technologies.ships },
-            {label: 'Türme', options: technologies.towers },
-        ]
-    }
 
     get changeHistory() {
         const coords = this.cache.coords;
@@ -542,13 +573,17 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     get showDetails() {
         return !this.cache.hideDetails;
     }
-
+    
     get undoDisabled() {
         return this.pointer < 1;
     }
 
     get redoDisabled() {
         return this.pointer === this.changeHistory.length-1;
+    }
+    
+    get passedTimeClass() {
+        return 'slds-align_absolute-center' + (this.pathHasErrors ? ' error' : '');
     }
 
     handle = (error) => {

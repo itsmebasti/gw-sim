@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import { CacheMixin } from 'lwc-base';
-import { dateString } from '../../../classes/framwork/misc/timeConverters';
+import { dateString, timeString } from '../../../classes/framwork/misc/timeConverters';
 import Database from '../../../classes/framwork/database/database';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
 import technologies from '../../../classes/model/static/technologies';
@@ -145,7 +145,7 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
     }
 
     get time() {
-        return this.startDate?.toLocaleTimeString('de-DE');
+        return timeString(this.startDate);
     }
 
     get startDate() {

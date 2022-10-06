@@ -15,25 +15,25 @@
             <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                             label={construction.label} name={construction.label}>
-                    <a for:each={construction.options} for:item="option" key={option} onclick={build}
+                    <a for:each={construction.options} for:item="option" key={option.construction} onclick={build}
                         href="javascript:void(0)"
                         class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small"
                         ondragstart={drag}
-                        draggable>{option}</a>
+                        possible={option.possible}
+                        draggable>{option.construction}</a>
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
-        <div class="slds-col slds-size_1-of-2 slds-p-left_medium">
+        <div class="left slds-col slds-size_2-of-3 slds-p-left_medium">
             <section class="ressources slds-grid slds-grid_vertical-stretch">
-                <div if:true={account} for:each={resources} for:item="res" key={res.name}
-                        class="slds-col slds-p-horizontal_xxx-small">
+                <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-horizontal_xxx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>
                     <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
                     <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" />
                 </div>
                 <div class="slds-col slds-p-horizontal_xxx-small">
                     <span class="slds-align_absolute-center">Zeit</span>
-                    <span class="slds-align_absolute-center">{timePassed}</span>
+                    <span class={passedTimeClass}><b>{timePassed}</b></span>
                     <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required/>
                 </div>
                 <div class="slds-col slds-p-horizontal_xxx-small allign-bottom">
@@ -51,17 +51,19 @@
 
             <section>
                 Abschließen:
-                <a onclick={completeBuilding} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Gebäude</a>
-                <a onclick={completeResearch} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Forschung</a>
-                <a onclick={completeShip} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Schiff</a>
-                <a onclick={completeAll} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
+                <a onclick={completeBuilding} possible={completeBuildingPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Gebäude</a>
+                <a onclick={completeResearch} possible={completeResearchgPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Forschung</a>
+                <a onclick={completeShip} possible={completeShipPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Schiff</a>
+                <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
                 <base-toggle label="Details" class="slds-show_inline-block slds-m-left_x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
+                <base-toggle label="Inline" class="slds-show_inline-block" checked={cache.inlineDetails} onchange={toggleInlineDetails}></base-toggle>
                 <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
                 <lightning-button-icon icon-name="utility:undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
                 <lightning-button-icon icon-name="utility:redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left_small"></lightning-button-icon>
             </section>
 
             <gw-path-logger hide-details={cache.hideDetails}
+                            inline-details={cache.inlineDetails}
                             reverse={pathDirectionReverse}
                             onsettingclick={handleSettingClick}
                             onjumpto={jumpTo}

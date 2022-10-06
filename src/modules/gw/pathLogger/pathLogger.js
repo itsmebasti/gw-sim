@@ -1,20 +1,22 @@
 import { LightningElement, api, track } from 'lwc';
-import { toHHMMSS } from '../../../classes/framwork/misc/timeConverters';
+import { toHHMMSS, dateTimeString, toSeconds, compactString } from '../../../classes/framwork/misc/timeConverters';
 import { E } from '../../../classes/model/static/types';
 
 const DIRECTION = { UP: Symbol(), DOWN: Symbol() };
 
 export default class PathLogger extends LightningElement {
     @api hideDetails = false;
+    @api inlineDetails = false;
     @track logs = [];
     @api reverse;
     account
+    startTime;
     serverTime;
-    start;
 
     idCounter;
     commandCounter;
     lastKeyMove;
+    waitingForRes = false;
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
@@ -40,18 +42,18 @@ export default class PathLogger extends LightningElement {
 
     @api
     reset(account) {
-        this.start = account.serverTime;
         this.account = account;
+        this.startTime = account.serverTime;
+        this.serverTime = account.serverTime;
         this.logs = [];
         this.idCounter = 0;
         this.commandCounter = -1;
         this.startListening(account);
-        this.setServerTime();
     }
 
     @api
     command(message, settings = []) {
-        this.logs.unshift({
+        this.logs.push({
             id: this.idCounter++,
             command: ++this.commandCounter,
             severity: 'command',
@@ -63,8 +65,8 @@ export default class PathLogger extends LightningElement {
 
     @api
     printError({message, details = []}) {
-        details.reverse().forEach((detail) => {
-            this.logs.unshift({
+        details.forEach((detail) => {
+            this.logs.push({
                 id: this.idCounter++,
                 command: this.commandCounter,
                 settings: [],
@@ -72,23 +74,47 @@ export default class PathLogger extends LightningElement {
                 isDetail: true,
                 cssClass: 'detail'});
         });
-
         this.log('ERROR', message, 'error');
     }
 
+    @api
+    addWarning() {
+        this.latestCommand.severity += ' warning';
+    }
+
+    @api
+    markAsSucceeded(construction, duration) {
+        this.latestCommand.severity += ' success';
+        if(construction) {
+            this.latestCommand.start = this.compactTimeString;
+            this.latestCommand.duration = toHHMMSS(duration);
+        }
+    }
+
+    @api
+    markAsRejected() {
+        this.latestCommand.severity += ' rejected';
+        delete this.latestCommand.start;
+        delete this.latestCommand.duration;
+    }
+    
+    get latestCommand() {
+        return this.logs.findLast(({isCommand}) => isCommand);
+    }
+
     log(msgType, message, cssClass = '') {
-        this.logs.unshift({
+        this.logs.push({
             id: this.idCounter++,
             command: this.commandCounter,
             settings: [],
-            time: this.serverTime,
+            time: this.serverTimeString,
             msgType,
             message,
             cssClass});
     }
 
     get displayedLogs() {
-        return this.logs.filter((log) => !this.hideDetails || log.isCommand);
+        return this.logs.filter((log) => !this.hideDetails || log.isCommand).reverse();
     }
 
     clear() {
@@ -149,26 +175,32 @@ export default class PathLogger extends LightningElement {
         account.subscribe(E.STARTED, this.handleTechnologyStart, account.current);
         account.subscribe(E.FINISHED, this.handleTechnologyFinish, account.current);
         account.subscribe(E.FAILED, this.handleFailed, account.current);
-        account.subscribe(E.WAITING, this.setServerTime);
+        account.subscribe(E.WAITING, this.updateServerTime);
 
         account.subscribe(E.EVENT_CHANGE, this.handleEventUpdate, account.current)
     }
 
-    setServerTime = ({total = 0} = {}) => {
-        this.serverTime = this.localeString(new Date(this.start + total * 1000));
+    updateServerTime = ({total}) => {
+        this.serverTime = this.startTime + total*1000;
+        
+        if(this.waitingForRes) {
+            this.latestCommand.start = this.compactTimeString;
+            this.latestCommand.duration = toHHMMSS(total);
+            this.waitingForRes = false;
+        }
     }
 
-    get startTime() {
-        return this.localeString(new Date(this.start))
-    }
-
-    handleEventUpdate = ({filter : {construction : {type}}, timeLeft, previous}) => {
+    handleEventUpdate = ({filter : {construction : {type, level}}, timeLeft, previous}) => {
+        const changedCommand = this.logs.find(({message}) => message === `Starte ${type} ${level+1}`);
+        const diff = previous - timeLeft;
+        changedCommand && (changedCommand.duration = toHHMMSS(toSeconds(changedCommand.duration) - diff) + '*');
+        
         this.log('UPDATE', `${type} (${toHHMMSS(previous)}) => (${toHHMMSS(timeLeft)})`, 'construction');
     }
 
-    handleTechnologyStart = ({construction: {type, level}, duration}) => {
-        this.markAsSucceeded();
-        this.log('START', `${type} ${level+1} (${toHHMMSS(duration)})`, 'construction');
+    handleTechnologyStart = ({construction, duration}) => {
+        this.markAsSucceeded(construction, duration);
+        this.log('START', `${construction.type} ${construction.level+1} (${toHHMMSS(duration)})`, 'construction');
     }
 
     handleTechnologyFinish = ({construction: {type, level}}, coords) => {
@@ -177,6 +209,10 @@ export default class PathLogger extends LightningElement {
 
     handleResourceRequest = ({resources}) => {
         this.addWarning();
+        
+        this.waitingForRes = true;
+        this.latestCommand.needed = resources.toString();
+        
         this.log('NEED ', 'Benötigt: ' + resources.toString(), 'res');
     }
 
@@ -194,33 +230,7 @@ export default class PathLogger extends LightningElement {
         this.markAsRejected();
         this.printError(error);
     }
-
-    @api
-    addWarning() {
-        this.addSeverity('warning');
-    }
-
-    @api
-    markAsSucceeded() {
-        this.addSeverity('success');
-    }
-
-    @api
-    markAsRejected() {
-        this.addSeverity('rejected');
-    }
-
-    addSeverity(severity) {
-        this.logs.find(({isCommand}) => isCommand).severity += ' ' + severity;
-    }
-
-    localeString(date) {
-        const options = {  year: 'numeric',
-            month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-
-        return date.toLocaleDateString('de-DE', options);
-    }
-
+    
     drag(evt) {
         const li = evt.currentTarget;
         evt.dataTransfer.setData('command', li.dataset.command);
@@ -251,5 +261,17 @@ export default class PathLogger extends LightningElement {
     
     get direction() {
         return (this.reverse) ? 'reverse' : '';
+    }
+    
+    get startTimeString() {
+        return dateTimeString(this.startTime);
+    }
+
+    get serverTimeString() {
+        return dateTimeString(this.serverTime);
+    }
+
+    get compactTimeString() {
+        return compactString(this.serverTime);
     }
 }

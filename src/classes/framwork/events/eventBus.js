@@ -62,30 +62,38 @@ export default class EventBus {
 
     continue(seconds) {
         this.processing = true;
-        if(this.tilNext === 0) {
-            const event = this.queue.shift().event;
+        
+        try {
+            if(this.tilNext === 0) {
+                const event = this.queue.shift().event;
 
-            if (event.scope === "global") {
-                Object.values(this.channels).forEach((channel) => channel[event.type].register(event));
-            } else {
-                this.channels[event.scope]?.[event.type].register(event);
-                this.channels["global"][event.type].register(event);
+                if (event.scope === "global") {
+                    Object.values(this.channels).forEach((channel) => channel[event.type].register(event));
+                } else {
+                    this.channels[event.scope]?.[event.type].register(event);
+                    this.channels["global"][event.type].register(event);
+                }
+
+                event.fire();
+
+                this.continue(seconds);
             }
+            else if(seconds > 0) {
+                const tillNext = this.nextOr(seconds);
+                this.passed += tillNext;
 
-            event.fire();
+                this.publish(new InfraEvent(E.WAITING, { duration: tillNext, total: this.passed })
+                    .add(() => this.queue.forEach((evt) => evt.timeLeft -= tillNext)));
 
-            this.continue(seconds);
+                this.continue(seconds - tillNext);
+            }
+            
+            this.processing = false;
         }
-        else if(seconds > 0) {
-            const tillNext = this.nextOr(seconds);
-            this.passed += tillNext;
-
-            this.publish(new InfraEvent(E.WAITING, { duration: tillNext, total: this.passed })
-                .add(() => this.queue.forEach((evt) => evt.timeLeft -= tillNext)));
-
-            this.continue(seconds - tillNext);
+        catch(e) {
+            this.processing = false;
+            throw e;
         }
-        this.processing = false;
     }
 
     get eventChannels() {
