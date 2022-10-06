@@ -104,7 +104,7 @@ export default class AddPlanet extends LightningElement {
     }
 
     handle = (error) => {
-        this.template.querySelector('base-toast').display('error', error);
+        this.baseToast ? this.baseToast.display('error', error) : console.error(error);
     }
 
     error = (error) => {
@@ -112,6 +112,10 @@ export default class AddPlanet extends LightningElement {
     }
 
     toast = (message, details, severity = 'success') => {
-        this.template.querySelector('base-toast').display(severity, message, details);
+        this.baseToast.display(severity, message, details);
+    }
+    
+    get baseToast() {
+        return this.template.querySelector('base-toast');
     }
 }

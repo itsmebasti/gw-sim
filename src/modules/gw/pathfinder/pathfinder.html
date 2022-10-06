@@ -41,11 +41,11 @@
                 </div>
             </section>
             <section>
-                <base-toggle label="Ressourcen selbst Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
+                <base-toggle label="Ress Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
                 <b class="slds-m-right_small">Summe: ( {generated} )</b>
                 <lightning-button-group>
                     <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
-                    <lightning-button variant="brand" onclick={rerender} label="Auf alles anwenden"></lightning-button>
+                    <lightning-button variant="brand" onclick={rerender} label="Anwenden"></lightning-button>
                 </lightning-button-group>
             </section>
 

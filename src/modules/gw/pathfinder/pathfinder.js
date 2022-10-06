@@ -38,7 +38,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         coords: '1:1:1',
         produce: true,
         hideDetails: false,
-        inlineDetails: true,
+        inlineDetails: false,
     });
 
     connectedCallback() {
@@ -70,10 +70,14 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             .then(() => this.loadStoredPlanets(player))
             .then(() => this.database.get('AccountData', player))
             .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
-            .catch(() => this.load(accountState(UNI.default.NAME)))
+            .catch((e) => {
+                console.error(e); 
+                this.load(accountState(UNI.default.NAME));
+            });
     }
 
     async load(accountState) {
+        console.log(accountState); 
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
 
@@ -587,14 +591,18 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     handle = (error) => {
-        this.template.querySelector('base-toast').display('error', error);
+        (this.baseToast) ? this.baseToast.display('error', error) : console.error(error);
     }
 
     error = (error) => {
         this.handle(error);
     }
 
-    toast = (message, details) => {
-        this.template.querySelector('base-toast').display('success', message, details);
+    toast = (message, details, severity = 'success') => {
+        this.baseToast?.display(severity, message, details);
+    }
+    
+    get baseToast() {
+        return this.template.querySelector('base-toast');
     }
 }

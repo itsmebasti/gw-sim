@@ -86,7 +86,7 @@ export default class AccountUpload extends LightningElement {
                 throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!';
             }
             else if(uploadSecondsDiff > 0) {
-                accountData.serverTime = serverInfo.serverTime - uploadSecondsDiff;
+                accountData.serverTime = serverInfo.serverTime - uploadSecondsDiff*1000;
                 const overviewAccount = new Account(accountData);
                 overviewAccount.continue(uploadSecondsDiff);
 
@@ -134,7 +134,7 @@ export default class AccountUpload extends LightningElement {
     }
 
     handle = (error) => {
-        this.template.querySelector('base-toast').display('error', error);
+        this.baseToast ? this.baseToast.display('error', error) : console.error(error);
     }
 
     error = (error) => {
@@ -142,6 +142,10 @@ export default class AccountUpload extends LightningElement {
     }
 
     toast = (message, details, severity = 'success') => {
-        this.template.querySelector('base-toast').display(severity, message, details);
+        this.baseToast.display(severity, message, details);
+    }
+    
+    get baseToast() {
+        return this.template.querySelector('base-toast');
     }
 }

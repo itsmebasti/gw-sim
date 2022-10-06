@@ -22,7 +22,7 @@ export default {
     preserveEntrySignatures: false,
     watch: {
         clearScreen: false,
-        buildDelay: 1000,
+        buildDelay: 2000,
         include: 'src/**'
     },
     plugins: [

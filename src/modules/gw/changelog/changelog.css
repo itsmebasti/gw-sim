@@ -12,13 +12,17 @@ gw-path-logger.inline {
 }
 
 a[possible] {
-  color: var(--gw-start-disabled);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 400;
-  border: 1px solid var(--borders, grey);
-  border-radius: 3px;
-  background: var(--gw-table-grey, #eee);
+    color: var(--gw-start-disabled);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    border: 1px solid var(--borders, grey);
+    border-radius: 3px;
+    background: var(--gw-button-grey, #eee);
+}
+
+a[possible]:hover {
+  background: var(--gw-button-grey-hover, #eee);
 }
 
 a[possible=true] {
