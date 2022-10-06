@@ -105,7 +105,7 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
         this.store();
     }
 
-    setPlanet({details: coords}) {
+    setPlanet({ detail: coords }) {
         this.coords = coords;
     }
 

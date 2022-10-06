@@ -77,7 +77,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     async load(accountState) {
-        console.log(accountState); 
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
 

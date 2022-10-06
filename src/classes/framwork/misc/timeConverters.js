@@ -4,7 +4,7 @@ export function gwToMilliseconds(dateString) {
 }
 
 export function toSeconds(timeString) {
-    const [all, days = 0, hours = 0, minutes = 0, seconds = 0] = /(?:(\d+) Tage?, )?(\d{2}):(\d{2}):(\d{2})/.exec(timeString);
+    const [all, days = 0, hours = 0, minutes = 0, seconds = 0] = /(?:(\d+) Tage?, )?(\d*):(\d{2}):(\d{2})/.exec(timeString);
     return (+days * 24 * 3600) + (+hours * 3600) + (+minutes * 60) + (+seconds);
 }
 
