@@ -37,5 +37,5 @@ export function dateTimeString(milliseconds) {
 
 export function compactString(milliseconds) {
     const date = new Date(milliseconds);
-    return `${date.getMonth()+1}.${date.getDate()} ${timeString(date)}`;
+    return `${date.getDate()}. ${timeString(date)}`;
 }
