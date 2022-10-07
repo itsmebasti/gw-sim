@@ -3,7 +3,7 @@ section {
     background: var(--gw-table-grey);
 }
 
-section:first-of-type {
+section.account, section.resources {
     background: var(--gw-header-blue);
     margin-bottom: 1rem;
 }
@@ -25,14 +25,14 @@ gw-path-logger {
 }
 
 .left {
-    max-width: 670px;
+    max-width: 680px;
 }
 
-.ressources > div:nth-child(odd) {
+.resources > div:nth-child(odd) {
   background: var(--gw-res-odd, white);
 }
 
-.ressources > div:nth-child(even) {
+.resources > div:nth-child(even) {
   background: var(--gw-res-even, white);
 }
 

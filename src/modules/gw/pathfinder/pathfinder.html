@@ -3,7 +3,7 @@
 
     <div class="slds-grid">
         <div class="slds-col slds-size_1-of-3">
-            <section>
+            <section class="account">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
                 <span class="slds-m-horizontal_small">Planet:</span>
@@ -25,7 +25,7 @@
             </lightning-accordion>
         </div>
         <div class="left slds-col slds-size_2-of-3 slds-p-left_medium">
-            <section class="ressources slds-grid slds-grid_vertical-stretch">
+            <section class="resources slds-grid slds-grid_vertical-stretch">
                 <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-horizontal_xxx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>
                     <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
