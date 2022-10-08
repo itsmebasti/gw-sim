@@ -2,6 +2,12 @@
     --sds-c-textarea-sizing-min-height: 500px;
 }
 
+@media screen and (min-width: 1024px) {
+    .left {
+        padding-left: 1rem;
+    }
+}
+
 base-toast {
     position: fixed;
     top: 20px;

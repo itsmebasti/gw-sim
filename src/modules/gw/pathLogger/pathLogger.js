@@ -16,7 +16,6 @@ export default class PathLogger extends LightningElement {
     idCounter;
     commandCounter;
     lastKeyMove;
-    waitingForRes = false;
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
@@ -79,12 +78,15 @@ export default class PathLogger extends LightningElement {
 
     @api
     addWarning() {
+        if(!this.latestCommand) return;
         this.latestCommand.severity += ' warning';
     }
 
     @api
     markAsSucceeded(construction, duration) {
+        if(!this.latestCommand) return;
         this.latestCommand.severity += ' success';
+        
         if(construction) {
             this.latestCommand.start = this.compactTimeString;
             this.latestCommand.duration = toHHMMSS(duration);
@@ -93,12 +95,17 @@ export default class PathLogger extends LightningElement {
 
     @api
     markAsRejected() {
+        if(!this.latestCommand) return;
         this.latestCommand.severity += ' rejected';
         delete this.latestCommand.start;
         delete this.latestCommand.duration;
     }
     
     get latestCommand() {
+        if(!this.logs?.findLast) {
+            console.log(this.logs);
+            return;
+        }
         return this.logs.findLast(({isCommand}) => isCommand);
     }
 
@@ -182,12 +189,6 @@ export default class PathLogger extends LightningElement {
 
     updateServerTime = ({total}) => {
         this.serverTime = this.startTime + total*1000;
-        
-        if(this.waitingForRes) {
-            this.latestCommand.start = this.compactTimeString;
-            this.latestCommand.duration = toHHMMSS(total);
-            this.waitingForRes = false;
-        }
     }
 
     handleEventUpdate = ({filter : {construction : {type, level}}, timeLeft, previous}) => {
@@ -210,7 +211,6 @@ export default class PathLogger extends LightningElement {
     handleResourceRequest = ({resources}) => {
         this.addWarning();
         
-        this.waitingForRes = true;
         this.latestCommand.needed = resources.toString();
         
         this.log('NEED ', 'Benötigt: ' + resources.toString(), 'res');

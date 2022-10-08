@@ -1,16 +1,18 @@
 <template>
     <base-toast></base-toast>
 
-    <div class="slds-grid">
-        <div class="slds-col slds-size_1-of-3">
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
             <section class="account">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
-                <span class="slds-m-horizontal_small">Planet:</span>
-                <lightning-button-icon icon-name="utility:back" variant="bare" onclick={previousPlanet}></lightning-button-icon>
-                <base-select class="planets slds-show_inline-block slds-m-horizontal_xx-small"
-                            value={cache.coords} options={planets} onchange={changePlanet}></base-select>
-                <lightning-button-icon icon-name="utility:forward" variant="bare" onclick={nextPlanet}></lightning-button-icon>
+                <div class="slds-show_inline-block">
+                    <span class="slds-m-horizontal_small">Planet:</span>
+                    <lightning-button-icon icon-name="utility:jump_to_left" variant="bare" onclick={previousPlanet}></lightning-button-icon>
+                    <base-select class="planets slds-show_inline-block slds-m-horizontal_xx-small"
+                                value={cache.coords} options={planets} onchange={changePlanet}></base-select>
+                    <lightning-button-icon icon-name="utility:jump_to_right" variant="bare" onclick={nextPlanet}></lightning-button-icon>
+                </div>
             </section>
             <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
@@ -24,7 +26,7 @@
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
-        <div class="left slds-col slds-size_2-of-3 slds-p-left_medium">
+        <div class="left slds-col slds-size_1-of-1 slds-large-size_2-of-3">
             <section class="resources slds-grid slds-grid_vertical-stretch">
                 <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-horizontal_xxx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>

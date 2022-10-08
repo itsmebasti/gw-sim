@@ -1,7 +1,7 @@
 <template>
-    <github-corner corner-color="#2b89c6" repo="https://github.com/itsmebasti/gw-sim"></github-corner>
+    <github-corner class="slds-show_large" corner-color="#2b89c6" repo="https://github.com/itsmebasti/gw-sim"></github-corner>
 
-    <base-vertical-tabs>
+    <base-tabs>
         <base-tab label="Pathfinder" icon="standard:trailhead_alt">
             <gw-pathfinder path-direction-reverse={reverse}></gw-pathfinder>
         </base-tab>
@@ -25,5 +25,5 @@
         <base-tab label="Changelog" icon="standard:task">
             <gw-changelog></gw-changelog>
         </base-tab>
-    </base-vertical-tabs>
+    </base-tabs>
 </template>

@@ -50,14 +50,12 @@
     --gw-start-enabled: #00ff00;
     --gw-start-disabled: #D91E18;
 
-    --slds-lwc-base-vertical-tabs-nav-color-background: var(--gw-navigation);
-    --slds-lwc-base-vertical-tabs-nav-color-border: var(--gw-navigation);
-    --slds-lwc-base-vertical-tabs-text-color: var(--text);
-    --slds-lwc-base-vertical-tabs-nav-item-color-background: var(--gw-navigation-header);
-    --slds-lwc-base-vertical-tabs-nav-item-color-background-active: black;
-    --slds-lwc-base-vertical-tabs-nav-item-color-background-hover: var(--gw-navigation);
-    --slds-lwc-base-vertical-tabs-nav-item-color-border: var(--gw-navigation);
-    --slds-lwc-base-vertical-tabs-content-color-background: black;
+    --slds-lwc-base-tabs-content-color-background: black;
+    --slds-lwc-base-tabs-nav-color-background: var(--gw-navigation);
+    --slds-lwc-base-tabs-nav-color-border: var(--gw-navigation);
+    --slds-lwc-base-tabs-text-color: var(--text);
+    --slds-lwc-base-tabs-nav-item-color-background: var(--gw-navigation-header);
+    --slds-lwc-base-tabs-nav-item-color-background-hover: var(--gw-navigation);
 
     --slds-c-accordion-color-border: var(--borders);
     --slds-c-accordion-heading-text-color: var(--text);

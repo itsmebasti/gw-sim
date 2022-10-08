@@ -16,7 +16,8 @@ base-toast {
 }
 
 lightning-accordion {
-  background: var(--gw-table-grey, white);
+    margin-bottom: 1rem;
+    background: var(--gw-table-grey, white);
 }
 
 gw-path-logger {
@@ -24,8 +25,12 @@ gw-path-logger {
     border: 5px solid var(--gw-table-blue-header, black);
 }
 
-.left {
-    max-width: 680px;
+
+@media screen and (min-width: 1024px) {
+    .left {
+        max-width: 680px;
+        padding-left: 1rem;
+    }
 }
 
 .resources > div:nth-child(odd) {

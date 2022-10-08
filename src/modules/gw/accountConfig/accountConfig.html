@@ -1,8 +1,8 @@
 <template>
     <base-toast></base-toast>
 
-    <div class="slds-grid">
-        <div class="slds-col slds-size_1-of-3">
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-large-size_1-of-3">
             <section class="slds-p-bottom_x-small">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                             value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
@@ -56,7 +56,7 @@
                 (Pfade sind hiervon nicht betroffen)
             </section>
         </div>
-        <div class="slds-col slds-size_1-of-2 slds-p-horizontal_medium">
+        <div class="left slds-col slds-size_1-of-1 slds-large-size_1-of-2">
             <lightning-textarea variant="label-hidden" value={beautifiedJson} class="json"></lightning-textarea>
             <lightning-button label="Speichern" variant="success" onclick={uploadFullAccount}></lightning-button>
         </div>
