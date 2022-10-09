@@ -7,7 +7,6 @@
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
                 <div class="slds-show_inline-block">
-                    <span class="slds-m-horizontal_small">Planet:</span>
                     <lightning-button-icon icon-name="utility:jump_to_left" variant="bare" onclick={previousPlanet}></lightning-button-icon>
                     <base-select class="planets slds-show_inline-block slds-m-horizontal_xx-small"
                                 value={cache.coords} options={planets} onchange={changePlanet}></base-select>
