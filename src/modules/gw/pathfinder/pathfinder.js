@@ -59,6 +59,16 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                         break;
                 }
             }
+            else {
+                switch(evt.key) {
+                    case 'ArrowRight': case 'd': case 'D':
+                        this.nextPlanet();
+                        break;
+                    case 'ArrowLeft': case 'a': case 'A':
+                        this.previousPlanet();
+                        break;
+                }
+            }
         });
 
         this.reload();
@@ -415,22 +425,26 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     nextPlanet(evt) {
         const planets = this.planets;
-        const next = planets.indexOf(this.cache.coords) + 1;
-
-        if(next >= 0 && next < planets.length) {
-            this.selectPlanet(planets[next]);
-            this.template.querySelector('base-select.planets').selectedIndex = next;
+        let next = planets.indexOf(this.cache.coords) + 1;
+        
+        if(next >= planets.length) {
+            next = 0;
         }
+
+        this.selectPlanet(planets[next]);
+        this.template.querySelector('base-select.planets').selectedIndex = next;
     }
 
     previousPlanet(evt) {
         const planets = this.planets;
-        const prev = planets.indexOf(this.cache.coords) - 1;
-
-        if(prev >= 0) {
-            this.selectPlanet(planets[prev]);
-            this.template.querySelector('base-select.planets').selectedIndex = prev;
+        let prev = planets.indexOf(this.cache.coords) - 1;
+        
+        if(prev < 0) {
+            prev = planets.length-1;
         }
+        
+        this.selectPlanet(planets[prev]);
+        this.template.querySelector('base-select.planets').selectedIndex = prev;
     }
 
     selectPlanet(coords) {

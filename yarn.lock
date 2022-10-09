@@ -1431,7 +1431,7 @@ livereload@^0.9.1:
 
 "lwc-base@https://github.com/itsmebasti/lwc-base":
   version "1.0.0"
-  resolved "https://github.com/itsmebasti/lwc-base#a1c4f65d3ff797d160632f6279f1c2f4da41c122"
+  resolved "https://github.com/itsmebasti/lwc-base#9f0a64ae001b65ea851267ad5be61bc085066b47"
   dependencies:
     compression "^1.7.4"
     express "^4.17.1"

@@ -15,7 +15,17 @@ base-toast {
     transform: translateX(-50%);
 }
 
+section {
+    padding: .25rem;
+}
+
+section.account {
+    background: var(--gw-header-blue);
+    margin-bottom: 1rem;
+}
+
 lightning-accordion {
+    margin-bottom: 1rem;
   background: var(--gw-table-grey-dark, white);
 }
 
