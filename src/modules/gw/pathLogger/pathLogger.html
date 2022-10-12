@@ -5,18 +5,17 @@
             <div>[{serverTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier</div>
         </li>
 
-        <li for:each={displayedLogs} for:item="log" key={log.id}
-            data-command={log.command}
-            draggable={log.isCommand}
-            ondragend={dragEnd}
-            ondragover={allowDrop}
-            ondragstart={drag}
-            ondrop={drop}
-            class={log.severity}>
-
+        <li for:each={displayedLogs} for:item="log" key={log.id} class={log.severity}>
             <div if:true={log.time}>[{log.time}]&nbsp;<span class={log.cssClass}>{log.msgType}</span>&nbsp;&gt;&nbsp;{log.message}</div>
             <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
-            <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1">
+            <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1"
+                data-command={log.command}
+                draggable="true"
+                ondragend={dragEnd}
+                ondragover={allowDrop}
+                ondragstart={drag}
+                ondrop={drop}>
+                
                 {log.message}
                 
                 <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="bare"
@@ -48,5 +47,4 @@
             <div>[{startTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad startet hier</div>
         </li>
     </ol>
-<!--    <button class="slds-button slds-button_success" onclick={clear}>Clear Log</button>-->
 </template>

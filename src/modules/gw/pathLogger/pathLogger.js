@@ -15,7 +15,7 @@ export default class PathLogger extends LightningElement {
 
     idCounter;
     commandCounter;
-    lastKeyMove;
+    pointer;
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
@@ -33,10 +33,7 @@ export default class PathLogger extends LightningElement {
     }
 
     renderedCallback() {
-        if(this.lastKeyMove !== undefined) {
-            this.template.querySelector(`li.command[data-command='${this.lastKeyMove}'] div`)?.focus();
-            this.lastKeyMove = undefined;
-        }
+        this.pointer ?? this.template.querySelector(`div.slds-drop-zone[data-command='${this.pointer}']`)?.focus();
     }
 
     @api
@@ -131,15 +128,14 @@ export default class PathLogger extends LightningElement {
     }
 
     move(evt, direction) {
-        const liElement = this.template.activeElement?.parentElement;
-        const command = +liElement?.dataset.command;
+        const command = +this.template.activeElement?.dataset.command;
         const earlier = (direction === (this.reverse ? DIRECTION.UP : DIRECTION.DOWN));
-
+        
         if(!isNaN(command)) {
             evt.preventDefault();
             evt.stopPropagation();
             this.dispatchEvent(new CustomEvent('move', { detail:{ id: command, dropAt: command + ((earlier) ? -2 : 1) } }));
-            this.lastKeyMove = (earlier) ? command-1 : command+1;
+            this.pointer = (earlier) ? command-1 : command+1;
         }
     }
 
@@ -180,11 +176,11 @@ export default class PathLogger extends LightningElement {
 
     toStart(evt) {
         const id = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: 0 } }));
+        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: this.commandCounter } }));
     }
 
     commandId(evt) {
-        return parseInt(evt.target.closest('li').dataset.command);
+        return parseInt(evt.target.closest('div[data-command]').dataset.command);
     }
 
     startListening(account) {
@@ -248,13 +244,13 @@ export default class PathLogger extends LightningElement {
     }
     
     drag(evt) {
-        const li = evt.currentTarget;
-        evt.dataTransfer.setData('command', li.dataset.command);
-        const dragImage = this.template.querySelector('ol.temp').appendChild(li.cloneNode(true));
+        const div = evt.currentTarget;
+        evt.dataTransfer.setData('command', div.dataset.command);
+        const dragImage = this.template.querySelector('ol.temp').appendChild(div.parentElement.cloneNode(true));
         dragImage.classList.add('drag-image');
         evt.dataTransfer.setDragImage(dragImage, evt.offsetX, evt.offsetY);
 
-        li.classList.add('dragged');
+        div.classList.add('dragged');
     }
 
     dragEnd(evt) {
