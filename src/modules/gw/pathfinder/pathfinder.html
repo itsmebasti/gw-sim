@@ -2,84 +2,84 @@
     <base-toast></base-toast>
 
     <div class="slds-grid slds-wrap">
-        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
-            <section class="account">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-m-right--medium">
+            <section class="account slds-p-around_xx-small slds-m-bottom_medium">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
-                <div class="slds-show_inline-block">
-                    <lightning-button-icon icon-name="utility:jump_to_left" variant="bare" onclick={previousPlanet}></lightning-button-icon>
-                    <base-select class="planets slds-show_inline-block slds-m-horizontal_xx-small"
-                                value={cache.coords} options={planets} onchange={changePlanet}></base-select>
-                    <lightning-button-icon icon-name="utility:jump_to_right" variant="bare" onclick={nextPlanet}></lightning-button-icon>
-                </div>
+                <gw-planet-selector planets={planets} selected={cache.coords} onselect={selectPlanet}></gw-planet-selector>
             </section>
-            <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude">
+            <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude" class="slds-m-bottom_medium">
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                             label={construction.label} name={construction.label}>
-                    <a for:each={construction.options} for:item="option" key={option.construction} onclick={build}
-                        href="javascript:void(0)"
-                        class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small"
-                        ondragstart={drag}
-                        possible={option.possible}
-                        draggable>{option.construction}</a>
+                    <section class="slds-p-top_x-small">
+                        <a for:each={construction.options} for:item="option" key={option.construction} onclick={build}
+                            href="javascript:void(0)"
+                            class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small"
+                            ondragstart={drag}
+                            possible={option.possible}
+                            draggable>{option.construction}</a>
+                    </section>
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
-        <div class="left slds-col slds-size_1-of-1 slds-large-size_2-of-3">
-            <section class="resources slds-grid slds-grid_vertical-stretch">
-                <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-horizontal_xxx-small">
+        <div class="left slds-col slds-size_1-of-1 slds-large-size_3-of-5">
+            <section class="resources slds-grid slds-wrap slds-m-bottom_medium">
+                <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-around_xx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>
                     <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
                     <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" />
                 </div>
-                <div class="slds-col slds-p-horizontal_xxx-small">
+                <div class="slds-col slds-p-around_xx-small">
                     <span class="slds-align_absolute-center">Zeit</span>
                     <span class={passedTimeClass}><b>{timePassed}</b></span>
                     <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required/>
                 </div>
-                <div class="slds-col slds-p-horizontal_xxx-small allign-bottom">
-                    <lightning-button variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
+                <div class="slds-col slds-grid">
+                    <lightning-button class="allign-bottom slds-p-bottom--xx-small" variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
                 </div>
             </section>
-            <section>
-                <base-toggle label="Ress Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
-                <b class="slds-m-right_small">Summe: ( {generated} )</b>
-                <lightning-button-group>
-                    <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
-                    <lightning-button variant="brand" onclick={rerender} label="Anwenden"></lightning-button>
-                </lightning-button-group>
+            <section class="options slds-p-around_xx-small">
+                <section class="slds-p-bottom_x-small">
+                    <base-toggle label="Ress Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
+                    <b class="slds-m-right_small">Summe: ( {generated} )</b>
+                    <lightning-button-group>
+                        <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
+                        <lightning-button variant="brand" onclick={rerender} label="Anwenden"></lightning-button>
+                    </lightning-button-group>
+                </section>
+                <section>
+                    Abschließen:
+                    <a onclick={completeBuilding} possible={completeBuildingPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Gebäude</a>
+                    <a onclick={completeResearch} possible={completeResearchgPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Forschung</a>
+                    <a onclick={completeShip} possible={completeShipPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Schiff</a>
+                    <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
+                    
+                    <base-toggle label="Details" class="slds-show_inline-block slds-m-left_x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
+                    <base-toggle label="Inline" class="slds-show_inline-block" checked={cache.inlineDetails} onchange={toggleInlineDetails}></base-toggle>
+                    <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
+                    <lightning-button-icon icon-name="utility:undo" variant="brand" size="medium" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:redo" variant="brand" size="medium" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left_small"></lightning-button-icon>
+                </section>
             </section>
-
-            <section>
-                Abschließen:
-                <a onclick={completeBuilding} possible={completeBuildingPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Gebäude</a>
-                <a onclick={completeResearch} possible={completeResearchgPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Forschung</a>
-                <a onclick={completeShip} possible={completeShipPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Schiff</a>
-                <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
-                <base-toggle label="Details" class="slds-show_inline-block slds-m-left_x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
-                <base-toggle label="Inline" class="slds-show_inline-block" checked={cache.inlineDetails} onchange={toggleInlineDetails}></base-toggle>
-                <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
-                <lightning-button-icon icon-name="utility:undo" variant="bare" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
-                <lightning-button-icon icon-name="utility:redo" variant="bare" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left_small"></lightning-button-icon>
-            </section>
-
+            
             <gw-path-logger hide-details={cache.hideDetails}
                             inline-details={cache.inlineDetails}
                             reverse={pathDirectionReverse}
                             onsettingclick={handleSettingClick}
                             onjumpto={jumpTo}
+                            onstartfrom={startFrom}
                             onmove={move}
                             onremove={remove}
                             onduplicate={duplicate}></gw-path-logger>
-
-            <lightning-accordion allow-multiple-sections-open>
+                            
+            <lightning-accordion allow-multiple-sections-open class="slds-m-bottom_medium">
                 <lightning-accordion-section label="Pfad" name="Pfad">
                     <section class="slds-p-vertical_x-small">
-                        <input value={selectedPath} class="path-name slds-input slds-m-right_small"/>
+                        <input value={selectedPath} class="path-name slds-input slds-size_medium slds-m-right_small" onkeydown={stopPropagation}/>
                         <lightning-button variant="success" onclick={savePath} label="Speichern"></lightning-button>
                     </section>
-                    <section>
-                        <base-select class="slds-show_inline-block"
+                    <section class="slds-p-bottom_x-small">
+                        <base-select class="slds-show_inline-block slds-size_medium"
                                     value={selectedPath} options={savedPaths} onchange={selectPath}></base-select>
                         <span class="slds-m-horizontal_x-small">vom Speicher</span>
                         <lightning-button-group>
@@ -89,7 +89,7 @@
                         </lightning-button-group>
                     </section>
                     <section>
-                        <textarea class="path slds-theme_offline slds-" rows="1" cols="40"></textarea>
+                        <textarea class="path slds-theme_offline slds-size_medium" rows="1"></textarea>
                         <lightning-button-group class="slds-m-left_small">
                             <lightning-button variant="brand" onclick={executePasted} label="Ausführen"></lightning-button>
                             <lightning-button variant="brand" onclick={copy} label="kopieren"></lightning-button>

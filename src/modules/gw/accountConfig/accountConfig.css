@@ -1,39 +1,23 @@
 :host {
-    --sds-c-textarea-sizing-min-height: 500px;
-}
-
-@media screen and (min-width: 1024px) {
-    .left {
-        padding-left: 1rem;
-    }
+    --sds-c-textarea-sizing-min-height: 35rem;
 }
 
 base-toast {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-section {
-    padding: .25rem;
+    bottom: 0;
+    left: 0;
 }
 
 section.account {
+    border: .25rem solid var(--gw-header-blue, grey);
     background: var(--gw-header-blue);
-    margin-bottom: 1rem;
 }
 
 lightning-accordion {
     margin-bottom: 1rem;
-  background: var(--gw-table-grey-dark, white);
+    background: var(--gw-table-grey-dark, white);
 }
 
-input.date {
-  width: 8rem;
-}
-
-input.time {
-  width: 6rem;
-  padding-right: 0;
+.json {
+    border: .25rem solid var(--gw-table-blue-header, black);
 }

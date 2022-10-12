@@ -1,11 +1,11 @@
 export default class Database {
     static NO_DB_SUPPORT = 'Dein Browser unterstützt keine Zwischenspeicherung!'
     static NAME = 'SIM';
-    version = 6;
+    version = 7;
 
     constructor() {
         const openRequest = window.indexedDB.open(Database.NAME, this.version);
-        openRequest.onupgradeneeded = ({ oldVersion, target : { result : db } }) => {
+        openRequest.onupgradeneeded = ({ oldVersion, target : { transaction, result : db } }) => {
             db.onerror = () => console.error(db.error);
 
             if(oldVersion < 1) {
@@ -36,6 +36,9 @@ export default class Database {
             }
             if(oldVersion < 6) {
                 db.createObjectStore('NewPlanets', { keyPath: 'player' });
+            }
+            if(oldVersion < 7) {
+                transaction.objectStore('Fleets').createIndex('account', 'account');
             }
 
             db.close();

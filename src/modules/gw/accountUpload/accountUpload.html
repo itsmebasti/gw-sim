@@ -3,19 +3,21 @@
     <p class="temp" lwc:dom="manual"></p>
 
     <section class="slds-p-bottom_x-small">
-        <section class=" slds-p-bottom_x-small">
-            Uni:<base-select class="slds-show_inline-block slds-m-left_small" value={uni} options={unis} onchange={setUni}></base-select>
-        </section>
-
-        <a href={urls.research} target="_blank" class="slds-m-right_x-small">Forschung</a>
-        <a href={urls.overview} target="_blank" class="slds-m-right_x-small">Gesamtübersicht</a>
-        <a href={urls.resources} target="_blank" class="slds-m-right_x-small">Rohstoffe</a>
-        <a href={urls.landing} target="_blank" class="slds-m-right_x-small">Startseite</a>
-        <textarea placeholder="Forschung" name="research" onpaste={pasteDom} class="slds-theme_offline" rows="3" cols="40"></textarea>
-        <textarea placeholder="Gesamtübersicht" name="overviewDom" onpaste={pasteDom} class="slds-theme_offline" rows="3" cols="40"></textarea>
-        <textarea placeholder="Statistik -> Rohstoffe" name="stats" onpaste={pasteDom} class="slds-theme_offline" rows="3" cols="40"></textarea>
-        <textarea placeholder="Startseite" name="landingHtml" onpaste={pasteDom} class="slds-theme_offline" rows="3" cols="40"></textarea>
-
-        <lightning-button label="Hochladen" variant="success" onclick={upload}></lightning-button>
+        Uni:<base-select class="slds-show_inline-block slds-m-left_small" value={uni} options={unis} onchange={setUni}></base-select>
     </section>
+
+    <section class="slds-p-bottom_x-small slds-wrap">
+        <a href={urls.research} target="_blank" class="slds-m-right_x-small">Forschung</a> 
+        <a href={urls.overview} target="_blank" class="slds-m-right_x-small">Gesamtübersicht</a> 
+        <a href={urls.resources} target="_blank" class="slds-m-right_x-small">Rohstoffe</a> 
+        <a href={urls.landing} target="_blank" class="slds-m-right_x-small" onblur={selectNext}>Startseite</a> 
+        <textarea placeholder="Forschung" name="research" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
+        <textarea placeholder="Gesamtübersicht" name="overviewDom" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
+        <textarea placeholder="Statistik -> Rohstoffe" name="stats" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
+        <textarea placeholder="Startseite" name="landingHtml" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
+    </section>
+    <lightning-button-group>
+        <lightning-button class="upload" label="Hochladen" variant="success" onclick={upload}></lightning-button>
+        <lightning-button label="Felder Leeren" variant="brand" onclick={clear}></lightning-button>
+    </lightning-button-group>
 </template>

@@ -1,6 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
 import { CacheMixin } from 'lwc-base';
-import { dateString, timeString } from '../../../classes/framwork/misc/timeConverters';
 import Database from '../../../classes/framwork/database/database';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
 import technologies from '../../../classes/model/static/technologies';
@@ -88,25 +87,21 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
         this.store(accountState(name));
     }
 
-    changeTime(evt) {
-        const dateControl = this.template.querySelector('input.date');
-        const timeControl = this.template.querySelector('input.time');
-        const date = new Date(dateControl.valueAsNumber + timeControl.valueAsNumber);
-
-        this.serverTime = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+    changeStart(evt) {
+        this.updateServerTime(this.template.querySelector('base-date-time').value);
     }
 
-    resetTime(evt) {
-        this.serverTime = UNI[this.selectedUni].START_DATE.getTime();
+    resetStart(evt) {
+        this.updateServerTime(UNI[this.selectedUni].START_DATE.getTime());
     }
 
-    set serverTime(value) {
+    updateServerTime(value) {
         this.accountData.serverTime = value;
         this.store();
     }
 
-    setPlanet({ detail: coords }) {
-        this.coords = coords;
+    selectPlanet({ target: {selected} }) {
+        this.coords = selected;
     }
 
     set coords(value) {
@@ -140,16 +135,8 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
         return this._coords;
     }
 
-    get date() {
-        return dateString(this.startDate);
-    }
-
-    get time() {
-        return timeString(this.startDate);
-    }
-
-    get startDate() {
-        return this.accountData && new Date(this.accountData.serverTime);
+    get serverTime() {
+        return this.accountData?.serverTime;
     }
 
     get defaultSelected() {

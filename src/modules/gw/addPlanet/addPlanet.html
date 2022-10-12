@@ -9,9 +9,8 @@
         oder Eingeben:<input class="coords slds-input slds-m-left_small" placeholder="50:100:16" type="text" 
                         pattern="\d{1,3}:\d{1,3}:\d{1,3}" value={planet.coords} title="50:100:16"/>
     </section>
-    <section class=" slds-p-bottom_x-small">
-        Start:<input class="date slds-input slds-m-left_small" value={date} type="date" />
-        <input class="time slds-input slds-m-left_small" value={time} type="time" step="1" />
+    <section>
+        <base-date-time value={planet.startTime}></base-date-time>
         <lightning-button variant="success" onclick={store} label="Speichern" class="slds-m-left_small"></lightning-button>
     </section>
 </template>

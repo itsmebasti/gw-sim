@@ -85,6 +85,7 @@ export default class PathLogger extends LightningElement {
     @api
     markAsSucceeded(construction, duration) {
         if(!this.latestCommand) return;
+        
         this.latestCommand.severity += ' success';
         
         if(construction) {
@@ -96,6 +97,7 @@ export default class PathLogger extends LightningElement {
     @api
     markAsRejected() {
         if(!this.latestCommand) return;
+        
         this.latestCommand.severity += ' rejected';
         delete this.latestCommand.start;
         delete this.latestCommand.duration;
@@ -149,6 +151,10 @@ export default class PathLogger extends LightningElement {
         this.dispatchEvent(new CustomEvent('remove', { detail: { id: this.commandId(evt) } }));
     }
 
+    startFrom(evt) {
+        this.dispatchEvent(new CustomEvent('startfrom', { detail: { id: this.commandId(evt) } }));
+    }
+
     jumpTo(evt) {
         this.dispatchEvent(new CustomEvent('jumpto', { detail: { id: this.commandId(evt) } }));
     }
@@ -170,6 +176,11 @@ export default class PathLogger extends LightningElement {
     toEnd(evt) {
         const id = this.commandId(evt);
         this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: -1 } }));
+    }
+
+    toStart(evt) {
+        const id = this.commandId(evt);
+        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: 0 } }));
     }
 
     commandId(evt) {
@@ -209,9 +220,14 @@ export default class PathLogger extends LightningElement {
     }
 
     handleResourceRequest = ({resources}) => {
-        this.addWarning();
-        
-        this.latestCommand.needed = resources.toString();
+        // temporary Bierbaron fix
+        if(this.latestCommand) {
+            this.addWarning();
+            this.latestCommand.needed = resources.toString();
+        }
+        else {
+            console.log(this.logs)
+        }
         
         this.log('NEED ', 'Benötigt: ' + resources.toString(), 'res');
     }

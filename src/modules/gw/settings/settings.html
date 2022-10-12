@@ -1,5 +1,11 @@
 <template>
-    <div class="slds-size_x-large">
+    <div class="slds-size_1-of-1 slds-large-size_3-of-5">
+        <lightning-accordion active-section-name="Fullscreen">
+            <lightning-accordion-section label="Fullscreen" name="Fullscreen">
+                <base-toggle label="Fullscreen" onchange={toggleFullscreen}></base-toggle>
+            </lightning-accordion-section>
+        </lightning-accordion>
+        
         <lightning-accordion active-section-name="Theme">
             <lightning-accordion-section label="Theme" name="Theme">
                 <base-toggle label="GW Theme aktivieren" onchange={toggleTheme} checked={cache.darkmode}></base-toggle>
@@ -14,7 +20,7 @@
         <lightning-accordion active-section-name="Pfad">
             <lightning-accordion-section label="Pfad" name="Pfad">
                 <base-toggle label="Pfad Umkehren" onchange={toggleDirection} checked={cache.reverse}></base-toggle>
-                <gw-path-logger reverse={cache.reverse}></gw-path-logger>
+                <gw-path-logger reverse={cache.reverse} class="slds-m-around_medium"></gw-path-logger>
             </lightning-accordion-section>
         </lightning-accordion>
     </div>

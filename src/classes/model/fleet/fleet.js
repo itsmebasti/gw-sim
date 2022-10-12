@@ -7,7 +7,7 @@ export default class Fleet {
         const  [from, ,to] = row.querySelector("td:nth-of-type(4)").children;
 
         this.id = +id;
-        this.player = serverInfo.player;
+        this.account = serverInfo.player;
         this.mission = mission;
         this.arrival = +arrival;
         this.returning = +returning;
@@ -19,16 +19,17 @@ export default class Fleet {
         this.ships = ships;
 
         this.ownFleet = (returning !== undefined);
+        this.newKolo = (!this.target.exists && mission === 'Kolonisieren');
         this.friendly = new Set(["rgb(0, 242, 255)", "rgb(0, 255, 0)"]).has(missionElement.style.color);
         this.important = (row.querySelector("i.unsetFleetImportant") !== null);
         this.unimportant = (row.querySelector("i.unsetFleetIgnore") !== null);
 
-        this.delivery = (this.empty) ? null :
-            (mission === "Rückflug" || !this.target.exists) ?
+        this.delivery = (this.empty) ? undefined :
+            (mission === "Rückflug" || !this.target.exists && !this.newKolo) ?
                 { planet: this.source, time: this.returning } :
                 { planet: this.target, time: this.arrival };
-        this.deploy = (!this.ownFleet) ? null :
-            (this.mission === "Stationierung" && this.target.isOwnPlanet) ?
+        this.deploy = (!this.ownFleet) ? undefined :
+            (this.newKolo || this.mission === "Stationierung" && this.target.isOwnPlanet) ?
                 { planet: this.target, time: this.arrival } :
                 { planet: this.source, time: this.returning };
     }
@@ -49,7 +50,7 @@ export default class Fleet {
 
     planet(coordsTd) {
         const isOwnPlanet = coordsTd.classList.contains("switchToCoordinate");
-        const player = (isOwnPlanet) ? this.player : coordsTd.getAttribute("original-title");
+        const player = (isOwnPlanet) ? this.account : coordsTd.getAttribute("original-title");
         const exists = (player !== "Unbesiedelt");
 
         return { coords: coordsTd.textContent.trim(), isOwnPlanet, player, exists };

@@ -1,20 +1,15 @@
+:host {
+    display: block;
+}
+
 base-toast {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 1.25rem;
+    left: 0;
 }
 
 input.coords {
     width: 6rem;
-}
-
-input.date {
-  width: 8rem;
-}
-
-input.time {
-  width: 7rem;
 }
 
 ::placeholder {

@@ -2,8 +2,8 @@
     <base-toast></base-toast>
 
     <div class="slds-grid slds-wrap">
-        <div class="slds-size_1-of-1 slds-large-size_1-of-3">
-            <section class="account">
+        <div class="slds-size_1-of-1 slds-large-size_1-of-3 slds-m-right--medium">
+            <section class="account slds-p-around_xx-small slds-m-bottom_medium">
                 Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
                             value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
                 <span class="slds-show_inline-block">Start / Upload: {latestUpload}</span>
@@ -12,25 +12,23 @@
             <lightning-accordion allow-multiple-sections-open active-section-name="Upload">
                 
                 <lightning-accordion-section label="Start Anpassen" name="Start" if:true={defaultSelected}>
-                    <section>
+                    <section class="slds-p-vertical_x-small">
                         Uni:<base-select class="slds-show_inline-block slds-m-left_small"
                                         value={selectedUni} options={unis} onchange={setUni}></base-select>
                     </section>
                     <section>
-                        Start:<input class="date slds-input slds-m-left_small" value={date} type="date" />
-                        <input type="time" step="1" value={time} class="time slds-input slds-m-left_small" required/>
-                        <lightning-button variant="brand" onclick={changeTime} label="Anwenden" class="slds-m-left_small"></lightning-button>
+                        Start:<base-date-time value={serverTime}></base-date-time> 
+                        <lightning-button variant="brand" onclick={changeStart} label="Anwenden" class="slds-m-left_small"></lightning-button>
                     </section>
-                    <lightning-button variant="brand" onclick={resetTime} label="Zeit auf Uni Start setzen"></lightning-button>
+                    <lightning-button class="slds-p-bottom_x-small" variant="brand" onclick={resetStart} label="Zeit auf Uni Start setzen"></lightning-button>
                 </lightning-accordion-section>
                 
                 <lightning-accordion-section label="Bauschleifen Anpassen" name="Bauschleifen">
-                    <section>
-                        Planet:<base-select class="slds-show_inline-block slds-m-left_small"
-                                        value={coords} options={planets} onchange={setPlanet}></base-select>
+                    <section class="slds-p-vertical_x-small">
+                        <gw-planet-selector planets={planets} selected={coords} onselect={selectPlanet}></gw-planet-selector>
                         <b class="slds-m-left_medium">Rohstoffe: {queueCleanupRes.fe} | {queueCleanupRes.lut} | {queueCleanupRes.h2o} | {queueCleanupRes.h2}</b>
                     </section>
-                    <section>
+                    <section class="slds-p-bottom_x-small">
                         <lightning-pill for:each={queueItems} for:item="type" key={type}
                                         onremove={cleanupQueue} label={type} class="slds-m-right_xxx-small"></lightning-pill>
                     </section>
@@ -43,22 +41,25 @@
                 </lightning-accordion-section>
                 
                 <lightning-accordion-section label="Kolonialisieren" name="AddPlanet">
-                    <gw-add-planet player={cache.selectedAccount}></gw-add-planet>
+                    <gw-add-planet class="slds-p-top_x-small" player={cache.selectedAccount}></gw-add-planet>
                 </lightning-accordion-section>
                 
                 <lightning-accordion-section label="Upload" name="Upload">
-                    <gw-account-upload class="slds-p-bottom_x-small"></gw-account-upload>
+                    <gw-account-upload class="slds-p-top_x-small" ></gw-account-upload>
                 </lightning-accordion-section>
             </lightning-accordion>
 
-            <section class="slds-p-bottom_x-small">
+            <section>
                 <lightning-button label="Alle Accountdaten Löschen" variant="destructive" onclick={clear} class="slds-m-right_small"></lightning-button>
                 (Pfade sind hiervon nicht betroffen)
             </section>
         </div>
-        <div class="left slds-col slds-size_1-of-1 slds-large-size_1-of-2">
-            <lightning-textarea variant="label-hidden" value={beautifiedJson} class="json"></lightning-textarea>
-            <lightning-button label="Speichern" variant="success" onclick={uploadFullAccount}></lightning-button>
+        <div class="left slds-col slds-size_1-of-1 slds-large-size_3-of-5">
+            <lightning-textarea variant="label-hidden" value={beautifiedJson} class="json slds-m-bottom_x-small"></lightning-textarea>
+
+            <section>
+                <lightning-button label="Speichern" variant="success" onclick={uploadFullAccount}></lightning-button>
+            </section>
         </div>
     </div>
 </template>

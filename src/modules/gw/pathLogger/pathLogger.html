@@ -18,7 +18,8 @@
             <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
             <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1">
                 {log.message}
-                <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="container" size="small"
+                
+                <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="bare"
                     class={setting.color}
                     icon-name={setting.icon}
                     tooltip={setting.tooltip}
@@ -31,11 +32,13 @@
                 </template>
                 
                 <div class="slds-drop-zone__actions">
-                    <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={duplicate} icon-name="utility:layers" tooltip="Duplizieren"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={startFrom} icon-name="utility:new_window"    tooltip="Erst ab hier"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={up} icon-name="utility:up"            tooltip="Hoch schieben"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={down} icon-name="utility:down"        tooltip="Runter schieben"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={toEnd} icon-name="utility:arrow_bottom" tooltip="Ans Ende"></lightning-button-icon>
+                    <lightning-button-icon variant="brand" size="x-small" onclick={toStart} icon-name="utility:arrow_top" tooltip="An den Anfang"></lightning-button-icon>
                     <lightning-button-icon variant="brand" size="x-small" onclick={remove} icon-name="utility:close"     tooltip="Löschen"></lightning-button-icon>
                 </div>
             </div>

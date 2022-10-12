@@ -1,36 +1,36 @@
 section {
-    padding: .25rem;
     background: var(--gw-table-grey);
 }
 
 section.account, section.resources {
     background: var(--gw-header-blue);
-    margin-bottom: 1rem;
+    border: .25rem solid var(--gw-header-blue, grey);
+}
+
+section.options, gw-path-logger {
+    border: .25rem solid var(--gw-table-blue-header, black);
+}
+
+section.options {
+    border-bottom: 0;
+    padding: .25rem;
 }
 
 base-toast {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 1.25rem;
+  left: 0;
 }
 
 lightning-accordion {
-    margin-bottom: 1rem;
     background: var(--gw-table-grey, white);
 }
 
 gw-path-logger {
     display: block;
-    border: 5px solid var(--gw-table-blue-header, black);
-}
-
-
-@media screen and (min-width: 1024px) {
-    .left {
-        max-width: 680px;
-        padding-left: 1rem;
-    }
+    height: 27.5rem;
+    overflow: hidden;
+    resize: vertical;
 }
 
 .resources > div:nth-child(odd) {
@@ -41,13 +41,26 @@ gw-path-logger {
   background: var(--gw-res-even, white);
 }
 
+.resources {
+    align-items: stretch;
+}
+
+.resources .slds-col {
+    flex: 1 1 0;
+}
+
 input.wait {
+    --slds-c-input-spacing-horizontal-start: .5rem;
     padding-right: 0;
-    width: 6rem;
+    width: 5.75rem;
+}
+
+.allign-bottom {
+    align-self: flex-end;
 }
 
 input.res {
-    width: 6rem;
+    width: 5.5rem;
     text-align: right;
     
     /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
@@ -62,17 +75,12 @@ input.res::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input.path-name {
-  width: 200px;
-}
-
 a {
   color: var(--gw-start-disabled);
   text-decoration: none;
-  font-size: 13px;
   font-weight: 400;
   border: 1px solid var(--borders, grey);
-  border-radius: 3px;
+  border-radius: .25rem;
   background: var(--gw-button-grey, #eee);
 }
 
@@ -82,11 +90,6 @@ a:hover {
 
 a[possible=true] {
   color: var(--gw-start-enabled);
-}
-
-.allign-bottom {
-  display: flex;
-  align-items: flex-end;
 }
 
 .error {

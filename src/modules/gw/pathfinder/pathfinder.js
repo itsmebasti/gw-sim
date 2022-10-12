@@ -19,7 +19,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     @track savedAccounts;
     @track savedPaths;
     @track accountState;
+    newPlanets;
     resFleets;
+    koloFleets;
     selectedPath;
     account;
 
@@ -40,6 +42,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         hideDetails: false,
         inlineDetails: false,
     });
+    
+    stopPropagation(evt) {
+        evt.stopPropagation();
+    }
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
@@ -62,10 +68,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             else {
                 switch(evt.key) {
                     case 'ArrowRight': case 'd': case 'D':
-                        this.nextPlanet();
+                        this.template.querySelector('planet-selector').next();
                         break;
                     case 'ArrowLeft': case 'a': case 'A':
-                        this.previousPlanet();
+                        this.template.querySelector('planet-selector').previous();
                         break;
                 }
             }
@@ -75,10 +81,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     @api reload(player = this.cache.selectedAccount ?? 'Default') {
-        this.loadStoredAccounts()
-            .then(() => this.loadStoredPaths())
-            .then(() => this.loadStoredPlanets(player))
-            .then(() => this.database.get('AccountData', player))
+        this.database.get('AccountData', player)
             .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
             .catch((e) => {
                 console.error(e); 
@@ -86,15 +89,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             });
     }
 
-    async load(accountState) {
+    load(accountState) {
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
-
-        await this.database.getAllBy('Fleets', 'deliveryTime', IDBKeyRange.lowerBound(accountState.serverTime/1000))
-                    .then((resFleets) => this.resFleets = resFleets
-                            ?.filter(({player, havingRes, delivery: {planet: {isOwnPlanet}}}) => havingRes && isOwnPlanet && player === this.cache.selectedAccount));
-
-        this.loadPlanet(this.cache.coords);
+        this.loadStoredData(accountState)
+            .then(() => this.loadPlanet(this.cache.coords))
+            .catch(this.handle);
     }
 
     print(steps) {
@@ -126,27 +126,30 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     
     preparedAccount(state) {
         const account = new Account(state);
-        
         account.current = this.cache.coords;
+        
+        let koloStart;
+        const newPlanet = this.newPlanets?.find(({coords}) => coords === this.cache.coords);
+        if(newPlanet) {
+            koloStart = newPlanet.startTime - (account.serverTime/1000);
+            
+            if(koloStart < 0) {
+                this.error('Kolonisation muss in der Zukunft liegen!');
+                koloStart = 0;
+            }
+            
+            account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time: koloStart});
+        }
 
         this.resFleets?.forEach((fleet) => {
             const time = fleet.delivery.time - account.serverTime/1000;
             const resourceChanges = new ResourceChanges(...Object.values(fleet.res), this.resChangeType(fleet));
 
             account.register(new InfraEvent(E.RESOURCE_CHANGE, { resourceChanges }, fleet.delivery.planet.coords), {time});
-        })
+        });
         
-        const newPlanet = this.newPlanets?.planets.find(({coords}) => coords === this.cache.coords);
-        if(newPlanet) {            
-            let time = (newPlanet.startTime - account.serverTime)/1000;
-            
-            if(time < 0) {
-                this.error('Kolonisation muss in der Zukunft liegen!');
-                time = 0;
-            }
-            
-            account.register(new InfraEvent(E.NEW_PLANET, newPlanet), {time});
-            account.continue(time);
+        if(koloStart !== undefined) {
+            account.continue(koloStart);
             account.serverTime += account.passed * 1000;
             account.passed = 0;
         }
@@ -306,6 +309,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.print(steps)
     }
 
+    startFrom(evt) {
+        const steps = this.steps;
+        steps.splice(0, evt.detail.id);
+        this.print(steps)
+    }
+
     remove(evt) {
         const steps = this.steps;
         steps.splice(evt.detail.id, 1);
@@ -330,23 +339,33 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     loadStoredPaths() {
-        this.savedPaths;
-
         return this.database.getAll('Paths')
-                   .then((paths) => this.savedPaths = paths.map(({ name }) => name))
+                   .then((paths = []) => this.savedPaths = paths.map(({ name }) => name))
                    .catch(this.handle);
     }
 
-    loadStoredAccounts() {
-        this.savedAccounts = ['Default']
-        return this.database.getAll('AccountData')
-                   .then((data) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
-                   .catch(this.handle);
-    }
-    
-    loadStoredPlanets(player) {
-        this.database.get('NewPlanets', player)
-            .then((data) => this.newPlanets = data )
+    loadStoredData(accountState) {
+        return this.loadStoredPaths()
+            .then(() => this.database.getAll('AccountData'))
+            .then((data = []) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
+            
+            .then(() => this.database.getAllBy('Fleets', 'deliveryTime', IDBKeyRange.lowerBound(accountState.serverTime/1000)))
+            .then((fleets = []) => fleets.filter(({account}) => (account === accountState.player)))
+            .then((fleets) => {
+                this.resFleets = fleets.filter(({delivery, newKolo}) => delivery?.planet.isOwnPlanet || newKolo);
+                
+                this.newPlanets = fleets.filter(({newKolo}) => (newKolo))
+                                        .map(({deploy}) => ({ startTime: deploy.time, coords: deploy.planet.coords }));
+            })
+            
+            .then(() => this.database.get('NewPlanets', accountState.player))
+            .then(({planets} = {planets: []}) => {
+                planets.filter(({coords}) => !this.planets.includes(coords))
+                    .forEach(({coords, startTime}) => {
+                        this.newPlanets.push({coords, startTime: startTime/1000})
+                    });
+            })
+            
             .catch(this.handle);
     }
 
@@ -419,37 +438,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                    .catch(this.handle);
     }
 
-    changePlanet({ detail : coords }) {
-        this.selectPlanet(coords);
-    }
-
-    nextPlanet(evt) {
-        const planets = this.planets;
-        let next = planets.indexOf(this.cache.coords) + 1;
-        
-        if(next >= planets.length) {
-            next = 0;
-        }
-
-        this.selectPlanet(planets[next]);
-        this.template.querySelector('base-select.planets').selectedIndex = next;
-    }
-
-    previousPlanet(evt) {
-        const planets = this.planets;
-        let prev = planets.indexOf(this.cache.coords) - 1;
-        
-        if(prev < 0) {
-            prev = planets.length-1;
-        }
-        
-        this.selectPlanet(planets[prev]);
-        this.template.querySelector('base-select.planets').selectedIndex = prev;
-    }
-
-    selectPlanet(coords) {
+    selectPlanet({target:{selected}}) {
         this.savePath()
-            .then(() => this.loadPlanet(coords))
+            .then(() => this.loadPlanet(selected))
     }
 
     loadPlanet(coords) {
@@ -480,7 +471,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     undo(evt) {
         if(this.undoDisabled) {
-            this.error('Ende der Path history');
+            this.error('Ende der Pfad history');
             return;
         }
         this.timeTraveling = true;
@@ -494,7 +485,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         }
         this.timeTraveling = true;
         this.print([...this.changeHistory[++this.pointer]]);
-        this.toast('Path geladen (Redo)', '[Ctrl + Y]');
     }
 
     toggleProduce(evt) {
@@ -578,9 +568,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         const result = [];
         
         result.push(...this.accountState?.planets ?? []);
-        result.push(...this.newPlanets?.planets ?? []);
+        result.push(...this.newPlanets ?? []);
         
-        return result.map(({coords}) => coords);
+        return [...new Set(result.map(({coords}) => coords))];
     }
 
     get logger() {
@@ -604,6 +594,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     handle = (error) => {
+        console.error(error); 
         (this.baseToast) ? this.baseToast.display('error', error) : console.error(error);
     }
 

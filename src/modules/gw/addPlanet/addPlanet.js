@@ -1,5 +1,4 @@
 import { LightningElement, track, api } from 'lwc';
-import { dateString, timeString } from '../../../classes/framwork/misc/timeConverters';
 import Database from '../../../classes/framwork/database/database';
 
 const DEFAULT_PLANET = {coords: '50:100:1', startTime: Date.now()};
@@ -48,7 +47,7 @@ export default class AddPlanet extends LightningElement {
         }
         
         const planet = this.stored.planets.find(({coords: c}) => c === coords);
-        planet.startTime = this.parsedStartMillis();
+        planet.startTime = this.template.querySelector('base-date-time').value;
         
         this.database.add('NewPlanets', this.stored)
             .then(() => {
@@ -69,18 +68,10 @@ export default class AddPlanet extends LightningElement {
             .then(() => {
                 this.toast('Planet ' + this.planet.coords + ' erfolgreich gelöscht');
                 
-                this.dispatchEvent(new CustomEvent('accountchange', { detail: this.player }));
+                this.dispatchEvent(new CustomEvent('accountchange', { detail: accountData.player, bubbles: true, composed: true }));
                 this.loadStoredPlanets();
             })
             .catch(this.handle);
-    }
-    
-    parsedStartMillis() {
-        const dateControl = this.template.querySelector('input.date');
-        const timeControl = this.template.querySelector('input.time');
-        const date = new Date(dateControl.valueAsNumber + timeControl.valueAsNumber);
-
-        return date.getTime() + date.getTimezoneOffset() * 60 * 1000;
     }
     
     parsedCoords() {
@@ -93,14 +84,6 @@ export default class AddPlanet extends LightningElement {
     
     get newCoords() {
         return this.stored?.planets.map(({coords}) => coords) ?? [];
-    }
-
-    get date() {
-        return dateString(new Date(this.planet.startTime));
-    }
-
-    get time() {
-        return timeString(new Date(this.planet.startTime));
     }
 
     handle = (error) => {

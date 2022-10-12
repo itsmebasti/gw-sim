@@ -17,9 +17,9 @@ export default class Fleets {
         const events = document.createElement('p');
         events.innerHTML = [...raw.matchAll(/<table.*?<\/table>/gs)].pop();
 
-        const own = [...events.querySelectorAll(".itemOwnFleet")];
-        const back = [...events.querySelectorAll(".itemComebackFleet")];
-        const other = [...events.querySelectorAll(".itemOtherFleet")];
+        const own = [...events.querySelectorAll('.itemOwnFleet')];
+        const back = [...events.querySelectorAll('.itemComebackFleet')];
+        const other = [...events.querySelectorAll('.itemOtherFleet')];
 
         const startedFleets = own.map(this.missionDetails);
 
@@ -34,16 +34,17 @@ export default class Fleets {
     }
 
     store() {
-        this.database.add("Fleets", ...this.values)
-            // .then(() => this.database.deleteAllBy("Fleets", "deployTime", IDBKeyRange.upperBound(this.serverSeconds)))
-            // .then(() => this.database.deleteAllBy("Fleets", "resTime", IDBKeyRange.upperBound(this.serverSeconds)))
+        this.database.add('Fleets', ...this.values)
+            .then(() => this.database.deleteAllBy('Fleets', 'deployTime', IDBKeyRange.upperBound(this.serverSeconds)))
+            .then(() => this.database.deleteAllBy('Fleets', 'deliveryTime', IDBKeyRange.upperBound(this.serverSeconds)))
+            .catch(console.error)
     }
 
     missionDetails = (row) => {
         return {
-            id: row.querySelector("i[data-id]").dataset.id,
-            arrival: row.querySelector("td.countTime").dataset.time,
-            mission: row.querySelector("td:nth-of-type(3) span").textContent.trim(),
+            id: row.querySelector('i[data-id]').dataset.id,
+            arrival: row.querySelector('td.countTime').dataset.time,
+            mission: row.querySelector('td:nth-of-type(3) span').textContent.trim(),
         };
     }
 }

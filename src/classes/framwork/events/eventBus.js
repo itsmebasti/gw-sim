@@ -6,7 +6,6 @@ export default class EventBus {
     passed = 0;
     channels;
     queue;
-    processing = false;
 
     constructor(passed = 0) {
         this.passed = passed;
@@ -27,9 +26,7 @@ export default class EventBus {
             this.sortQueue();
         }
 
-        if(!this.processing) {
-            this.continue(0);
-        }
+        this.continue(0);
     }
 
     subscribe(type, handler, scope = "global") {
@@ -61,38 +58,28 @@ export default class EventBus {
     }
 
     continue(seconds) {
-        this.processing = true;
-        
-        try {
-            if(this.tilNext === 0) {
-                const event = this.queue.shift().event;
+        if(this.tilNext === 0) {
+            const event = this.queue.shift().event;
 
-                if (event.scope === "global") {
-                    Object.values(this.channels).forEach((channel) => channel[event.type].register(event));
-                } else {
-                    this.channels[event.scope]?.[event.type].register(event);
-                    this.channels["global"][event.type].register(event);
-                }
-
-                event.fire();
-
-                this.continue(seconds);
+            if (event.scope === "global") {
+                Object.values(this.channels).forEach((channel) => channel[event.type].register(event));
+            } else {
+                this.channels[event.scope]?.[event.type].register(event);
+                this.channels["global"][event.type].register(event);
             }
-            else if(seconds > 0) {
-                const tillNext = this.nextOr(seconds);
-                this.passed += tillNext;
 
-                this.publish(new InfraEvent(E.WAITING, { duration: tillNext, total: this.passed })
-                    .add(() => this.queue.forEach((evt) => evt.timeLeft -= tillNext)));
+            event.fire();
 
-                this.continue(seconds - tillNext);
-            }
-            
-            this.processing = false;
+            this.continue(seconds);
         }
-        catch(e) {
-            this.processing = false;
-            throw e;
+        else if(seconds > 0) {
+            const tillNext = this.nextOr(seconds);
+            this.passed += tillNext;
+
+            this.publish(new InfraEvent(E.WAITING, { duration: tillNext, total: this.passed })
+                .add(() => this.queue.forEach((evt) => evt.timeLeft -= tillNext)));
+
+            this.continue(seconds - tillNext);
         }
     }
 

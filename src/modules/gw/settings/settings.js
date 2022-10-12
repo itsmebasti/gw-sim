@@ -30,4 +30,15 @@ export default class Settings extends CacheMixin(LightningElement) {
         this.cache.darkmode = !this.cache.darkmode;
         this.dispatchEvent(new CustomEvent('themechange', {detail: this.cache.darkmode}));
     }
+    
+    toggleFullscreen() {
+        if(document.fullscreenElement) {
+            document.exitFullscreen()
+                .catch(console.error);
+        }
+        else {
+            document.documentElement.requestFullscreen()
+                .catch(console.error);
+        }
+    }
 }

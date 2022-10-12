@@ -110,8 +110,21 @@ export default class AccountUpload extends LightningElement {
     pasteDom(evt) {
         evt.preventDefault();
         evt.target.value = evt.clipboardData.getData('text/html');
-
-        evt.target.nextSibling.focus();
+        
+        this.selectNext(evt);
+    }
+    
+    selectNext(evt) {
+        if(evt.target.nextSibling) {
+            evt.target.nextSibling.focus();
+        }
+        else {
+            this.template.querySelector('lightning-button.upload').focus();
+        }
+    }
+    
+    clear(evt) {
+        this.template.querySelectorAll('textarea').forEach((element) => element.value = "");
     }
 
     setUni({ detail : name }) {

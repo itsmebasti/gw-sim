@@ -1,18 +1,29 @@
+@media screen and (max-width: 1024px) {
+    .slds-drop-zone__actions lightning-button-icon {  
+        width: 2rem;
+        display: inline-block;
+        text-align: center;
+    }
+}
+
+.slds-drop-zone > lightning-button-icon {
+    display: inline-block;
+    transform: scale(1.2) translate(0,-.1rem);
+    margin-right: .25rem;
+    margin-left: .25rem;
+}
 
 ol {
-  list-style-type: none;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 12px;
-  line-height: 22px;
+    list-style-type: none;
+    font-family: 'Roboto Mono', monospace;
+    
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: auto;
+    background-color: var(--gw-table-grey-dark, black);
+    padding: 0 .125rem;
 
-  height: 450px;
-  overflow-y: scroll;
-  overflow-x: auto;
-  resize: vertical;
-  background-color: var(--gw-table-grey-dark, black);
-  padding: 0 1px;
-
-  position: relative;
+    position: relative;
 }
 
 ol.reverse { 
@@ -33,14 +44,10 @@ ol.temp {
 }
 
 li {
-  color: white;
-  border-bottom: solid 1px #80808038;
-  position: relative;
-  margin-right: 10px;
-}
-
-div.slds-drop-zone lightning-button-icon {
-    --slds-c-button-sizing-border: 0px;
+    color: white;
+    border-bottom: solid 1px #80808038;
+    position: relative;
+    margin-right: 0.75rem;
 }
 
 div.slds-drop-zone lightning-button-icon.red {
@@ -62,7 +69,7 @@ div.slds-drop-zone lightning-button-icon.green {
 }
 
 .slds-drop-zone {
-  padding-left: 5px;
+  padding-left: .25rem;
   font-weight: bold;
   cursor: grab;
 }
