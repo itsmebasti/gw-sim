@@ -19,7 +19,7 @@ export default class Fleet {
         this.ships = ships;
 
         this.ownFleet = (returning !== undefined);
-        this.newKolo = (!this.target.exists && mission === 'Kolonisieren');
+        this.newKolo = (!this.target.exists && mission === 'Kolonisierung');
         this.friendly = new Set(["rgb(0, 242, 255)", "rgb(0, 255, 0)"]).has(missionElement.style.color);
         this.important = (row.querySelector("i.unsetFleetImportant") !== null);
         this.unimportant = (row.querySelector("i.unsetFleetIgnore") !== null);
