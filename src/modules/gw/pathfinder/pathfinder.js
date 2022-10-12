@@ -68,10 +68,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             else {
                 switch(evt.key) {
                     case 'ArrowRight': case 'd': case 'D':
-                        this.template.querySelector('planet-selector').next();
+                        this.template.querySelector('gw-planet-selector').next();
                         break;
                     case 'ArrowLeft': case 'a': case 'A':
-                        this.template.querySelector('planet-selector').previous();
+                        this.template.querySelector('gw-planet-selector').previous();
                         break;
                 }
             }
