@@ -171,12 +171,12 @@ export default class AccountConfig extends CacheMixin(LightningElement) {
 
         if(this.accountData) {
             const account = new Account(this.accountData);
+            account.current = this.coords;
 
-            technologies.all
-                .filter(({type}) => this.removedQueueTypes.includes(type))
-                .forEach((info) => {
-                    RESOURCES.forEach((resType) => result[resType] += info[resType] / 400 * levelFactor.values[account.level(info.type) + 1])
-                });
+            this.removedQueueTypes.filter((type) => {
+                const construction = account.get(type);
+                RESOURCES.forEach((resType) => result[resType] += construction.describe[resType] / 400 * levelFactor.values[construction.level + 1])
+            });
         }
 
         return result;
