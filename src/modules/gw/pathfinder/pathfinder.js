@@ -321,16 +321,13 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.print(steps);
     }
 
-    move({ detail: { id, dropAt, tec } }) {
-        if(dropAt < -1) return;
-        const steps = this.steps;
-
-        const element = (tec) ? {type: 'start', tec, produce: this.cache.produce } : steps.splice(id, 1)[0];
-        const removedOffset = (id <= dropAt) ? 0 : 1;
-
-        steps.splice(dropAt + removedOffset, 0, element);
-
-        this.print(steps);
+    move({ detail: { commandIndex, newIndex, tec } }) {
+        const command = (tec) ? { type: 'start', tec, produce: this.cache.produce } : this.steps[commandIndex];
+        
+        tec || this.steps.splice(commandIndex, 1);
+        this.steps.splice(newIndex, 0, command);
+        
+        this.print(this.steps);
     }
 
     duplicate({ detail: {id} }) {

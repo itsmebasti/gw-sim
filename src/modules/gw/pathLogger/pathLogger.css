@@ -35,14 +35,6 @@ ol.reverse > li:first-child {
     margin-bottom: auto;
 }
 
-ol.temp {
-    position: fixed;
-    top: -10000px;
-    z-index: -9999;
-    opacity: 0;
-    width: 100%;
-}
-
 li {
     color: white;
     border-bottom: solid 1px #80808038;
@@ -84,10 +76,10 @@ div.slds-drop-zone lightning-button-icon.green {
 }
 
 .drag-image {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
+    position: fixed;
+    top: -10000px;
+    z-index: -9999;
+    opacity: 0;
 }
 
 .construction {

@@ -1,19 +1,18 @@
 <template>
-    <ol class="temp" lwc:dom="manual"></ol>
+    <ol class="drag-image" lwc:dom="manual"></ol>
     <ol class={direction} ondragover={allowDrop} ondrop={drop} data-command="-1">
-        <li>
+        <li data-command={commandCounter}>
             <div>[{serverTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier</div>
         </li>
 
-        <li for:each={displayedLogs} for:item="log" key={log.id} class={log.severity}>
+        <li for:each={displayedLogs} for:item="log" key={log.id} data-command={log.command} class={log.severity}>
             <div if:true={log.time}>[{log.time}]&nbsp;<span class={log.cssClass}>{log.msgType}</span>&nbsp;&gt;&nbsp;{log.message}</div>
             <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
             <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1"
-                data-command={log.command}
                 draggable="true"
+                ondragstart={drag}
                 ondragend={dragEnd}
                 ondragover={allowDrop}
-                ondragstart={drag}
                 ondrop={drop}>
                 
                 {log.message}
@@ -43,7 +42,7 @@
             </div>
         </li>
 
-        <li>
+        <li data-command='-1'>
             <div>[{startTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad startet hier</div>
         </li>
     </ol>

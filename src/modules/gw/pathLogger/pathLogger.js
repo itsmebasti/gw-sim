@@ -2,8 +2,6 @@ import { LightningElement, api, track } from 'lwc';
 import { toHHMMSS, dateTimeString, toSeconds, compactString } from '../../../classes/framwork/misc/timeConverters';
 import { E } from '../../../classes/model/static/types';
 
-const DIRECTION = { UP: Symbol(), DOWN: Symbol() };
-
 export default class PathLogger extends LightningElement {
     @api hideDetails = false;
     @api inlineDetails = false;
@@ -15,17 +13,17 @@ export default class PathLogger extends LightningElement {
 
     idCounter;
     commandCounter;
-    pointer;
+    @api pointer;
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
-            if (!evt.ctrlKey) {
+            if (!evt.ctrlKey && this.template.activeElement) {
                 switch(evt.key) {
                     case 'ArrowUp': case 'w': case 'W':
-                        this.move(evt, DIRECTION.UP);
+                        this.handleMoveKeyInput(evt, +1);
                         break;
                     case 'ArrowDown': case 's': case 'S':
-                        this.move(evt, DIRECTION.DOWN);
+                        this.handleMoveKeyInput(evt, -1);
                         break;
                 }
             }
@@ -33,7 +31,7 @@ export default class PathLogger extends LightningElement {
     }
 
     renderedCallback() {
-        this.pointer ?? this.template.querySelector(`div.slds-drop-zone[data-command='${this.pointer}']`)?.focus();
+        this.template.querySelector(`li.command[data-command='${this.pointer}'] div[tabindex='-1']`)?.focus();
     }
 
     @api
@@ -119,68 +117,85 @@ export default class PathLogger extends LightningElement {
             cssClass});
     }
 
-    get displayedLogs() {
-        return this.logs.filter((log) => !this.hideDetails || log.isCommand).reverse();
-    }
-
-    clear() {
-        this.logs = [];
-    }
-
-    move(evt, direction) {
-        const command = +this.template.activeElement?.dataset.command;
-        const earlier = (direction === (this.reverse ? DIRECTION.UP : DIRECTION.DOWN));
+    handleMoveKeyInput(evt, step) {
+        const id = this.commandId({target: this.template.activeElement});
         
-        if(!isNaN(command)) {
+        if(!isNaN(id)) {
             evt.preventDefault();
             evt.stopPropagation();
-            this.dispatchEvent(new CustomEvent('move', { detail:{ id: command, dropAt: command + ((earlier) ? -2 : 1) } }));
-            this.pointer = (earlier) ? command-1 : command+1;
+            this.moveCommandOneStep(id, step);
         }
     }
 
     handleSettingClick(evt) {
-        this.dispatchEvent(new CustomEvent('settingclick', { detail: { action: evt.target.dataset.action, id: this.commandId(evt) } }));
+        const id = this.commandId(evt)
+        this.pointer = id;
+        this.dispatchEvent(new CustomEvent('settingclick', { detail: { id, action: evt.target.dataset.action } }));
     }
 
     remove(evt) {
-        this.dispatchEvent(new CustomEvent('remove', { detail: { id: this.commandId(evt) } }));
+        const id = this.commandId(evt);
+        this.pointer = (this.reverse) ? id + 1 : id - 1;
+        this.dispatchEvent(new CustomEvent('remove', { detail: {id} }));
     }
 
     startFrom(evt) {
-        this.dispatchEvent(new CustomEvent('startfrom', { detail: { id: this.commandId(evt) } }));
+        const id = this.commandId(evt);
+        this.pointer = id;
+        this.dispatchEvent(new CustomEvent('startfrom', { detail: {id} }));
     }
 
     jumpTo(evt) {
-        this.dispatchEvent(new CustomEvent('jumpto', { detail: { id: this.commandId(evt) } }));
+        const id = this.commandId(evt);
+        this.pointer = id;
+        this.dispatchEvent(new CustomEvent('jumpto', { detail: {id} }));
     }
 
     duplicate(evt) {
-        this.dispatchEvent(new CustomEvent('duplicate', { detail: { id: this.commandId(evt) } }));
+        const id = this.commandId(evt);
+        this.pointer = (this.reverse) ? id - 1 : id + 1;
+        this.dispatchEvent(new CustomEvent('duplicate', { detail: {id} }));
     }
 
     up(evt) {
-        const id = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: id+1 } }));
+        this.moveCommandOneStep(this.commandId(evt), +1);
     }
 
     down(evt) {
-        const id = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: id-2 } }));
+        this.moveCommandOneStep(this.commandId(evt), -1);
+    }
+    
+    moveCommandOneStep(commandIndex, step) {
+        if(this.reverse) {
+            step *= -1;
+        }
+        
+        let newIndex = commandIndex + step;
+        
+        if(newIndex >= 0 && newIndex <= this.commandCounter) {
+            this.pointer = newIndex;
+            this.dispatchEvent(new CustomEvent('move', { detail: { commandIndex, newIndex } }));
+        }
     }
 
     toEnd(evt) {
-        const id = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: -1 } }));
+        const commandIndex = this.commandId(evt);
+        const newIndex = (this.reverse) ? this.commandCounter : 0;
+        
+        this.pointer = newIndex;
+        this.dispatchEvent(new CustomEvent('move', { detail: { commandIndex, newIndex } }));
     }
 
     toStart(evt) {
-        const id = this.commandId(evt);
-        this.dispatchEvent(new CustomEvent('move', { detail: { id, dropAt: this.commandCounter } }));
+        const commandIndex = this.commandId(evt);
+        const newIndex = (this.reverse) ? 0 : this.commandCounter;
+        
+        this.pointer = newIndex;
+        this.dispatchEvent(new CustomEvent('move', { detail: { commandIndex, newIndex } }));
     }
 
     commandId(evt) {
-        return parseInt(evt.target.closest('div[data-command]').dataset.command);
+        return parseInt(evt.target.closest('li').dataset.command);
     }
 
     startListening(account) {
@@ -244,31 +259,44 @@ export default class PathLogger extends LightningElement {
     }
     
     drag(evt) {
-        const div = evt.currentTarget;
-        evt.dataTransfer.setData('command', div.dataset.command);
-        const dragImage = this.template.querySelector('ol.temp').appendChild(div.parentElement.cloneNode(true));
-        dragImage.classList.add('drag-image');
-        evt.dataTransfer.setDragImage(dragImage, evt.offsetX, evt.offsetY);
+        const liElement = evt.currentTarget.closest('li');
+        evt.dataTransfer.setData('command', liElement.dataset.command);
+        
+        const clone = liElement.cloneNode(false);
+        clone.innerText = liElement.firstChild.childNodes[0].textContent;
+        this.template.querySelector('ol.drag-image').appendChild(clone);
+        
+        evt.dataTransfer.setDragImage(clone, evt.offsetX, evt.offsetY);
 
-        div.classList.add('dragged');
+        evt.currentTarget.classList.add('dragged');
     }
 
     dragEnd(evt) {
         evt.currentTarget.classList.remove('dragged');
-        this.template.querySelector('.drag-image').remove();
+        this.template.querySelector('ol.drag-image').innerHTML = "";
     }
 
     drop(evt) {
         evt.preventDefault();
         evt.stopPropagation();
-        const id = parseInt(evt.dataTransfer.getData('command') ?? this.commandCounter);
-        const dropAt = parseInt(evt.currentTarget.dataset.command ?? -1);
         const tec = evt.dataTransfer.getData('tec');
-        this.dispatchEvent(new CustomEvent('move', { detail:{ id, dropAt, tec } }));
+        const commandIndex = +evt.dataTransfer.getData('command');
+        let newIndex = +evt.target.closest('li').dataset.command;
+        
+        if(tec || newIndex < commandIndex) {
+            newIndex++;
+        }
+        
+        this.pointer = newIndex;
+        this.dispatchEvent(new CustomEvent('move', { detail:{ commandIndex, newIndex, tec } }));
     }
 
     allowDrop(evt) {
         evt.preventDefault();
+    }
+
+    get displayedLogs() {
+        return this.logs.filter((log) => !this.hideDetails || log.isCommand).reverse();
     }
     
     get direction() {
