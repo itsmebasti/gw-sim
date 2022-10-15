@@ -5,7 +5,7 @@
     "lut": 0,
     "h2o": 0,
     "h2": 0,
-    "time": 1000,
+    "seconds": 1000,
     "dependencies": [
       {
         "type": "Orbitale Verteidigungsstation",
@@ -19,7 +19,7 @@
     "lut": 200,
     "h2o": 0,
     "h2": 0,
-    "time": 10000,
+    "seconds": 10000,
     "dependencies": [
       {
         "type": "Orbitale Verteidigungsstation",
@@ -37,7 +37,7 @@
     "lut": 5000,
     "h2o": 0,
     "h2": 0,
-    "time": 25000,
+    "seconds": 25000,
     "dependencies": [
       {
         "type": "Orbitale Verteidigungsstation",
@@ -51,7 +51,7 @@
     "lut": 2000,
     "h2o": 50,
     "h2": 0,
-    "time": 850,
+    "seconds": 850,
     "dependencies": [
       {
         "type": "Orbitale Verteidigungsstation",
@@ -69,7 +69,7 @@
     "lut": 2000,
     "h2o": 2000,
     "h2": 0,
-    "time": 10000,
+    "seconds": 10000,
     "dependencies": [
       {
         "type": "Orbitale Verteidigungsstation",

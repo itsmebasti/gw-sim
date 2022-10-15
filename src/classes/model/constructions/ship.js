@@ -1,5 +1,5 @@
 import Construction from './construction';
-import timeBonus from '../static/timeBonus';
+import { timeBonus } from '../static/formulas';
 import { FACTORY } from '../static/types';
 
 export default class Ship extends Construction {
@@ -16,6 +16,6 @@ export default class Ship extends Construction {
     }
     
     increaseSeconds(sfLevel) {
-        return this.describe.time * timeBonus(sfLevel) / this.speed;
+        return this.describe.seconds * timeBonus(sfLevel) / this.speed;
     }
 }

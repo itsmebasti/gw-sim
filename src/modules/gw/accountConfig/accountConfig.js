@@ -2,9 +2,6 @@ import { LightningElement, track, api } from 'lwc';
 import { CacheMixin } from 'lwc-base';
 import Database from '../../../classes/framwork/database/database';
 import UNI, { accountState } from '../../../classes/model/infra/uni';
-import technologies from '../../../classes/model/static/technologies';
-import levelFactor from '../../../classes/model/static/levelFactor.json';
-import { RESOURCES } from '../../../classes/model/static/types';
 import Account from '../../../classes/model/infra/account';
 
 export default class AccountConfig extends CacheMixin(LightningElement) {

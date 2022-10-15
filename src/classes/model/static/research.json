@@ -6,7 +6,7 @@
     "lut": 0,
     "h2o": 0,
     "h2": 0,
-    "factor": 24.999999999,
+    "seconds": 9999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -21,7 +21,7 @@
     "lut": 4000,
     "h2o": 0,
     "h2": 2000,
-    "factor": 99.999999999,
+    "seconds": 39999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -40,7 +40,7 @@
     "lut": 0,
     "h2o": 0,
     "h2": 30000,
-    "factor": 24.999999999,
+    "seconds": 9999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -63,7 +63,7 @@
     "lut": 0,
     "h2o": 20000,
     "h2": 100000,
-    "factor": 150,
+    "seconds": 60000,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -82,7 +82,7 @@
     "lut": 5750,
     "h2o": 0,
     "h2": 450,
-    "factor": 259.999999999,
+    "seconds": 103999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -101,7 +101,7 @@
     "lut": 13250,
     "h2o": 0,
     "h2": 1240,
-    "factor": 259.999999999,
+    "seconds": 103999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -120,7 +120,7 @@
     "lut": 0,
     "h2o": 0,
     "h2": 0,
-    "factor": 24.999999999,
+    "seconds": 9999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -143,7 +143,7 @@
     "lut": 100,
     "h2o": 0,
     "h2": 0,
-    "factor": 259.999999999,
+    "seconds": 103999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -158,7 +158,7 @@
     "lut": 4000,
     "h2o": 4000,
     "h2": 4000,
-    "factor": 750,
+    "seconds": 300000 ,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -173,7 +173,7 @@
     "lut": 10000,
     "h2o": 0,
     "h2": 200,
-    "factor": 24.999999999,
+    "seconds": 9999,
     "dependencies": [
       {
         "type": "Forschungszentrum",
@@ -188,7 +188,7 @@
     "lut": 8000,
     "h2o": 8000,
     "h2": 3000,
-    "factor": 49.95,
+    "seconds": 19980,
     "dependencies": [
       {
         "type": "Forschungszentrum",

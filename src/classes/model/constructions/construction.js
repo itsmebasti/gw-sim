@@ -1,5 +1,4 @@
-import levelFactor from '../static/levelFactor.json';
-import timeBonus from '../static/timeBonus';
+import { timeBonus, frendorFactor } from '../static/formulas';
 import ResourceChanges from '../resources/resourceChanges';
 import { CHANGE, RES, RESOURCES, STORAGE } from '../static/types';
 
@@ -47,10 +46,10 @@ export default class Construction {
     }
     
     increaseCost(resType, level = this.level+1) {
-        return this.describe[resType] / 400 * levelFactor.values[level];
+        return this.describe[resType] * frendorFactor(level);
     }
     
     increaseSeconds(factoryLevel, level = this.level+1) {
-        return Math.floor(this.describe.factor * levelFactor.values[level] * timeBonus(factoryLevel) / this.speed)
+        return Math.floor(this.describe.seconds * frendorFactor(level) * timeBonus(factoryLevel) / this.speed)
     }
 }

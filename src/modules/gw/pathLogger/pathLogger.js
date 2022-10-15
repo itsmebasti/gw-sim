@@ -141,7 +141,7 @@ export default class PathLogger extends LightningElement {
 
     startFrom(evt) {
         const id = this.commandId(evt);
-        this.pointer = id;
+        this.pointer = 0;
         this.dispatchEvent(new CustomEvent('startfrom', { detail: {id} }));
     }
 

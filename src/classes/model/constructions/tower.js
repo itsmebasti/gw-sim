@@ -1,5 +1,5 @@
 import Construction from './construction';
-import timeBonus from '../static/timeBonus';
+import { timeBonus } from '../static/formulas';
 import { FACTORY } from '../static/types';
 
 export default class Tower extends Construction {
@@ -16,6 +16,6 @@ export default class Tower extends Construction {
     }
     
     increaseSeconds(orbiLevel) {
-        return this.describe.time * timeBonus(orbiLevel) / this.speed;
+        return this.describe.seconds * timeBonus(orbiLevel) / this.speed;
     }
 }
