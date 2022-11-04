@@ -1,7 +1,7 @@
 import ResourceCenter from '../resources/resourceCenter';
 import InfraEvent from '../../framwork/events/infraEvent';
 import DetailedError from '../../framwork/misc/detailedError';
-import { FACTORY, MINES, FACTORIES, E } from '../static/types';
+import { FACTORY, MINES, FACTORIES, E, CHANGE } from '../static/types';
 import technologies from '../static/technologies';
 import CommandCenter from '../factories/commandCenter';
 import ResearchCenter from '../factories/researchCenter';
@@ -30,8 +30,29 @@ export default class Planet {
         this.resources = new ResourceCenter(...MINES.map((mine) => this.get(mine)), data.resources);
     
         account.subscribe(E.START_REQUEST, this.handleStartRequest, this.coords);
-        account.subscribe(E.RESOURCE_CHANGE, ({resourceChanges}) => this.resources.apply(resourceChanges), this.coords);
-        account.subscribe(E.WAITING, ({duration}) => this.resources.produceIntoStorage(duration));
+        account.subscribe(E.RESOURCE_CHANGE, this.handleResourceChange, this.coords);
+        account.subscribe(E.PRE_CONTINUE, this.validateH2Prod, this.coords);
+        account.subscribe(E.CONTINUE, ({duration}) => this.resources.produceIntoStorage(duration));
+    }
+    
+    handleResourceChange = ({resourceChanges}) => {
+        const waterBefore = this.resources.h2oStorage.stored;
+        
+        this.resources.apply(resourceChanges);
+        
+        const waterAfter = this.resources.h2oStorage.stored;
+        
+        if(waterBefore > 0 && waterAfter === 0) {
+            this.account.publish(new InfraEvent(E.REDUCED_H2_PROD, {}, this.coords));
+        }
+    }
+    
+    validateH2Prod = ({duration}) => {
+        const secondsTillWaterIsEmpty = this.resources.secondsTillWaterIsEmpty();
+        
+        if(secondsTillWaterIsEmpty > 0 && secondsTillWaterIsEmpty < duration) {
+            this.account.register(new InfraEvent(E.REDUCED_H2_PROD, {}, this.coords), {time: secondsTillWaterIsEmpty});
+        }
     }
     
     buildingObjects(plain, speed) {
@@ -125,7 +146,8 @@ export default class Planet {
     publishResRequest(construction) {
         const missing = construction
             .increaseCosts()
-            .keepDelta(this.resources)
+            .clone(CHANGE.NEED)
+            .keepDelta(this.resources.state)
             .ceil();
         
         if(!missing.isEmpty()) {

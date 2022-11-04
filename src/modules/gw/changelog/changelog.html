@@ -1,53 +1,53 @@
 <template>
     <base-timeline class="slds-show slds-size_1-of-1 slds-large-size_3-of-5">
-        <!-- <base-timeline-item icon="standard:topic" label="Aktives Element im Log" date="05.10.2022" open>
-            Diese Änderung betrifft den Log rechts im <a target="_self" href="javascript:void(0)">Pathfinder</a>,
-            Der aktiv ausgewählte Auftrag im Log ist blau umrandet. Neue Items werden ab jetzt automatisch nach diesem aktiven Element eingefügt und das neue Element wird zum aktiven Element.
-            Damit ist es nun auch möglich Rohstoff Transporte und Zeit Anpassungen direkt an der richtigen Stelle im Pfad zu platzieren.
-        </base-timeline-item> -->
-    <base-timeline-item icon="standard:topic" label="Kolos werden in der Luft erkannt" date="12.10.2022" open>
-        Solltet ihr zum Zeitpunkt des Uploads ein Kolo Schiff in der Luft haben um einen neuen Planeten zu besiedeln,
-        so wird das ab jetzt erkannt un der neue Planet mit den mitgenommenen Rohstoffen angelegt.
-    </base-timeline-item>
-    <base-timeline-item icon="standard:topic" label="Mobile Version brauchbar" date="11.10.2022" open>
-        Die letzten Tage ich hab vieles aufgeräumt, Bugs behoben und Kleinigkeiten verbessert.<br>
-        Ihr werdet zwei neue aktionen im Log finden, damit alles in alle Richtungen funktioniert.
-        Wenn ihr neu hochladet, könnt ihr ab jetzt den Befehl mit "Erst ab hier" auswählen, der dem neuen Zeitpunkt im Pfad entspricht.
-        Außerdem könnt ihr Items jetzt auch ganz an den Anfang schieben.
-        <br>
-        <br>
-        Die größte Veränderung betrifft aber vor allem die mobilen Geräte. Das Userinterface sollte 
-        ab jetzt relativ reibungslos (im Querformat) auf Handys bedienbar sein.
-        Es gibt noch ein paar Schwachstellen, die ich verbessern möchte, 
-        aber grundlegend sollte erst einmal alles zufriedenstellend funktionieren.
-        Hinweis: Unter Einstellungen könnt ihr sogar in den Fullscreen Modus wechseln, dann fühlt es sich fast schon wie ein App an.
-    </base-timeline-item>
-    <base-timeline-item icon="standard:topic" label="Planeten shortcuts" date="09.10.2022" open>
-        Ab jetzt könnt ihr mit den Pfeiltasten zwischen den Planeten wechseln, 
-        <br>dabei wird immer der aktuelle Stand der Pfades zwischengespeichert!
-    </base-timeline-item>
-    <base-timeline-item icon="standard:topic" label="Verbessertes Pathfinder Interface" date="06.10.2022" open>
-        Ab jetzt könnt ihr im Pathfinder sehen, welche Technologie ihr bauen könnt, oder nicht.
-        <br>
-        <a possible="true" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenmine</a>
-        <a possible="false" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenspeicher</a>
-        <br>
-        Außerdem ist ab jetzt die Serverzeit rot hinterlegt, wenn es irgendwo im Pfad einen Fehler gab.
-        So könnt ihr ohne den ganzen Pfad zu sehen im Pfad herumspielen und wisst, ob er auch valide ist und bis zu eurem Ziel durchläuft.
-    </base-timeline-item>
-    <base-timeline-item icon="standard:topic" label="Inline Details" date="06.10.2022">
-        Damit mit während die Details ausgeblendet sind trotzdem die wichtigsten Informationen hat, 
-        gibt es ab jetzt einen "Inline" toggle, mit dem ihr euch start und bauzeit, sowie fehlende Ressourcen anzeigen lassen könnt.
-        <br>
-        <br>
-        <base-toggle label="Demo: Inline Info aktivieren" onchange={toggleInline} checked={inline}></base-toggle>
-        <gw-path-logger class="inline slds-show slds-large-size_4-of-5 slds-size_1-of-1" reverse={reverse} hide-details inline-details={inline}></gw-path-logger>
-    </base-timeline-item>
-    <base-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022">
-        Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
-        Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
-        Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
-    </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Neue vom Log" date="26.10.2022" open>
+            Diese Änderungen betreffen den Log rechts im <a target="_self" href="javascript:void(0)">Pathfinder</a>,
+            Neue Items werden ab jetzt automatisch nach dem aktiven Auftrag eingefügt. Der aktive Auftrag im Log ist blau umrandet. 
+            Damit ist es nun auch möglich Rohstofftransporte und Zeit Anpassungen sofort an der richtigen Stelle im Pfad zu platzieren.
+            Außerdem gibt es zukünftig weitere Informationen im Pfad über dinge die der Pathfinder unsichtbar im Hintergrund für euch erledigt, 
+            damit es keine Missverständnisse gibt. Des weiteren gab es sichtbare Anpassungen am User Interface und kleinere Bugfixes im Hintergrund.
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Kolos werden in der Luft erkannt" date="12.10.2022" open>
+            Solltet ihr zum Zeitpunkt des Uploads ein Kolo Schiff in der Luft haben um einen neuen Planeten zu besiedeln,
+            so wird das ab jetzt erkannt un der neue Planet mit den mitgenommenen Rohstoffen angelegt.
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Mobile Version brauchbar" date="11.10.2022" open>
+            Die letzten Tage ich hab vieles aufgeräumt, Bugs behoben und Kleinigkeiten verbessert.<br>
+            Ihr werdet zwei neue aktionen im Log finden, damit alles in alle Richtungen funktioniert.
+            Wenn ihr neu hochladet, könnt ihr ab jetzt den Befehl mit "Erst ab hier" auswählen, der dem neuen Zeitpunkt im Pfad entspricht.
+            Außerdem könnt ihr Items jetzt auch ganz an den Anfang schieben.
+            <br>
+            <br>
+            Die größte Veränderung betrifft aber vor allem die mobilen Geräte. Das Userinterface sollte 
+            ab jetzt relativ reibungslos (im Querformat) auf Handys bedienbar sein.
+            Es gibt noch ein paar Schwachstellen, die ich verbessern möchte, 
+            aber grundlegend sollte erst einmal alles zufriedenstellend funktionieren.
+            Hinweis: Unter Einstellungen könnt ihr sogar in den Fullscreen Modus wechseln, dann fühlt es sich fast schon wie ein App an.
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Planeten shortcuts" date="09.10.2022" open>
+            Ab jetzt könnt ihr mit den Pfeiltasten zwischen den Planeten wechseln, 
+            <br>dabei wird immer der aktuelle Stand der Pfades zwischengespeichert!
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Verbessertes Pathfinder Interface" date="06.10.2022" open>
+            Ab jetzt könnt ihr im Pathfinder sehen, welche Technologie ihr bauen könnt, oder nicht.
+            <br>
+            <a possible="true" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenmine</a>
+            <a possible="false" class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Eisenspeicher</a>
+            <br>
+            Außerdem ist ab jetzt die Serverzeit rot hinterlegt, wenn es irgendwo im Pfad einen Fehler gab.
+            So könnt ihr ohne den ganzen Pfad zu sehen im Pfad herumspielen und wisst, ob er auch valide ist und bis zu eurem Ziel durchläuft.
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Inline Details" date="06.10.2022">
+            Damit mit während die Details ausgeblendet sind trotzdem die wichtigsten Informationen hat, 
+            gibt es ab jetzt einen "Inline" toggle, mit dem ihr euch start und bauzeit, sowie fehlende Ressourcen anzeigen lassen könnt.
+            <br>
+            (Hinweis: dieses Feature wurde durch weitere Log Levels erweitert.)
+        </base-timeline-item>
+        <base-timeline-item icon="standard:topic" label="Content hinzugefügt" date="05.10.2022">
+            Der xetys hat uns ein Tutorial gedreht das ich euch hier bereit stellen darf. Ihr findet es unter <a>Info</a>.
+            Das UI wurde an manchen Stellen angepasst und die Inhalte gepflegt. 
+            Es lohnt sich also die Info und das Changelog einmal durchzulesen und den ein oder anderen Hinweis aufzuschnappen.
+        </base-timeline-item>
         <base-timeline-item icon="standard:topic" label="Changelog hinzugefügt" date="04.10.2022">
             Ich habe mich entschieden diesen <a>Changelog</a> einzuführen, damit ihr besser nachvollziehen könnt, 
             was neu ist und wie ihr die neuen Features nutzen könnt.
@@ -55,10 +55,6 @@
         <base-timeline-item icon="standard:topic" label="Umgekehrtes Log implementiert" date="03.10.2022">
             Ab jetzt ist es möglich das Log im Pathfinder einfach umzukehren, 
             unter <a>Einstellungen</a> könnt ihr euch nun entscheiden was euch besser gefällt.
-            <br>
-            <br>
-            <base-toggle label="Demo: Pfad Umkehren" onchange={toggleDirection} checked={reverse}></base-toggle>
-            <gw-path-logger class="revert slds-show slds-large-size_4-of-5 slds-size_1-of-1" reverse={reverse}></gw-path-logger>
         </base-timeline-item>
         <base-timeline-item icon="standard:topic" label="Planeten Hinzufügen" date="01.10.2022">
             Ab heute könnt ihr unter <a>Account Konfigurieren -> Kolonialisieren</a>  Planeten hinzufügen.
@@ -83,7 +79,6 @@
             <b>Ressourcen selbst Produzieren [=o] Summe: ( 101 | 1337 | 0 | 255 )</b>
             <br>
             Dort könnt ihr dieses Feature auch auf den ganzen Pfad anwenden.
-            <gw-path-logger class="interaction slds-show slds-large-size_4-of-5 slds-size_1-of-1" reverse={reverse}></gw-path-logger>
         </base-timeline-item>
         <base-timeline-item icon="standard:topic" label="Drag Drop vervollständigt" date="29.09.2022">
             Ihr könnt ab jetzt auch dir Items von links nach rechts direkt in den Pfad drag-droppen wo ihr so braucht 

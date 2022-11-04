@@ -1,90 +1,102 @@
 import ResourceStorage from './resourceStorage';
 import ResourceChanges from './resourceChanges';
-import { RES, NAMES } from '../static/types';
+import { RES, NAMES, CHANGE } from '../static/types';
 
 export default class ResourceCenter {
-    fe;
-    lut;
-    h2o;
-    h2;
+    feStorage;
+    lutStorage;
+    h2oStorage;
+    h2Storage;
     
     constructor(feMine, luMine, tower, chem, echem, resources) {
-        this.fe = new ResourceStorage(RES.FE, resources, feMine);
-        this.lut = new ResourceStorage(RES.LUT, resources, luMine);
-        this.h2o = new ResourceStorage(RES.H2O, resources, tower);
-        this.h2 = new ResourceStorage(RES.H2, resources, new H2Factory(chem, echem));
+        this.feStorage = new ResourceStorage(RES.FE, resources, feMine);
+        this.lutStorage = new ResourceStorage(RES.LUT, resources, luMine);
+        this.h2oStorage = new ResourceStorage(RES.H2O, resources, tower);
+        this.h2Storage = new ResourceStorage(RES.H2, resources, new H2Factory(chem, echem));
     }
     
     apply(resourceChanges) {
-        resourceChanges.values.forEach((change) => this[change.type].apply(change));
+        resourceChanges.values.forEach((change) => this.storage(change.type).apply(change));
     }
     
-    timeToProduce(fe, lut, h2o, h2) {
-        const feTime = this.fe.secondsToProduce(fe);
-        const lutTime = this.lut.secondsToProduce(lut);
+    timeToProduce(feAmount, lutAmount, h2oAmount, h2Amount) {
+        const feTime = this.feStorage.secondsToProduce(feAmount);
+        const lutTime = this.lutStorage.secondsToProduce(lutAmount);
         
-        const h2oConsumption = this.h2.mine.hourlyConsumption();
-        const h2oProduction = this.h2o.mine.hourlyProduction();
+        const hourlyH2oConsumption = this.h2Storage.mine.hourlyConsumption();
+        const hourlyH2oProduction = this.h2oStorage.mine.hourlyProduction();
         
-        let h2oTime = this.h2o.secondsToProduce(h2o, {h2oConsumption});
+        let h2oTime = this.h2oStorage.secondsToProduce(h2oAmount, {hourlyH2oConsumption});
         let h2Time = 0;
         
-        if(h2 > 0) {
-            h2Time = this.h2.secondsToProduce(h2);
+        if(h2Amount > 0) {
+            h2Time = this.h2Storage.secondsToProduce(h2Amount);
             
             if(h2Time === Infinity) {
                 return Infinity;
             }
             
-            const consumption = this.h2.consumptionIn(h2Time);
-            const water = this.h2o.resourcesIn(h2Time);
+            const consumption = this.h2Storage.consumptionIn(h2Time);
+            const water = this.h2oStorage.resourcesIn(h2Time);
             
             if(consumption > water) {
-                const secondsToConsumeAll = this.h2o.secondsToConsumeAll(h2oConsumption);
-                const rest = h2 - this.h2.productionIn(secondsToConsumeAll);
+                const secondsToConsumeAll = this.h2oStorage.secondsToConsumeAll(hourlyH2oConsumption);
                 
-                h2Time = secondsToConsumeAll + this.h2.secondsToProduce(rest, {h2oProduction});
+                const rest = h2Amount - this.h2Storage.productionIn(secondsToConsumeAll);
+                
+                h2Time = secondsToConsumeAll + this.h2Storage.secondsToProduce(rest, {hourlyH2oProduction});
             }
         }
         
         const seconds = Math.ceil(Math.max(feTime, lutTime, h2oTime, h2Time));
         
-        if(h2oProduction < 0 && this.h2o.resourcesIn(seconds, h2oConsumption) < h2o) {
+        if(hourlyH2oProduction < 0 && this.h2oStorage.resourcesIn(seconds, hourlyH2oConsumption) < h2oAmount) {
             return Infinity;
         }
         
         return seconds;
     }
     
+    secondsTillWaterIsEmpty() {
+        return this.h2oStorage.secondsToConsumeAll(this.h2Storage.mine.hourlyConsumption());
+    }
+    
     produceIntoStorage(duration) {
-        const changes = new ResourceChanges(
-            this.fe.productionIn(duration),
-            this.lut.productionIn(duration));
+        let h2oProduction = this.h2oStorage.productionIn(duration);
+        let h2Production = 0;
         
-        let h2oChange = this.h2o.productionIn(duration);
-        let h2Change = 0;
-        
-        const water = this.h2o.resourcesIn(duration);
-        const consumption = this.h2.consumptionIn(duration);
+        const water = this.h2oStorage.resourcesIn(duration);
+        const consumption = this.h2Storage.consumptionIn(duration);
         
         if(consumption > water) {
-            h2oChange = -this.h2o.stored;
-            h2Change += this.h2.productionIn(duration) * (water/consumption);
+            h2oProduction = -this.h2oStorage.stored;
+            h2Production += this.h2Storage.productionIn(duration) * (water/consumption);
         }
         else {
-            h2oChange -= consumption;
-            h2Change += this.h2.productionIn(duration);
+            h2oProduction -= consumption;
+            h2Production += this.h2Storage.productionIn(duration);
         }
         
-        changes.set(RES.H2O, h2oChange);
-        changes.set(RES.H2, h2Change);
-        
-        this.apply(changes);
+        this.apply(new ResourceChanges(
+            this.feStorage.productionIn(duration),
+            this.lutStorage.productionIn(duration), 
+            h2oProduction, 
+            h2Production, 
+            CHANGE.PRODUCED));
+    }
+    
+    storage(type) {
+        switch (type) {
+            case RES.FE: return this.feStorage;
+            case RES.LUT: return this.lutStorage;
+            case RES.H2O: return this.h2oStorage;
+            case RES.H2: return this.h2Storage;
+        }
     }
     
     get printable() {
-        return [this.fe, this.lut, this.h2o, this.h2].map((storage) => {
-            const consumption = (storage === this.h2o) ? this.h2.mine.hourlyConsumption() : 0;
+        return [this.feStorage, this.lutStorage, this.h2oStorage, this.h2Storage].map((storage) => {
+            const consumption = (storage === this.h2oStorage) ? this.h2Storage.mine.hourlyConsumption() : 0;
             return {
                 name: NAMES[storage.resType],
                 type: storage.resType,
@@ -95,7 +107,7 @@ export default class ResourceCenter {
     }
     
     get state() {
-        return [this.fe, this.lut, this.h2o, this.h2].map(
+        return [this.feStorage, this.lutStorage, this.h2oStorage, this.h2Storage].map(
             (storage) => ({type: storage.resType, stored: storage.stored}));
     }
 }

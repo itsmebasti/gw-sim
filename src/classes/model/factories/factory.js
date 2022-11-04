@@ -12,7 +12,7 @@ export default class Factory extends Building {
         super(describe, level, account.uni.SPEED);
         this.coords = coords;
         this.account = account;
-        account.subscribe(E.WAITING, this.continue, coords);
+        account.subscribe(E.CONTINUE, this.continue, coords);
     }
     
     initializeQueue(construction, timeLeft) {
@@ -40,6 +40,7 @@ export default class Factory extends Building {
         const unfulfilledDependency = (this.constructing && construction.dependencyLevel(current.type) === current.level + 1);
         
         if(unfulfilledDependency) {
+            this.account.publish(new InfraEvent(E.FULFILLING_DEPENDENCY, {construction: current}, this.coords));
             this.completeCurrent();
         }
     }

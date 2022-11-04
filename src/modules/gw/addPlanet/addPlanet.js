@@ -68,7 +68,7 @@ export default class AddPlanet extends LightningElement {
             .then(() => {
                 this.toast('Planet ' + this.planet.coords + ' erfolgreich gelöscht');
                 
-                this.dispatchEvent(new CustomEvent('accountchange', { detail: accountData.player, bubbles: true, composed: true }));
+                this.dispatchEvent(new CustomEvent('accountchange', { detail: this.player, bubbles: true, composed: true }));
                 this.loadStoredPlanets();
             })
             .catch(this.handle);

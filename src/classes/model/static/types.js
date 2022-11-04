@@ -38,24 +38,32 @@ export const FACTORY = {
 export const FACTORIES = Object.values(FACTORY);
 
 export const CHANGE = {
-    FARM: Symbol('farm'),
-    COST: Symbol('cost'),
-    TRADE: Symbol('trade'),
-    TRADE_OUT: Symbol('tradeOut'),
-    SAVE: Symbol('save'),
-    TRANSPORT: Symbol('transport')
+    FARM: Symbol('FARM'),
+    COST: Symbol('AUSGABEN'),
+    TRADE: Symbol('HANDEL'),
+    TRADE_OUT: Symbol('HANDEL_RAUS'),
+    SAVE: Symbol('SAVE_FLUG'),
+    TRANSPORT: Symbol('TRANSPORT'),
+    PRODUCED: Symbol('PRODUZIERT'),
+    GENERATED: Symbol('GENERIER'),
+    NEED: Symbol('BENÖTIGT'),
+    MANUALLY: Symbol('MANUELL'),
 }
 
 export const E = {
-    FLEET_CHANGE: Symbol(),
-    RESOURCE_CHANGE: Symbol(),
-    RESOURCE_REQUEST: Symbol(),
-    START_REQUEST: Symbol(),
-    STARTED: Symbol(),
-    FINISHED: Symbol(),
-    FAILED: Symbol(),
-    NEW_PLANET: Symbol(),
+    FLEET_CHANGE: Symbol('FLEET_CHANGE'),
+    RESOURCE_CHANGE: Symbol('RESOURCE_CHANGE'),
+    RESOURCE_REQUEST: Symbol('RESOURCE_REQUEST'),
+    REDUCED_H2_PROD: Symbol('REDUCED_H2_PROD'),
+    START_REQUEST: Symbol('START_REQUEST'),
+    STARTED: Symbol('STARTED'),
+    FINISHED: Symbol('FINISHED'),
+    FAILED: Symbol('FAILED'),
+    NEW_PLANET: Symbol('NEW_PLANET'),
     
-    EVENT_CHANGE: Symbol(),
-    WAITING: Symbol()
+    EVENT_CHANGE: Symbol('EVENT_CHANGE'),
+    FULFILLING_DEPENDENCY: Symbol('FULFILLING_DEPENDENCY'),
+    FINISH_RESEARCH_CENTER: Symbol('FINISH_RESEARCH_CENTER'),
+    PRE_CONTINUE: Symbol('PRE_CONTINUE'),
+    CONTINUE: Symbol('CONTINUE')
 };

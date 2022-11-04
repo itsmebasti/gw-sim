@@ -4,7 +4,7 @@ export default class ResourceChanges {
     type;
     changesByResType = {}
     
-    constructor(fe=0, lut=0, h2o=0, h2=0, type = CHANGE.TRADE) {
+    constructor(fe=0, lut=0, h2o=0, h2=0, type) {
         this.type = type;
         this.set(RES.FE, fe);
         this.set(RES.LUT, lut);
@@ -31,7 +31,7 @@ export default class ResourceChanges {
     }
     
     keepDelta(planetRes) {
-        this.values.forEach((change) => change.subtractTillZero(planetRes[change.type].stored));
+        this.values.forEach((change, i) => change.subtractTillZero(planetRes[i].stored));
         return this;
     }
     
@@ -55,7 +55,7 @@ export default class ResourceChanges {
     }
     
     toString() {
-        return this.toArray().join("/");
+        return this.toArray().map((value) => (value > 0) ? '+'+value : value).join('|');
     }
     
     clone(type = this.type) {

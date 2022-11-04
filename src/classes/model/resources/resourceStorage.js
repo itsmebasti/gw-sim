@@ -10,6 +10,18 @@ export default class ResourceStorage {
         this.mine = mine;
     }
     
+    set stored(value) {
+        this._stored = this.clean(value);
+    }
+    
+    get stored() {
+        return this._stored;
+    }
+    
+    clean(amount) {
+        return +amount.toFixed(5);
+    }
+    
     resourcesIn(seconds, h2oConsumption) {
         return this.clean(this.stored + this.productionIn(seconds, h2oConsumption));
     }
@@ -20,7 +32,7 @@ export default class ResourceStorage {
     }
     
     consumptionIn(seconds) {
-        return seconds * (this.mine.hourlyConsumption() / 3600);
+        return this.clean(seconds * (this.mine.hourlyConsumption() / 3600));
     }
     
     apply(change) {
@@ -37,25 +49,12 @@ export default class ResourceStorage {
         }
     }
     
-    set stored(value) {
-        this._stored = this.clean(value);
-    }
-    
-    get stored() {
-        return this._stored;
-    }
-    
-    clean(amount) {
-        const rounded = Math.trunc(amount + 0.00001);
-        return (rounded > amount) ? rounded : amount;
-    }
-    
     consume(amount) {
-        if(amount < 0 || amount > this.stored || isNaN(amount)) {
+        if(amount < 0 || this.clean(amount) > this.stored || isNaN(amount)) {
             throw new ResourceError(Math.trunc(this.stored) + ' - ' + amount + ' ' + this.resType + ' nicht möglich');
         }
         
-        this.stored -= amount;
+        this.stored -= Math.min(amount, this.stored);
     }
     
     add(amount) {
@@ -72,19 +71,18 @@ export default class ResourceStorage {
         this.stored = amount;
     }
     
-    
-    secondsToProduce(amount, {h2oProduction, h2oConsumption = 0}  = {} ) {
+    secondsToProduce(amount, {hourlyH2oProduction, hourlyH2oConsumption = 0}  = {} ) {
         const need = amount - this.stored;
         
-        let production = this.mine.hourlyProduction() - h2oConsumption;
+        let hourlyProduction = this.mine.hourlyProduction() - hourlyH2oConsumption;
         
-        if(h2oProduction && this.mine.hourlyConsumption() > h2oProduction) {
-            production *= h2oProduction / this.mine.hourlyConsumption();
+        if(hourlyH2oProduction && this.mine.hourlyConsumption() > hourlyH2oProduction) {
+            hourlyProduction *= hourlyH2oProduction / this.mine.hourlyConsumption();
         }
         
         return (need <= 0) ? 0 :
-               (production <= 0) ? Infinity :
-                need / production * 3600;
+               (hourlyProduction <= 0) ? Infinity :
+               Math.ceil(need / hourlyProduction * 3600);
     }
     
     secondsToConsumeAll(hourlyConsumption) {
@@ -95,7 +93,7 @@ export default class ResourceStorage {
         
         const tillZero = res / consumption;
         
-        return tillZero * 3600;
+        return (tillZero < 0) ? Infinity : Math.floor(tillZero * 3600);
     }
 }
 

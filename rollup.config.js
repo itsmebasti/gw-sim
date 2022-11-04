@@ -1,4 +1,5 @@
 import lwc from '@lwc/rollup-plugin';
+import fs from 'fs';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import { nodeResolve as resolveSubdirectoryImports } from '@rollup/plugin-node-resolve';
@@ -33,13 +34,26 @@ export default {
         copy({
             targets: [
                 { src: 'src/index.html', dest: 'dist' },
-                { src: 'src/favicon.ico', dest: 'dist/assets/icons' },
+                { src: 'src/favicon.ico', dest: 'dist' },
                 { src: 'node_modules/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css', dest: 'dist/assets/styles' },
             ],
             copyOnce: true
         }),
         production && terser(),
-        watching && serve('dist'),
-        watching && livereload({ watch: 'dist', delay: 400 })
+        watching && serve({
+            contentBase: 'dist',
+            https: {
+                key: fs.readFileSync('ssl.key'),
+                cert: fs.readFileSync('ssl.crt'),
+            }
+        }),
+        watching && livereload({ 
+            watch: 'dist', 
+            delay: 400,
+            https: {
+                key: fs.readFileSync('ssl.key'),
+                cert: fs.readFileSync('ssl.crt'),
+            }
+        })
     ].filter(Boolean)
 };

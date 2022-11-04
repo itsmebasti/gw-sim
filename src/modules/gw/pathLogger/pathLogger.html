@@ -1,49 +1,51 @@
 <template>
-    <ol class="drag-image" lwc:dom="manual"></ol>
-    <ol class={direction} ondragover={allowDrop} ondrop={drop} data-command="-1">
-        <li data-command={commandCounter}>
-            <div>[{serverTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier</div>
-        </li>
+    <div class="container">
+        <ol class="drag-image" lwc:dom="manual"></ol>
+        
+        <ol class={direction} ondragover={allowDrop} ondrop={drop} data-command={firstOrLastCommand}>
+            <li data-command={commandCounter}>
+                <div>[{serverTimeString}]&nbsp;<span class="time">ENDE </span>&nbsp;&gt;&nbsp;---------- Pfad endet hier</div>
+            </li>
 
-        <li for:each={displayedLogs} for:item="log" key={log.id} data-command={log.command} class={log.severity}>
-            <div if:true={log.time}>[{log.time}]&nbsp;<span class={log.cssClass}>{log.msgType}</span>&nbsp;&gt;&nbsp;{log.message}</div>
-            <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
-            <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1"
-                draggable="true"
-                ondragstart={drag}
-                ondragend={dragEnd}
-                ondragover={allowDrop}
-                ondrop={drop}>
-                
-                {log.message}
-                
-                <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="bare"
-                    class={setting.color}
-                    icon-name={setting.icon}
-                    tooltip={setting.tooltip}
-                    data-action={setting.action}
-                    onclick={handleSettingClick}></lightning-button-icon>
+            <li for:each={displayedLogs} for:item="log" key={log.id} data-command={log.command} class={log.severity}>
+                <div if:true={log.time}>[{log.time}]&nbsp;<span class={log.cssClass}>{log.msgType}</span>&nbsp;&gt;&nbsp;{log.message}</div>
+                <div if:true={log.isDetail} class={log.cssClass}>{log.message}</div>
+                <div if:true={log.isCommand} class="slds-drop-zone slds-drop-zone__container" tabindex="-1"
+                    draggable="true"
+                    ondragstart={drag}
+                    ondragend={dragEnd}
+                    onfocus={bubbleCommandClick}>
                     
-                <template if:true={inlineDetails}>
-                    <span if:true={log.needed} class="slds-p-right_xx-small">({log.needed})</span>
-                    <span if:true={log.start}>Start: {log.start} + {log.duration}</span>
-                </template>
-                
-                <div class="slds-drop-zone__actions">
-                    <lightning-button-icon variant="brand" size="x-small" onclick={duplicate} icon-name="utility:layers" tooltip="Duplizieren"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={startFrom} icon-name="utility:new_window"    tooltip="Erst ab hier"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={up} icon-name="utility:up"            tooltip="Hoch schieben"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={down} icon-name="utility:down"        tooltip="Runter schieben"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={toEnd} icon-name="utility:arrow_bottom" tooltip="Ans Ende"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={toStart} icon-name="utility:arrow_top" tooltip="An den Anfang"></lightning-button-icon>
-                    <lightning-button-icon variant="brand" size="x-small" onclick={remove} icon-name="utility:close"     tooltip="Löschen"></lightning-button-icon>
+                    {log.message}
+                    
+                    <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="bare"
+                        class={setting.color}
+                        icon-name={setting.icon}
+                        tooltip={setting.tooltip}
+                        data-action={setting.action}
+                        onclick={handleSettingClick}></lightning-button-icon>
+                        
+                    <template if:true={showInlineDetails}>
+                        <span if:true={log.needed} class="slds-p-right_xx-small">({log.needed})</span>
+                        <span if:true={log.start}>Start: {log.start} + {log.duration}</span>
+                    </template>
+                    
+                    <div class="slds-drop-zone__actions">
+                        <lightning-button-icon variant="brand" size="x-small" onclick={duplicate} icon-name="utility:layers" tooltip="Duplizieren"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={jumpTo} icon-name="utility:pop_in"    tooltip="Nur bis hier"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={startFrom} icon-name="utility:new_window"    tooltip="Erst ab hier"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={up} icon-name="utility:up"            tooltip="Hoch schieben"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={down} icon-name="utility:down"        tooltip="Runter schieben"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={toEnd} icon-name="utility:arrow_bottom" tooltip="Ans Ende"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={toStart} icon-name="utility:arrow_top" tooltip="An den Anfang"></lightning-button-icon>
+                        <lightning-button-icon variant="brand" size="x-small" onclick={remove} icon-name="utility:close"     tooltip="Löschen"></lightning-button-icon>
+                    </div>
                 </div>
-            </div>
-        </li>
+            </li>
 
-        <li data-command='-1'>
-            <div>[{startTimeString}]&nbsp;<span class="time">TIME </span>&nbsp;&gt;&nbsp;---------- Pfad startet hier</div>
-        </li>
-    </ol>
+            <li data-command='-1'>
+                <div>[{startTimeString}]&nbsp;<span class="time">START</span>&nbsp;&gt;&nbsp;---------- Pfad startet hier</div>
+            </li>
+        </ol>
+    </div>
 </template>

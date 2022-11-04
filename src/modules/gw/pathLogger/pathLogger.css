@@ -1,3 +1,10 @@
+.container {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    background-color: var(--gw-table-grey-dark, black);
+}
+
 @media screen and (max-width: 1024px) {
     .slds-drop-zone__actions lightning-button-icon {  
         width: 2rem;
@@ -17,10 +24,9 @@ ol {
     list-style-type: none;
     font-family: 'Roboto Mono', monospace;
     
-    height: 100%;
+    flex-grow: 1;
     overflow-y: scroll;
     overflow-x: auto;
-    background-color: var(--gw-table-grey-dark, black);
     padding: 0 .125rem;
 
     position: relative;
@@ -86,12 +92,20 @@ div.slds-drop-zone lightning-button-icon.green {
   color: limegreen;
 }
 
-.time {
+.detail {
+  color: orange;
+}
+
+.time, .info {
   color: #00EAFF;
 }
 
 .res {
   color: lightskyblue;
+}
+
+.warning {
+  color: darkorange;
 }
 
 .error {
@@ -113,8 +127,4 @@ div.slds-drop-zone lightning-button-icon.green {
 
 .command.rejected {
   background-color: #997777;
-}
-
-.detail {
-  color: orange;
 }

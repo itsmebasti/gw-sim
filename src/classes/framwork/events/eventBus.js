@@ -67,19 +67,21 @@ export default class EventBus {
                 this.channels[event.scope]?.[event.type].register(event);
                 this.channels["global"][event.type].register(event);
             }
-
+            
             event.fire();
-
+            
             this.continue(seconds);
         }
         else if(seconds > 0) {
-            const tillNext = this.nextOr(seconds);
-            this.passed += tillNext;
-
-            this.publish(new InfraEvent(E.WAITING, { duration: tillNext, total: this.passed })
-                .add(() => this.queue.forEach((evt) => evt.timeLeft -= tillNext)));
-
-            this.continue(seconds - tillNext);
+            this.register(new InfraEvent(E.PRE_CONTINUE, { duration: this.nextOr(seconds) }));
+            
+            const toProcess = this.nextOr(seconds);
+            this.passed += toProcess;
+            
+            this.publish(new InfraEvent(E.CONTINUE, { duration: toProcess, total: this.passed }));
+            this.queue.forEach((evt) => evt.timeLeft -= toProcess);
+            
+            this.continue(seconds - toProcess);
         }
     }
 

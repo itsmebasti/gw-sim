@@ -10,6 +10,7 @@ import InfraEvent from '../../../classes/framwork/events/infraEvent';
 import { CHANGE, E, FACTORY } from '../../../classes/model/static/types';
 import { ResourceError } from '../../../classes/model/resources/resourceStorage';
 import ResourceChanges from '../../../classes/model/resources/resourceChanges';
+import History from './history';
 
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
@@ -26,13 +27,13 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     account;
 
     steps = [];
-    history = {};
-    pointer = -1;
-    timeTraveling = false;
-    pathHasErrors = false;
-
+    selectedStep;
+    
+    history = new History();
+    
     @track requested = [0, 0, 0, 0];
     timePassed = '00:00:00';
+    pathHasErrors = false;
     produceResForNextBuild = true;
 
     @track cache = this.cached({
@@ -93,11 +94,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
         this.loadStoredData(accountState)
-            .then(() => this.loadPlanet(this.cache.coords))
-            .catch(this.handle);
+            .then(() => this.loadPlanet(this.cache.coords));
     }
 
-    print(steps) {
+    print(steps, activeStep) {
         try {
             this.account = this.preparedAccount(this.accountState);
         }
@@ -107,15 +107,18 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             return;
         }
         
-        this.account.subscribe(E.FAILED, () => this.pathHasErrors = true, this.account.current);
-        this.account.subscribe(E.RESOURCE_REQUEST, this.handleResourceRequest, this.account.current);
+        this.selectedStep = activeStep;
         
         this.requested = [0, 0, 0, 0];
-        this.steps = [];
         this.steps = steps;
-        this.updateHistory();
+        
+        this.history.push(steps);
 
         this.logger.reset(this.account);
+        this.account.subscribe(E.FAILED, () => this.pathHasErrors = true, this.account.current);
+        this.account.subscribe(E.REDUCED_H2_PROD, () => this.pathHasErrors = true, this.account.current);
+        this.account.subscribe(E.RESOURCE_REQUEST, this.handleResourceRequest, this.account.current);
+        
         this.pathHasErrors = false;
         steps.forEach(this.execute);
 
@@ -167,27 +170,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     add(step) {
-        this.steps.push(step);
-        this.updateHistory();
-        this.execute(step);
+        const position = (this.selectedStep === undefined) ? this.steps.length : this.selectedStep + 1;
+        this.steps.splice(position, 0, step);
+        this.print(this.steps, position);
     }
 
-    updateHistory() {
-        const initial = (this.steps.length === 0 && this.changeHistory.length === 0);
-
-        if(!initial && !this.timeTraveling) {
-            this.changeHistory.splice(++this.pointer, Infinity, Object.freeze([...this.steps]));
-        }
-
-        this.timeTraveling = false;
-    }
-
-    resetHistory() {
-        this.history = {};
-        this.pointer = -1;
-    }
-
-
+    
     // steps
 
     applyManualChanges(evt) {
@@ -287,7 +275,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                 break;
         }
 
-        this.print(this.steps)
+        this.print(this.steps, id);
     }
 
     levelFor(tech) {
@@ -298,21 +286,16 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     // Step re-ordering
 
-    drag(evt) {
-        const tec = evt.currentTarget.innerText;
-        evt.dataTransfer.setData('tec', tec);
-    }
-
     jumpTo(evt) {
         const steps = this.steps;
         steps.splice(evt.detail.id + 1);
-        this.print(steps)
+        this.print(steps, this.steps.length - 1);
     }
 
     startFrom(evt) {
         const steps = this.steps;
         steps.splice(0, evt.detail.id);
-        this.print(steps)
+        this.print(steps, 0);
     }
 
     remove(evt) {
@@ -327,12 +310,12 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         tec || this.steps.splice(commandIndex, 1);
         this.steps.splice(newIndex, 0, command);
         
-        this.print(this.steps);
+        this.print(this.steps, newIndex);
     }
 
     duplicate({ detail: {id} }) {
         this.steps.splice(id, 0, {...this.steps[id]});
-        this.print(this.steps)
+        this.print(this.steps, id + 1);
     }
 
     loadStoredPaths() {
@@ -371,10 +354,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     handleResourceRequest = ({ resources: resourceChanges, construction }) => {
         if (this.produceResForNextBuild) {
-            this.logger.printError({ message: 'Warte auf Ressourcen für ' + construction.type + ' ' + (construction.level+1) })
+            this.logger.printInfo('Warte auf Ressourcen für ' + construction.type + ' ' + (construction.level+1))
         }
         else {
-            this.account.publish(new InfraEvent(E.RESOURCE_CHANGE, {resourceChanges}, this.cache.coords));
+            this.account.publish(new InfraEvent(E.RESOURCE_CHANGE, {resourceChanges: resourceChanges.clone(CHANGE.GENERATED)}, this.cache.coords));
 
             const res = resourceChanges.values.map(({ amount }) => Math.ceil(amount));
 
@@ -386,6 +369,15 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
 
     // Event handler
+    
+    selectStep({ detail: commandId }) {
+        this.selectedStep = commandId;
+    }
+
+    drag(evt) {
+        const tec = evt.currentTarget.innerText;
+        evt.dataTransfer.setData('tec', tec);
+    }
 
     selectPath({ detail: name }) {
         this.selectedPath = name;
@@ -397,26 +389,14 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     savePath(evt) {
         const name = this.template.querySelector('.path-name').value;
-        const proxyFree = JSON.parse(JSON.stringify(this.steps));
 
-        return this.database.upsert('Paths', { name, steps: proxyFree })
+        return this.database.upsert('Paths', { name, steps: this.steps })
             .then(() => {
                 this.toast('Pfad erfolgreich im Broser gespeichet', '[' + name + '] - [Ctrl + S]' );
                 this.selectedPath = name;
                 this.loadStoredPaths();
             })
             .catch(this.handle);
-    }
-
-    loadPath(evt) {
-        return this.database.get('Paths', this.selectedPath)
-                   .catch((error) => {
-                       this.handle(error);
-                       this.print(this.steps);
-                   })
-                   .then((path) => this.print(path?.steps ?? []))
-                   .then(() => this.toast('Pfade geladen und ausgeführt'))
-                   .catch(this.handle);
     }
 
     deletePath(evt) {
@@ -442,28 +422,21 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     loadPlanet(coords) {
         this.cache.coords = (this.planets.includes(coords)) ? coords : this.planets[0];
-
-        this.resetHistory();
-        this.resetSelectedPath();
-        this.loadPath();
-    }
-
-    resetSelectedPath() {
+        
         this.selectedPath = this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
+        
+        return this.database.get('Paths', this.selectedPath)
+            .then((path) => {
+                const initialPath = path?.steps ?? [];
+                this.history.switchTo(this.cache.coords, initialPath);
+                this.history.ignoreNextPush();
+                this.print(initialPath);
+            })
+            .catch(this.handle);
     }
 
     reset(evt) {
         this.print([]);
-    }
-
-    rerender(evt) {
-        this.steps.forEach((step) => {
-            if(step.type === 'start') {
-                step.produce = this.cache.produce;
-            }
-        });
-
-        this.print(this.steps);
     }
 
     undo(evt) {
@@ -471,8 +444,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             this.error('Ende der Pfad history');
             return;
         }
-        this.timeTraveling = true;
-        this.print([...this.changeHistory[--this.pointer]]);
+        
+        this.history.ignoreNextPush();
+        this.print(this.history.back());
     }
 
     redo(evt) {
@@ -480,12 +454,19 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             this.error('Keine weiteren Pfade');
             return;
         }
-        this.timeTraveling = true;
-        this.print([...this.changeHistory[++this.pointer]]);
+        
+        this.history.ignoreNextPush();
+        this.print(this.history.forth());
     }
 
-    toggleProduce(evt) {
-        this.cache.produce = !this.cache.produce;
+    produceRes(evt) {
+        this.cache.produce = true;
+        evt.target.blur();
+    }
+
+    generateRes(evt) {
+        this.cache.produce = false;
+        evt.target.blur();
     }
 
     toggleDetails(evt) {
@@ -543,18 +524,22 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
 
     // Getters
-
-    get changeHistory() {
-        const coords = this.cache.coords;
-        if(!this.history[coords]) {
-            this.history[coords] = [];
-        }
-
-        return this.history[coords];
+    
+    get generateVariant() {
+        return this.cache.produce ? 'neutral' : 'brand';
+    }
+    
+    get produceVariant() {
+        return this.cache.produce ? 'brand' : 'neutral';
+    }
+    
+    get logLevel() {
+        return this.cache.hideDetails ? 'info' : 'details';
     }
 
     get resources() {
-        return this.account?.planet.resources.printable ?? [];
+        return this.account?.planet.resources.printable
+                .map((res, i) => (res.open = this.requested[i].toLocaleString('de-DE'), res)) ?? [];
     }
 
     get generated() {
@@ -579,11 +564,11 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
     
     get undoDisabled() {
-        return this.pointer < 1;
+        return !this.history.undoable;
     }
 
     get redoDisabled() {
-        return this.pointer === this.changeHistory.length-1;
+        return !this.history.redoable;
     }
     
     get passedTimeClass() {

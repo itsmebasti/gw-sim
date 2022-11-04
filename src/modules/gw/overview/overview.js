@@ -203,7 +203,7 @@ export default class Overview extends CacheMixin(LightningElement) {
 
     handleResRequest = ({ resources }, coords) => {
         this.account.publish(new InfraEvent(E.RESOURCE_CHANGE,
-            { resourceChanges: resources.clone(CHANGE.TRANSPORT) }, coords));
+            { resourceChanges: resources.clone(CHANGE.GENERATED) }, coords));
 
         const res = resources.values.map(({type, amount}) => this.formatNumbers(amount) + ' ' + type.toUpperCase());
 

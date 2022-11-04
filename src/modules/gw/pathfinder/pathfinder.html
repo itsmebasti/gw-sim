@@ -8,6 +8,23 @@
                                     value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
                 <gw-planet-selector planets={planets} selected={cache.coords} onselect={selectPlanet}></gw-planet-selector>
             </section>
+            
+            <section class="options slds-p-around_xx-small">
+                <lightning-button-group>
+                    <lightning-button label="Ress selbst produzieren" 
+                                        variant={produceVariant} 
+                                        icon-name="utility:clock" 
+                                        icon-position="right" 
+                                        style="--slds-c-icon-color-foreground:yellow"
+                                        onclick={produceRes}></lightning-button>
+                    
+                    <lightning-button label="Ress generieren und summieren" 
+                                        variant={generateVariant} 
+                                        icon-name="utility:add" 
+                                        style="--slds-c-icon-color-foreground:green"
+                                        onclick={generateRes}></lightning-button>
+                </lightning-button-group> 
+            </section>
             <lightning-accordion allow-multiple-sections-open active-section-name="Gebäude" class="slds-m-bottom_medium">
                 <lightning-accordion-section for:each={constructions} for:item="construction" key={construction.label}
                                             label={construction.label} name={construction.label}>
@@ -22,31 +39,34 @@
                 </lightning-accordion-section>
             </lightning-accordion>
         </div>
-        <div class="left slds-col slds-size_1-of-1 slds-large-size_3-of-5">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-5">
             <section class="resources slds-grid slds-wrap slds-m-bottom_medium">
                 <div if:true={account} for:each={resources} for:item="res" key={res.name} class="slds-col slds-p-around_xx-small">
                     <span class="slds-align_absolute-center">{res.name}</span>
                     <span class="slds-align_absolute-center">{res.stored}&nbsp;({res.hourlyProduction})</span>
+                    <span class="slds-align_absolute-center">
+                        <lightning-icon icon-name="utility:add" variant="bare" size="x-small" style="--slds-c-icon-color-foreground:green"></lightning-icon>
+                        {res.open}
+                    </span>
                     <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" />
                 </div>
                 <div class="slds-col slds-p-around_xx-small">
                     <span class="slds-align_absolute-center">Zeit</span>
                     <span class={passedTimeClass}><b>{timePassed}</b></span>
+                    <span>&nbsp;</span>
                     <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required/>
                 </div>
-                <div class="slds-col slds-grid">
-                    <lightning-button class="allign-bottom slds-p-bottom--xx-small" variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
+                <div class="slds-col slds-p-around_xx-small">
+                    <lightning-button class="slds-show slds-m-top--large"
+                                        label="Zwischensumme" 
+                                        onclick={resetCount}
+                                        variant="brand" 
+                                        icon-name="utility:add" 
+                                        style="--slds-c-icon-color-foreground:green"></lightning-button>
+                    <lightning-button class="slds-show slds-m-top--xx-small" variant="brand" onclick={applyManualChanges} label="Verrechnen"></lightning-button>
                 </div>
             </section>
             <section class="options slds-p-around_xx-small">
-                <section class="slds-p-bottom_x-small">
-                    <base-toggle label="Ress Produzieren" class="slds-show_inline-block" checked={cache.produce} onchange={toggleProduce}></base-toggle>
-                    <b class="slds-m-right_small">Summe: ( {generated} )</b>
-                    <lightning-button-group>
-                        <lightning-button variant="brand" disabled={cache.produce} onclick={resetCount} label="Begleichen"></lightning-button>
-                        <lightning-button variant="brand" onclick={rerender} label="Anwenden"></lightning-button>
-                    </lightning-button-group>
-                </section>
                 <section>
                     Abschließen:
                     <a onclick={completeBuilding} possible={completeBuildingPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Gebäude</a>
@@ -55,16 +75,17 @@
                     <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
                     
                     <base-toggle label="Details" class="slds-show_inline-block slds-m-left_x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
-                    <base-toggle label="Inline" class="slds-show_inline-block" checked={cache.inlineDetails} onchange={toggleInlineDetails}></base-toggle>
                     <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
+                    
                     <lightning-button-icon icon-name="utility:undo" variant="brand" size="medium" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
                     <lightning-button-icon icon-name="utility:redo" variant="brand" size="medium" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left_small"></lightning-button-icon>
                 </section>
             </section>
             
-            <gw-path-logger hide-details={cache.hideDetails}
-                            inline-details={cache.inlineDetails}
-                            reverse={pathDirectionReverse}
+            <gw-path-logger reverse={pathDirectionReverse}
+                            log-level={logLevel}
+                            active={selectedStep}
+                            oncommandclick={selectStep}
                             onsettingclick={handleSettingClick}
                             onjumpto={jumpTo}
                             onstartfrom={startFrom}
@@ -72,7 +93,7 @@
                             onremove={remove}
                             onduplicate={duplicate}></gw-path-logger>
                             
-            <lightning-accordion allow-multiple-sections-open class="slds-m-bottom_medium">
+            <lightning-accordion allow-multiple-sections-open>
                 <lightning-accordion-section label="Pfad" name="Pfad">
                     <section class="slds-p-vertical_x-small">
                         <input value={selectedPath} class="path-name slds-input slds-size_medium slds-m-right_small" onkeydown={stopPropagation}/>
