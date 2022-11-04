@@ -94,7 +94,26 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
         this.loadStoredData(accountState)
-            .then(() => this.loadPlanet(this.cache.coords));
+                .then(() => this.loadPlanet(this.cache.coords));
+    }
+
+    loadPlanet(coords) {
+        this.cache.coords = (this.planets.includes(coords)) ? coords : this.planets[0];
+        
+        this.selectedPath = this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
+        
+        return this.database.get('Paths', this.selectedPath)
+        .catch((error) => {
+            this.handle(error);
+            return this.steps;
+        })
+            .then((path) => {
+                const initialPath = path?.steps ?? [];
+                this.history.switchTo(this.cache.coords, initialPath);
+                this.history.ignoreNextPush();
+                this.print(initialPath);
+            })
+            .catch(this.handle);
     }
 
     print(steps, activeStep) {
@@ -418,21 +437,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     selectPlanet({target:{selected}}) {
         this.savePath()
             .then(() => this.loadPlanet(selected))
-    }
-
-    loadPlanet(coords) {
-        this.cache.coords = (this.planets.includes(coords)) ? coords : this.planets[0];
-        
-        this.selectedPath = this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
-        
-        return this.database.get('Paths', this.selectedPath)
-            .then((path) => {
-                const initialPath = path?.steps ?? [];
-                this.history.switchTo(this.cache.coords, initialPath);
-                this.history.ignoreNextPush();
-                this.print(initialPath);
-            })
-            .catch(this.handle);
     }
 
     reset(evt) {
