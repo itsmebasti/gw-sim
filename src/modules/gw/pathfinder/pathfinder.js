@@ -11,6 +11,7 @@ import { CHANGE, E, FACTORY } from '../../../classes/model/static/types';
 import { ResourceError } from '../../../classes/model/resources/resourceStorage';
 import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 import History from './history';
+import { LOG_LEVEL } from '../pathLogger/pathLogger';
 
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
@@ -40,8 +41,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         selectedAccount: 'Default',
         coords: '1:1:1',
         produce: true,
-        hideDetails: false,
-        inlineDetails: false,
+        logLevel: 'info',
     });
     
     stopPropagation(evt) {
@@ -50,6 +50,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
+            const componentVisible = (this.template.querySelector('div')?.offsetWidth > 0);
+            if(!componentVisible) return;
+            
             if (evt.ctrlKey) {
                 switch(evt.key) {
                     case 'z': case 'Z':
@@ -401,6 +404,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     selectPath({ detail: name }) {
         this.selectedPath = name;
     }
+    
+    selectLogLevel({ detail: level }) {
+        this.cache.logLevel = level;
+    }
 
     selectAccount({ detail: player }) {
         this.reload(player);
@@ -472,14 +479,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.cache.produce = false;
         evt.target.blur();
     }
-
-    toggleDetails(evt) {
-        this.cache.hideDetails = !this.cache.hideDetails;
-    }
-
-    toggleInlineDetails(evt) {
-        this.cache.inlineDetails = !this.cache.inlineDetails;
-    }
     
     updateUI() {
         this.updateJsonOutput();
@@ -537,8 +536,8 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         return this.cache.produce ? 'brand' : 'neutral';
     }
     
-    get logLevel() {
-        return this.cache.hideDetails ? 'info' : 'details';
+    get logLevels() {
+        return Object.values(LOG_LEVEL);
     }
 
     get resources() {
@@ -563,10 +562,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         return this.template.querySelector('gw-path-logger');
     }
 
-    get showDetails() {
-        return !this.cache.hideDetails;
-    }
-    
     get undoDisabled() {
         return !this.history.undoable;
     }

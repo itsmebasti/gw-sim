@@ -27,7 +27,10 @@ export default class PathLogger extends LightningElement {
     
     connectedCallback() {
         document.addEventListener('keydown', (evt) => {
-            if (!evt.ctrlKey && this.active !== undefined) {
+            const componentVisible = (this.template.querySelector('div')?.offsetWidth > 0);
+            if(!componentVisible) return;
+            
+            if(!evt.ctrlKey && this.active !== undefined) {
                 switch(evt.key) {
                     case 'ArrowUp': case 'w': case 'W':
                         this.handleMoveKeyInput(evt, +1);

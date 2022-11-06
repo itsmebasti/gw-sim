@@ -4,8 +4,7 @@
     <div class="slds-grid slds-wrap">
         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-m-right--medium">
             <section class="account slds-p-around_xx-small slds-m-bottom_medium">
-                Account:<base-select class="slds-show_inline-block slds-m-horizontal_small"
-                                    value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount}></base-select>
+                Account:<base-select value={cache.selectedAccount} options={savedAccounts} onchange={selectAccount} class="slds-show_inline-block slds-m-horizontal_small"></base-select>
                 <gw-planet-selector planets={planets} selected={cache.coords} onselect={selectPlanet}></gw-planet-selector>
             </section>
             
@@ -74,7 +73,9 @@
                     <a onclick={completeShip} possible={completeShipPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Schiff</a>
                     <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
                     
-                    <base-toggle label="Details" class="slds-show_inline-block slds-m-left_x-small" checked={showDetails} onchange={toggleDetails}></base-toggle>
+                    
+                    <span class="slds-p-horizontal_xx-small">Log Level:</span>
+                    <base-select value={cache.logLevel} options={logLevels} onchange={selectLogLevel} class="slds-show_inline-block slds-m-horizontal_small"></base-select>
                     <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
                     
                     <lightning-button-icon icon-name="utility:undo" variant="brand" size="medium" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
@@ -83,7 +84,7 @@
             </section>
             
             <gw-path-logger reverse={pathDirectionReverse}
-                            log-level={logLevel}
+                            log-level={cache.logLevel}
                             active={selectedStep}
                             oncommandclick={selectStep}
                             onsettingclick={handleSettingClick}
