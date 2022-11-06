@@ -5,11 +5,9 @@ import ServerInfo from './serverInfo';
 export default class Fleets {
     values;
     database = new Database();
-    serverSeconds;
 
     constructor(raw) {
-        const serverInfo = new ServerInfo(raw);
-        this.serverSeconds = serverInfo.serverTime/1000;
+        const player = new ServerInfo(raw).player;
         
         raw = raw.replaceAll(/'<img[^>]+>/g, '');
         raw = raw.replaceAll(/https:\/\/[^ "]+/g, '');
@@ -27,17 +25,14 @@ export default class Fleets {
             const returningMissionDetails = this.missionDetails(returnRow);
             const currentMissionDetails = startedFleets.find((started) => started.id === returningMissionDetails.id) ?? returningMissionDetails;
 
-            return new Fleet(serverInfo, returnRow, currentMissionDetails, returningMissionDetails.arrival);
+            return new Fleet(player, returnRow, currentMissionDetails, returningMissionDetails.arrival);
         });
 
-        this.values.push(...other.map((row) => new Fleet(serverInfo, row, this.missionDetails(row))));
+        this.values.push(...other.map((row) => new Fleet(player, row, this.missionDetails(row))));
     }
 
     store() {
-        this.database.add('Fleets', ...this.values)
-            .then(() => this.database.deleteAllBy('Fleets', 'deployTime', IDBKeyRange.upperBound(this.serverSeconds)))
-            .then(() => this.database.deleteAllBy('Fleets', 'deliveryTime', IDBKeyRange.upperBound(this.serverSeconds)))
-            .catch(console.error)
+        return this.database.add('Fleets', ...this.values);
     }
 
     missionDetails = (row) => {

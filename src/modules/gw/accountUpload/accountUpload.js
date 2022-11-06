@@ -17,7 +17,7 @@ export default class AccountUpload extends LightningElement {
     uni = UNI.list[0];
 
     upload(evt) {
-        const [research, overview, reourceStats, landing] = [...this.template.querySelectorAll('textarea')].map((element) => element.value);
+        const [research, overview, reourceStats, landing] = [...this.template.querySelectorAll('input')].map((element) => element.value);
 
         for(let value of [research, overview, reourceStats, landing]) {
             if(value === '') {
@@ -27,9 +27,21 @@ export default class AccountUpload extends LightningElement {
         }
 
         try {
-            this.store(this.accountStateFor(landing, overview, research, reourceStats));
+            const accountData = new Account(this.accountStateFor(landing, overview, research, reourceStats)).state;
+            const serverSeconds = accountData.serverTime/1000;
+            
+            this.database.add('AccountData', accountData)
+                .then(() => new Fleets(landing).store())
+                .then(() => this.database.deleteAllBy('Fleets', 'deployTime', IDBKeyRange.upperBound(serverSeconds)))
+                .then(() => this.database.deleteAllBy('Fleets', 'deliveryTime', IDBKeyRange.upperBound(serverSeconds)))
+                .then(() => {
+                    this.toast(accountData.player + ' Account erfolgreich hochgeladen');
 
-            new Fleets(landing).store();
+                    this.dispatchEvent(new CustomEvent('accountchange', { detail: accountData.player, bubbles: true, composed: true }));
+                    
+                    this.template.querySelectorAll('input').forEach((element) => element.value = "");
+                })
+                .catch(this.handle);
         }
         catch(e) {
             this.toast('Daten fehlerhaft!', e.message ?? e, 'error');
@@ -97,36 +109,23 @@ export default class AccountUpload extends LightningElement {
         return accountData;
     }
 
-    store(accountData) {
-        this.database.add('AccountData', new Account(accountData).state)
-            .then(() => {
-                this.toast(accountData.player + ' Account erfolgreich hochgeladen');
-
-                this.dispatchEvent(new CustomEvent('accountchange', { detail: accountData.player, bubbles: true, composed: true }));
-            })
-            .catch(this.handle);
-    }
-
     pasteDom(evt) {
         evt.preventDefault();
         evt.target.value = evt.clipboardData.getData('text/html');
-        
-        this.selectNext(evt);
+    }
+    
+    selectFirstInput(evt) {
+        this.template.querySelector('input').focus();
     }
     
     selectNext(evt) {
-        if(evt.target.nextSibling) {
-            evt.target.nextSibling.focus();
-        }
-        else {
-            this.template.querySelector('lightning-button.upload').focus();
-        }
+        evt.target.nextSibling.focus();
     }
     
-    clear(evt) {
-        this.template.querySelectorAll('textarea').forEach((element) => element.value = "");
+    selectSubmit(evt) {
+        this.template.querySelector('lightning-button').focus();
     }
-
+    
     setUni({ detail : name }) {
         this.uni = name;
     }

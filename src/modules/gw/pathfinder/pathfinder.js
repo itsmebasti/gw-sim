@@ -69,7 +69,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                         break;
                 }
             }
-            else {
+            else if( !['INPUT', 'TEXTAREA'].includes(this.template.activeElement?.tagName)) {
                 switch(evt.key) {
                     case 'ArrowRight': case 'd': case 'D':
                         this.template.querySelector('gw-planet-selector').next();

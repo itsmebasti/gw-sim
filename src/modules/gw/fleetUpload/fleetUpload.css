@@ -2,10 +2,6 @@
     display: block;
 }
 
-input {
-    width: 4.5rem;
-}
-
 input::placeholder {
     color: var(--text-dark, grey);
 }
@@ -14,11 +10,4 @@ base-toast {
     position: fixed;
     bottom: 1.25rem;
     left: 0;
-}
-
-p.temp {
-    position: fixed;
-    top: -10000px;
-    z-index: -9999;
-    opacity: 0;
 }

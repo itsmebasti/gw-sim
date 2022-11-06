@@ -1,0 +1,10 @@
+<template>
+    <base-toast></base-toast>
+    
+    Uni:<base-select class="slds-show_inline-block slds-m-left_small" value={uni} options={unis} onchange={setUni}></base-select>
+
+    <a href={landing} target="_blank" class="slds-m-left_small" onblur={selectInput}>Startseite</a>
+    <input placeholder="Startseite" onpaste={pasteDom} class="slds-input slds-size_xx-small slds-m-left_small"></input>
+
+    <lightning-button label="Hochladen" variant="success" onclick={upload} class="slds-m-left_small"></lightning-button>
+</template>

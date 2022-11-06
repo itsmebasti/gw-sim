@@ -1,13 +1,13 @@
 import { NAMES, RES } from '../static/types';
 
 export default class Fleet {
-    constructor(serverInfo, row, { id, mission, arrival }, returning) {
+    constructor(player, row, { id, mission, arrival }, returning) {
         const missionElement = row.querySelector("td:nth-of-type(3)");
         const { res, ships } = this.fleetDetails(missionElement.querySelector("span").getAttribute("original-title"));
         const  [from, ,to] = row.querySelector("td:nth-of-type(4)").children;
 
         this.id = +id;
-        this.account = serverInfo.player;
+        this.account = player;
         this.mission = mission;
         this.arrival = +arrival;
         this.returning = +returning;

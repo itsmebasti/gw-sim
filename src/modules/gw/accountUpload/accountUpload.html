@@ -6,18 +6,17 @@
         Uni:<base-select class="slds-show_inline-block slds-m-left_small" value={uni} options={unis} onchange={setUni}></base-select>
     </section>
 
-    <section class="slds-p-bottom_x-small slds-wrap">
-        <a href={urls.research} target="_blank" class="slds-m-right_x-small">Forschung</a> 
-        <a href={urls.overview} target="_blank" class="slds-m-right_x-small">Gesamtübersicht</a> 
-        <a href={urls.resources} target="_blank" class="slds-m-right_x-small">Rohstoffe</a> 
-        <a href={urls.landing} target="_blank" class="slds-m-right_x-small" onblur={selectNext}>Startseite</a> 
-        <textarea placeholder="Forschung" name="research" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
-        <textarea placeholder="Gesamtübersicht" name="overviewDom" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
-        <textarea placeholder="Statistik -> Rohstoffe" name="stats" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
-        <textarea placeholder="Startseite" name="landingHtml" onpaste={pasteDom} class="slds-theme_offline" rows="3"></textarea>
+    <section class="slds-p-bottom_x-small">
+        <a href={urls.research} target="_blank" class="slds-m-right_x-small slds-show_inline-block">Forschung</a> 
+        <a href={urls.overview} target="_blank" class="slds-m-right_x-small slds-show_inline-block">Gesamtübersicht</a> 
+        <a href={urls.resources} target="_blank" class="slds-m-right_x-small slds-show_inline-block">Rohstoffe</a> 
+        <a href={urls.landing} target="_blank" class="slds-m-right_x-small slds-show_inline-block" onblur={selectFirstInput}>Startseite</a> 
+        <br>
+        <input placeholder="Forschung" onpaste={pasteDom} onblur={selectNext} class="slds-input slds-m-right_xx-small"></input>
+        <input placeholder="Gesamtübersicht" onpaste={pasteDom} onblur={selectNext} class="slds-input slds-m-right_xx-small"></input>
+        <input placeholder="Rohstoffe" onpaste={pasteDom} onblur={selectNext} class="slds-input slds-m-right_xx-small"></input>
+        <input placeholder="Startseite" onpaste={pasteDom} onblur={selectSubmit} class="slds-input slds-m-right_xx-small"></input>
     </section>
-    <lightning-button-group>
-        <lightning-button class="upload" label="Hochladen" variant="success" onclick={upload}></lightning-button>
-        <lightning-button label="Felder Leeren" variant="brand" onclick={clear}></lightning-button>
-    </lightning-button-group>
+    
+    <lightning-button label="Hochladen" variant="success" onclick={upload}></lightning-button>
 </template>

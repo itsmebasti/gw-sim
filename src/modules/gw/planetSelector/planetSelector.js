@@ -5,37 +5,29 @@ export default class PlanetSelector extends LightningElement {
     @api selected;
     
     changePlanet({ detail : coords }) {
-        this.select(this.planets.indexOf(coords));
+        this.selected = coords;
+        this.dispatchEvent(new CustomEvent('select'));
     }
 
     @api next(evt) {
-        let next = this.currentIndex() + 1;
+        let next = this.planets.indexOf(this.selected) + 1;
         
         if(next >= this.planets.length) {
             next = 0;
         }
         
-        this.select(next);
+        this.selected = this.planets[next];
+        this.dispatchEvent(new CustomEvent('select'));
     }
 
     @api previous(evt) {
-        let prev = this.currentIndex() - 1;
+        let prev = this.planets.indexOf(this.selected) - 1;
         
         if(prev < 0) {
             prev = this.planets.length-1;
         }
         
-        this.select(prev);
-    }
-    
-    select(index) {
-        this.selected = this.planets[index];
-        this.template.querySelector('base-select').selectedIndex = index;
-        
+        this.selected = this.planets[prev];
         this.dispatchEvent(new CustomEvent('select'));
-    }
-    
-    currentIndex() {
-        return this.planets.indexOf(this.selected);
     }
 }
