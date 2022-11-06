@@ -74,9 +74,9 @@
                     <a onclick={completeAll} possible={completeAllPossible} class="slds-show_inline-block slds-m-around_xxx-small slds-p-horizontal_xx-small">Alles</a>
                     
                     
-                    <span class="slds-p-horizontal_xx-small">Log Level:</span>
-                    <base-select value={cache.logLevel} options={logLevels} onchange={selectLogLevel} class="slds-show_inline-block slds-m-horizontal_small"></base-select>
-                    <lightning-button variant="brand" onclick={reset} label="RESET"></lightning-button>
+                    <span class="slds-m-left_small">Log Level:</span>
+                    <base-select value={cache.logLevel} options={logLevels} onchange={selectLogLevel} class="slds-show_inline-block"></base-select>
+                    <lightning-button variant="brand" onclick={reset} label="RESET" class="slds-m-left_small"></lightning-button>
                     
                     <lightning-button-icon icon-name="utility:undo" variant="brand" size="medium" onclick={undo} disabled={undoDisabled} title="CTRL+Z" class="slds-m-left_small"></lightning-button-icon>
                     <lightning-button-icon icon-name="utility:redo" variant="brand" size="medium" onclick={redo} disabled={redoDisabled} title="CTRL+Y" class="slds-m-left_small"></lightning-button-icon>
