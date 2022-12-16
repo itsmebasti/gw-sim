@@ -3,6 +3,26 @@ import { LightningElement, api } from 'lwc';
 export default class PlanetSelector extends LightningElement {
     @api planets = [];
     @api selected;
+
+    switchPlanets(evt) {
+        const componentVisible = (evt.target.offsetWidth > 0);
+        
+        if(componentVisible && !evt.ctrlKey) {
+            const hotKeyAction = {
+                'ArrowRight': this.next,
+                'd': this.next,
+                'D': this.next,
+                'ArrowLeft': this.previous,
+                'a': this.previous,
+                'A': this.previous,
+            }[evt.key];
+            
+            if(hotKeyAction) {
+                hotKeyAction();
+                evt.preventDefault();
+            }
+        }
+    }
     
     changePlanet({ detail : coords }) {
         this.selected = coords;

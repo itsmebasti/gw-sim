@@ -47,13 +47,13 @@
                         <lightning-icon icon-name="utility:add" variant="bare" size="x-small" style="--slds-c-icon-color-foreground:green"></lightning-icon>
                         {res.open}
                     </span>
-                    <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" />
+                    <input type="number" step="1" class="res slds-input slds-align_absolute-center" value="0" onkeydown={stopPropagation}/>
                 </div>
                 <div class="slds-col slds-p-around_xx-small">
                     <span class="slds-align_absolute-center">Zeit</span>
                     <span class={passedTimeClass}><b>{timePassed}</b></span>
                     <span>&nbsp;</span>
-                    <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required/>
+                    <input type="time" step="1" value="00:00:00" class="wait slds-input slds-align_absolute-center" required onkeydown={stopPropagation}/>
                 </div>
                 <div class="slds-col slds-p-around_xx-small">
                     <lightning-button class="slds-show slds-m-top--large"
@@ -97,21 +97,10 @@
             <lightning-accordion allow-multiple-sections-open>
                 <lightning-accordion-section label="Pfad" name="Pfad">
                     <section class="slds-p-vertical_x-small">
-                        <input value={selectedPath} class="path-name slds-input slds-size_medium slds-m-right_small" onkeydown={stopPropagation}/>
                         <lightning-button variant="success" onclick={savePath} label="Speichern"></lightning-button>
                     </section>
-                    <section class="slds-p-bottom_x-small">
-                        <base-select class="slds-show_inline-block slds-size_medium"
-                                    value={selectedPath} options={savedPaths} onchange={selectPath}></base-select>
-                        <span class="slds-m-horizontal_x-small">vom Speicher</span>
-                        <lightning-button-group>
-                            <lightning-button variant="success" onclick={loadPath} label="Laden"></lightning-button>
-                            <lightning-button variant="destructive" onclick={deletePath} label="Löschen"></lightning-button>
-                            <lightning-button variant="destructive" onclick={deletePaths} label="Alle Pfade löschen"></lightning-button>
-                        </lightning-button-group>
-                    </section>
                     <section>
-                        <textarea class="path slds-theme_offline slds-size_medium" rows="1"></textarea>
+                        <textarea class="path slds-theme_offline slds-size_medium" rows="1" onkeydown={stopPropagation}></textarea>
                         <lightning-button-group class="slds-m-left_small">
                             <lightning-button variant="brand" onclick={executePasted} label="Ausführen"></lightning-button>
                             <lightning-button variant="brand" onclick={copy} label="kopieren"></lightning-button>

@@ -1,5 +1,5 @@
 <template>
-    <div class="slds-show_inline-block">
+    <div class="slds-show_inline-block" onkeydown={switchPlanets}>
         <lightning-button-icon size="large" icon-name="utility:jump_to_left" variant="bare" onclick={previous}></lightning-button-icon>
         <base-select class="planets slds-show_inline-block slds-m-horizontal_xx-small"
                     value={selected} options={planets} onchange={changePlanet}></base-select>

@@ -18,12 +18,11 @@
                     
                     {log.message}
                     
-                    <lightning-button-icon for:each={log.settings} for:item="setting" key={setting.action} variant="bare"
-                        class={setting.color}
-                        icon-name={setting.icon}
-                        tooltip={setting.tooltip}
-                        data-action={setting.action}
-                        onclick={handleSettingClick}></lightning-button-icon>
+                    <lightning-button-icon if:true="log.produceRes" variant="bare" class="yellow" icon-name="utility:clock" data-action="generateRes" onclick={handleSettingClick}
+                        tooltip="Rostoffe werden selbst produziert"></lightning-button-icon>
+                        
+                    <lightning-button-icon if:false="log.produceRes" variant="bare" class="green" icon-name="utility:add" data-action="produceRes" onclick={handleSettingClick}
+                        tooltip="Rostoffe werden anderweitig beschafft"></lightning-button-icon>
                         
                     <template if:true={showInlineDetails}>
                         <span if:true={log.needed} class="slds-p-right_xx-small">({log.needed})</span>

@@ -3,7 +3,7 @@ import { CacheMixin } from 'lwc-base';
 import { toHHMMSS } from '../../../classes/framwork/misc/timeConverters';
 
 import technologies from '../../../classes/model/static/technologies';
-import UNI, { accountState } from '../../../classes/model/infra/uni';
+import { accountState } from '../../../classes/model/infra/uni';
 import Account from '../../../classes/model/infra/account'
 import Database from '../../../classes/framwork/database/database';
 import InfraEvent from '../../../classes/framwork/events/infraEvent';
@@ -12,30 +12,23 @@ import { ResourceError } from '../../../classes/model/resources/resourceStorage'
 import ResourceChanges from '../../../classes/model/resources/resourceChanges';
 import History from './history';
 import { LOG_LEVEL } from '../pathLogger/pathLogger';
+import ExecutableAccount from './executableAccount';
 
 export default class Pathfinder extends CacheMixin(LightningElement) {
     database = new Database();
-    
-    constructions = [];
     @api pathDirectionReverse = false;
-    @track savedAccounts;
-    @track savedPaths;
-    @track accountState;
-    newPlanets;
-    resFleets;
-    koloFleets;
-    selectedPath;
+    
+    // IndexedDB data
+    savedAccounts;
+    savedPaths;
+    
     account;
-
     steps = [];
     selectedStep;
     
-    history = new History();
+    requested = [0, 0, 0, 0];
     
-    @track requested = [0, 0, 0, 0];
-    timePassed = '00:00:00';
-    pathHasErrors = false;
-    produceResForNextBuild = true;
+    history = new History();
 
     @track cache = this.cached({
         selectedAccount: 'Default',
@@ -43,58 +36,39 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         produce: true,
         logLevel: 'info',
     });
-    
-    stopPropagation(evt) {
-        evt.stopPropagation();
-    }
 
     connectedCallback() {
+        this.reload();
+        
         document.addEventListener('keydown', (evt) => {
             const componentVisible = (this.template.querySelector('div')?.offsetWidth > 0);
-            if(!componentVisible) return;
             
-            if (evt.ctrlKey) {
-                switch(evt.key) {
-                    case 'z': case 'Z':
-                        this.undo();
-                        evt.preventDefault();
-                        break;
-                    case 'y': case 'Y':
-                        this.redo()
-                        evt.preventDefault();
-                        break;
-                    case 's': case 'S':
-                        this.savePath()
-                        evt.preventDefault();
-                        break;
-                }
-            }
-            else if( !['INPUT', 'TEXTAREA'].includes(this.template.activeElement?.tagName)) {
-                switch(evt.key) {
-                    case 'ArrowRight': case 'd': case 'D':
-                        this.template.querySelector('gw-planet-selector').next();
-                        break;
-                    case 'ArrowLeft': case 'a': case 'A':
-                        this.template.querySelector('gw-planet-selector').previous();
-                        break;
+            if(componentVisible && evt.ctrlKey) {
+                const hotKeyAction = {
+                    'z': this.undo,
+                    'Z': this.undo,
+                    'y': this.redo,
+                    'Y': this.redo,
+                    's': this.savePath,
+                    'S': this.savePath,
+                }[evt.key];
+            
+                if(hotKeyAction) {
+                    hotKeyAction();
+                    evt.preventDefault();
                 }
             }
         });
-
-        this.reload();
     }
 
-    @api reload(player = this.cache.selectedAccount ?? 'Default') {
+    @api reload(player = this.cache.selectedAccount) {
         this.database.get('AccountData', player)
-            .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
-            .catch((e) => {
-                console.error(e); 
-                this.load(accountState(UNI.default.NAME));
-            });
+            .catch(this.handle)
+            .then((state = accountState()) => this.load(state))
+            .catch(this.handle)
     }
 
     load(accountState) {
-        this.accountState = accountState;
         this.cache.selectedAccount = accountState.player;
         this.loadStoredData(accountState)
                 .then(() => this.loadPlanet(this.cache.coords));
@@ -103,29 +77,24 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     loadPlanet(coords) {
         this.cache.coords = (this.planets.includes(coords)) ? coords : this.planets[0];
         
-        this.selectedPath = this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
-        
-        return this.database.get('Paths', this.selectedPath)
-        .catch((error) => {
-            this.handle(error);
-            return this.steps;
-        })
+        return this.database.get('Paths', this.pathName())
+            .catch(this.handle)
             .then((path) => {
-                const initialPath = path?.steps ?? [];
-                this.history.switchTo(this.cache.coords, initialPath);
+                const initialSteps = path?.steps ?? [];
+                this.history.switchTo(this.cache.coords, initialSteps);
                 this.history.ignoreNextPush();
-                this.print(initialPath);
+                this.print(initialSteps);
             })
             .catch(this.handle);
     }
 
     print(steps, activeStep) {
         try {
-            this.account = this.preparedAccount(this.accountState);
+            this.account = new ExecutableAccount();
         }
         catch(e) {
             this.handle(e);
-            this.load(accountState(UNI.default.NAME));
+            this.load(accountState());
             return;
         }
         
@@ -143,14 +112,10 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         
         this.pathHasErrors = false;
         steps.forEach(this.execute);
-
-        if(steps.length === 0) {
-            this.updateUI();
-        }
     }
     
-    preparedAccount(state) {
-        const account = new Account(state);
+    preparedAccount() {
+        const account = new Account(this.account.state);
         account.current = this.cache.coords;
         
         let koloStart;
@@ -178,6 +143,8 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             account.serverTime += account.passed * 1000;
             account.passed = 0;
         }
+        
+        account.rebaseTo(koloStart);
         
         return account;
     }
@@ -349,7 +316,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     loadStoredData(accountState) {
         return this.loadStoredPaths()
             .then(() => this.database.getAll('AccountData'))
-            .then((data = []) => this.savedAccounts = [...new Set([...data.map(({ player }) => player), 'Default'])])
+            .then((data = []) => this.savedAccounts = data)
             
             .then(() => this.database.getAllBy('Fleets', 'deliveryTime', IDBKeyRange.lowerBound(accountState.serverTime/1000)))
             .then((fleets = []) => fleets.filter(({account}) => (account === accountState.player)))
@@ -376,7 +343,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     handleResourceRequest = ({ resources: resourceChanges, construction }) => {
         if (this.produceResForNextBuild) {
-            this.logger.printInfo('Warte auf Ressourcen für ' + construction.type + ' ' + (construction.level+1))
+            this.logger().printInfo('Warte auf Ressourcen für ' + construction.type + ' ' + (construction.level+1))
         }
         else {
             this.account.publish(new InfraEvent(E.RESOURCE_CHANGE, {resourceChanges: resourceChanges.clone(CHANGE.GENERATED)}, this.cache.coords));
@@ -401,10 +368,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         evt.dataTransfer.setData('tec', tec);
     }
 
-    selectPath({ detail: name }) {
-        this.selectedPath = name;
-    }
-    
     selectLogLevel({ detail: level }) {
         this.cache.logLevel = level;
     }
@@ -414,33 +377,15 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     savePath(evt) {
-        const name = this.template.querySelector('.path-name').value;
-
+        const name = this.pathName();
         return this.database.upsert('Paths', { name, steps: this.steps })
             .then(() => {
-                this.toast('Pfad erfolgreich im Broser gespeichet', '[' + name + '] - [Ctrl + S]' );
-                this.selectedPath = name;
+                this.toast('Pfad erfolgreich im Broser gespeichet', 'Tipp - Speichern: [Ctrl + S]' );
                 this.loadStoredPaths();
             })
             .catch(this.handle);
     }
-
-    deletePath(evt) {
-        return this.database.delete('Paths', this.selectedPath)
-                   .then(() => {
-                        this.loadStoredPaths();
-                        this.toast('Pfad gelöscht');
-                   })
-                   .catch(this.handle);
-    }
-
-    deletePaths(evt) {
-        return this.database.clear('Paths')
-                   .then(() => this.loadStoredPaths())
-                   .then(() => this.toast('Alle Pfade gelöscht'))
-                   .catch(this.handle);
-    }
-
+    
     selectPlanet({target:{selected}}) {
         this.savePath()
             .then(() => this.loadPlanet(selected))
@@ -479,38 +424,9 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.cache.produce = false;
         evt.target.blur();
     }
-    
-    updateUI() {
-        this.updateJsonOutput();
-        this.updateLinkValidity();
-        this.timePassed = toHHMMSS(this.account.passed);
-    }
-
-    updateJsonOutput() {
-        this.template.querySelector('.path').value = (this.steps.length) ? JSON.stringify(this.steps) : '';
-    }
-
-    updateLinkValidity() {
-        const validated = (construction) => ({
-            construction, 
-            possible: this.account.get(construction).dependencies().every(({ type, level }) => (this.levelFor(type) >= level))
-        });
-        
-        this.constructions = [
-            {label: 'Gebäude', options: technologies.buildings.map(validated) },
-            {label: 'Forschung', options: technologies.research.map(validated) },
-            {label: 'Schiffe', options: technologies.ships.map(validated) },
-            {label: 'Türme', options: technologies.towers.map(validated) },
-        ];
-        
-        this.completeBuildingPossible = (this.account.planet.kz.queue.length > 0);
-        this.completeResearchPossible = (this.account.planet.fz.queue.length > 0);
-        this.completeShipPossible = (this.account.planet.sf.queue.length > 0);
-        this.completeAllPossible = (this.completeBuildingPossible || this.completeResearchPossible || this.completeShipPossible);
-    }
 
     copy(evt) {
-        this.clip(this.template.querySelector('.path').value);
+        this.clip(pathField.value);
     }
 
     clip(string) {
@@ -521,19 +437,51 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     executePasted() {
         this.steps = [];
-        this.print(JSON.parse(this.template.querySelector('.path').value || '[]'));
+        this.print(JSON.parse(this.pathField.value || '[]'));
         this.toast('Pfad wird ausgeführt');
     }
-
-
-    // Getters
     
-    get generateVariant() {
-        return this.cache.produce ? 'neutral' : 'brand';
+    
+    // HELPERS
+
+    handle = (error) => {
+        console.error(error); 
+        (this.baseToast()) ? this.baseToast().display('error', error) : console.error(error);
+    }
+
+    error = (error) => {
+        this.handle(error);
+    }
+
+    toast = (message, details, severity = 'success') => {
+        this.baseToast()?.display(severity, message, details);
     }
     
-    get produceVariant() {
-        return this.cache.produce ? 'brand' : 'neutral';
+    stopPropagation(evt) {
+        evt.stopPropagation();
+    }
+    
+    pathName() {
+        return this.account.uni + ' ' + this.account.player + ' ' + this.cache.coords;
+    }
+    
+    baseToast() {
+        return this.template.querySelector('base-toast');
+    }
+
+    logger() {
+        return this.template.querySelector('gw-path-logger');
+    }
+    
+    pathField() {
+        return this.template.querySelector('.path');
+    }
+
+
+    // GETTERS
+    
+    get accountNames() {
+        return [...new Set([...this.savedAccounts.map(({ player }) => player), 'Default'])];
     }
     
     get logLevels() {
@@ -552,14 +500,60 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     get planets() {
         const result = [];
         
-        result.push(...this.accountState?.planets ?? []);
+        result.push(...this.account?.coords ?? []);
         result.push(...this.newPlanets ?? []);
         
         return [...new Set(result.map(({coords}) => coords))];
     }
+    
+    get timePassed() {
+        return toHHMMSS(this.account.passed);
+    }
+    
+    get passedTimeClass() {
+        return 'slds-align_absolute-center' + (this.pathHasErrors ? ' error' : '');
+    }
 
-    get logger() {
-        return this.template.querySelector('gw-path-logger');
+    get validatedConstructions() {
+        const validated = (construction) => ({
+            construction, 
+            possible: this.account.get(construction).dependencies().every(({ type, level }) => (this.levelFor(type) >= level))
+        });
+        
+        return [
+            {label: 'Gebäude', options: technologies.buildings.map(validated) },
+            {label: 'Forschung', options: technologies.research.map(validated) },
+            {label: 'Schiffe', options: technologies.ships.map(validated) },
+            {label: 'Türme', options: technologies.towers.map(validated) },
+        ];
+    }
+
+    get pathJson() {
+        return (this.steps.length) ? JSON.stringify(this.steps) : '';
+    }
+    
+    get generateVariant() {
+        return this.cache.produce ? 'neutral' : 'brand';
+    }
+    
+    get produceVariant() {
+        return this.cache.produce ? 'brand' : 'neutral';
+    }
+    
+    get completeBuildingPossible() {
+        return (this.account.planet.kz.queue.length > 0);
+    }
+    
+    get completeResearchPossible() {
+        return (this.account.planet.fz.queue.length > 0);
+    }
+    
+    get completeShipPossible() {
+        return (this.account.planet.sf.queue.length > 0);
+    }
+    
+    get completeAllPossible() {
+        return (this.completeBuildingPossible || this.completeResearchPossible || this.completeShipPossible);
     }
 
     get undoDisabled() {
@@ -568,26 +562,5 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     get redoDisabled() {
         return !this.history.redoable;
-    }
-    
-    get passedTimeClass() {
-        return 'slds-align_absolute-center' + (this.pathHasErrors ? ' error' : '');
-    }
-
-    handle = (error) => {
-        console.error(error); 
-        (this.baseToast) ? this.baseToast.display('error', error) : console.error(error);
-    }
-
-    error = (error) => {
-        this.handle(error);
-    }
-
-    toast = (message, details, severity = 'success') => {
-        this.baseToast?.display(severity, message, details);
-    }
-    
-    get baseToast() {
-        return this.template.querySelector('base-toast');
     }
 }

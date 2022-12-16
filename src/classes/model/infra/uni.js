@@ -1,6 +1,6 @@
 import { RES, FACTORY } from '../static/types';
 
-export function accountState(uniName) {
+export function accountState(uniName = UNI.default.NAME) {
     const uni = UNI[uniName];
     return {
         uni: uni.NAME,

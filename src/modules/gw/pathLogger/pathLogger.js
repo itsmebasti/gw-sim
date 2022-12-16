@@ -79,14 +79,14 @@ export default class PathLogger extends LightningElement {
     }
 
     @api
-    command(message, settings = []) {
+    command(message, produceRes) {
         this.logs.push({
             id: this.idCounter++,
             command: ++this.commandCounter,
             severity: 'command',
             message,
             level: LOG_LEVEL.command,
-            settings,
+            produceRes
             isCommand: true,
             cssClass: 'command'});
     }
@@ -97,7 +97,6 @@ export default class PathLogger extends LightningElement {
             this.logs.push({
                 id: this.idCounter++,
                 command: this.commandCounter,
-                settings: [],
                 message: detail,
                 level: LOG_LEVEL.detail,
                 isDetail: true,
@@ -147,7 +146,6 @@ export default class PathLogger extends LightningElement {
         this.logs.push({
             id: this.idCounter++,
             command: this.commandCounter,
-            settings: [],
             time: this.serverTimeString,
             level,
             msgType,

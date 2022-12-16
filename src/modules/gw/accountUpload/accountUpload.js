@@ -57,7 +57,7 @@ export default class AccountUpload extends LightningElement {
         const research = new Research(researchDom);
         const reourceStats = new ResourceStats(reourceStatsDom);
 
-        const result = this.synchronizedData(serverInfo, infraEvents, overview, research);
+        const result = this.synchronizedState(serverInfo, infraEvents, overview, research);
 
         const planetFor = (toFind) => result.planets.find(({coords}) => coords === toFind);
 
@@ -78,8 +78,8 @@ export default class AccountUpload extends LightningElement {
         return result;
     }
 
-    synchronizedData(serverInfo, infraEvents, overview, research) {
-        let accountData = {
+    synchronizedState(serverInfo, infraEvents, overview, research) {
+        let result = {
             uni: serverInfo.uni,
             player: serverInfo.player,
             serverTime: serverInfo.serverTime,
@@ -98,15 +98,13 @@ export default class AccountUpload extends LightningElement {
                 throw 'Bitte halte die reihenfolge beim öffnen der quellen ein!';
             }
             else if(uploadSecondsDiff > 0) {
-                accountData.serverTime = serverInfo.serverTime - uploadSecondsDiff*1000;
-                const overviewAccount = new Account(accountData);
-                overviewAccount.continue(uploadSecondsDiff);
-
-                accountData = overviewAccount.state;
+                result.serverTime = serverInfo.serverTime - uploadSecondsDiff*1000;
+                    
+                result = new Account(result).rebaseTo(uploadSecondsDiff).state;
             }
         }
 
-        return accountData;
+        return result;
     }
 
     pasteDom(evt) {

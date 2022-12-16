@@ -61,6 +61,16 @@ export default class Account extends EventBus {
         return this.planets.find((planet) => planet.coords === this.current);
     }
     
+    rebaseTo(seconds) {
+        if(seconds > 0) {
+            this.continue(seconds);
+            this.serverTime += this.passed * 1000;
+            this.passed = 0;
+        }
+        
+        return this;
+    }
+    
     addResources(resources, resourceChanges = new ResourceChanges(...resources, CHANGE.MANUALLY)) {
         this.publish(new InfraEvent(E.RESOURCE_CHANGE, {resourceChanges}, this.planet.coords));
     }
