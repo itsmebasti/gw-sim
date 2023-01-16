@@ -9,6 +9,6 @@ RUN ls / && pwd
 
 WORKDIR /code
 
-EXPOSE 80/tcp
+EXPOSE 3001/tcp
 
 ENTRYPOINT [ "/entrypoint.sh" ]
