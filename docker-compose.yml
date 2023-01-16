@@ -1,0 +1,18 @@
+volumes:
+    elastic:
+    mysql:
+
+
+services:
+
+    ############
+    ### Node ###
+    ############
+
+    node:
+        build: .
+        restart: always
+        volumes:
+            - ./:/code
+        ports:
+            - "3001:3001"

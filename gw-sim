@@ -1,0 +1,48 @@
+#!/bin/bash
+
+FUNCTIONS=(
+    "build"
+    "watch"
+    "local"
+    "start"
+    "stop"
+    "exec"
+    "install"
+)
+
+COMPOSE_FLAGS="-f docker-compose.yml"
+COMPOSE_CONTAINER="node"
+
+build() {
+    exec npm run build
+}
+
+watch() {
+    exec npm run watch
+}
+
+local() {
+    exec npm run local
+}
+
+start () {
+    docker compose $COMPOSE_FLAGS up -d $COMPOSE_CONTAINER
+}
+
+stop () {
+    docker compose $COMPOSE_FLAGS down
+}
+
+exec() {
+    docker compose $COMPOSE_FLAGS exec $COMPOSE_CONTAINER ${@};
+}
+
+install () {
+    exec yarn
+}
+
+for fnc in ${FUNCTIONS[@]}; do
+    if [[ "$fnc" = "$1" ]]; then
+        $fnc ${@:2};
+    fi
+done
