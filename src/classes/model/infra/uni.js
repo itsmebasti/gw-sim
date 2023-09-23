@@ -12,8 +12,8 @@ export function accountState(uniName) {
 }
 
 const UNI = {
-    get default() {return this.uni4},
-    get list() { return ['uni4', 'uni3', 'speed3']; },
+    get default() {return this.speed4},
+    get list() { return ['uni4', 'uni3', 'speed3', 'speed4']; },
     uni3: {
         NAME: 'uni3',
         SPEED: 1,
@@ -48,6 +48,21 @@ const UNI = {
         NAME: 'speed3',
             SPEED: 6,
             START_DATE: new Date(2022, 2-1, 4, 20),
+            START_INFRA: {
+            buildings: { [FACTORY.KZ]: 1 },
+            ships: {},
+            towers: {}
+        },
+        START_RES: [
+            { type: RES.FE, stored: 500 },
+            { type: RES.LUT, stored: 500 },
+            { type: RES.H2O, stored: 500 },
+            { type: RES.H2, stored: 0 }]
+    },
+    speed4: {
+        NAME: 'speed4',
+            SPEED: 6,
+            START_DATE: new Date(2023, 9-1, 22, 20),
             START_INFRA: {
             buildings: { [FACTORY.KZ]: 1 },
             ships: {},
