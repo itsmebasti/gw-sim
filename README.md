@@ -3,7 +3,7 @@ Dies ist ein Simulator für das Browser Game https://www.gigrawars.de/
 
 Aktuell wird das projekt gratis in der google cloud gehosted:
 
-https://gw-sim-361609.ey.r.appspot.com/
+https://gw-simulator.ey.r.appspot.com
 
 ## lokale Umgebung mit docker-env & gw-sim
 Wer lokal kein Node installieren möchte, kann die enthaltene Docker-Umgebung nutzen.

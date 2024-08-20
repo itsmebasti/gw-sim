@@ -97,10 +97,6 @@ export default class ResourceCenter {
     get printable() {
         return [this.feStorage, this.lutStorage, this.h2oStorage, this.h2Storage].map((storage) => {
             const consumption = (storage === this.h2oStorage) ? this.h2Storage.mine.hourlyConsumption() : 0;
-            
-            console.log('prod', storage.productionIn(3600, consumption));
-            console.log(consumption);
-            console.log(storage.productionIn(3600, consumption).toLocaleString('de-DE'));
             return {
                 name: NAMES[storage.resType],
                 type: storage.resType,
