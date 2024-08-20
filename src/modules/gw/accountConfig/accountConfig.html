@@ -17,36 +17,36 @@
                                         value={selectedUni} options={unis} onchange={setUni}></base-select>
                     </section>
                     <section>
-                        Start:<base-date-time value={serverTime}></base-date-time> 
+                        Start:<base-date-time value={serverTime}></base-date-time>
                         <lightning-button variant="brand" onclick={changeStart} label="Anwenden" class="slds-m-left_small"></lightning-button>
                     </section>
                     <lightning-button class="slds-p-bottom_x-small" variant="brand" onclick={resetStart} label="Zeit auf Uni Start setzen"></lightning-button>
                 </lightning-accordion-section>
-                
-                <lightning-accordion-section label="Upload" name="Upload">
-                    <gw-account-upload class="slds-p-top_x-small" ></gw-account-upload>
-                </lightning-accordion-section>
-                
-                <lightning-accordion-section label="Bauschleifen Anpassen" name="Bauschleifen">
-                    <section class="slds-p-vertical_x-small">
-                        <gw-planet-selector planets={planets} selected={coords} onselect={selectPlanet}></gw-planet-selector>
-                        <b class="slds-m-left_medium">Rohstoffe: {queueCleanupRes.fe} | {queueCleanupRes.lut} | {queueCleanupRes.h2o} | {queueCleanupRes.h2}</b>
-                    </section>
-                    <section class="slds-p-bottom_x-small">
-                        <lightning-pill for:each={queueItems} for:item="type" key={type}
-                                        onremove={cleanupQueue} label={type} class="slds-m-right_xxx-small"></lightning-pill>
-                    </section>
-                    <section>
-                        <lightning-button-group>
-                            <lightning-button label="Speichern" variant="success" onclick={acceptQueueCleanup} disabled={queueUnchanged}></lightning-button>
-                            <lightning-button label="Abbrechen" variant="destructive" onclick={abortQueueCleanup} disabled={queueUnchanged}></lightning-button>
-                        </lightning-button-group>
-                    </section>
-                </lightning-accordion-section>
-                
-                <lightning-accordion-section label="Flotten Update" name="Fleets">
-                    <gw-fleet-upload class="slds-p-top_x-small" ></gw-fleet-upload>
-                </lightning-accordion-section>
+<!--                -->
+<!--                <lightning-accordion-section label="Upload" name="Upload">-->
+<!--                    <gw-account-upload class="slds-p-top_x-small" ></gw-account-upload>-->
+<!--                </lightning-accordion-section>-->
+
+<!--                <lightning-accordion-section label="Bauschleifen Anpassen" name="Bauschleifen">-->
+<!--                    <section class="slds-p-vertical_x-small">-->
+<!--                        <gw-planet-selector planets={planets} selected={coords} onselect={selectPlanet}></gw-planet-selector>-->
+<!--                        <b class="slds-m-left_medium">Rohstoffe: {queueCleanupRes.fe} | {queueCleanupRes.lut} | {queueCleanupRes.h2o} | {queueCleanupRes.h2}</b>-->
+<!--                    </section>-->
+<!--                    <section class="slds-p-bottom_x-small">-->
+<!--                        <lightning-pill for:each={queueItems} for:item="type" key={type}-->
+<!--                                        onremove={cleanupQueue} label={type} class="slds-m-right_xxx-small"></lightning-pill>-->
+<!--                    </section>-->
+<!--                    <section>-->
+<!--                        <lightning-button-group>-->
+<!--                            <lightning-button label="Speichern" variant="success" onclick={acceptQueueCleanup} disabled={queueUnchanged}></lightning-button>-->
+<!--                            <lightning-button label="Abbrechen" variant="destructive" onclick={abortQueueCleanup} disabled={queueUnchanged}></lightning-button>-->
+<!--                        </lightning-button-group>-->
+<!--                    </section>-->
+<!--                </lightning-accordion-section>-->
+
+<!--                <lightning-accordion-section label="Flotten Update" name="Fleets">-->
+<!--                    <gw-fleet-upload class="slds-p-top_x-small" ></gw-fleet-upload>-->
+<!--                </lightning-accordion-section>-->
                 
                 <lightning-accordion-section label="Kolonialisieren" name="AddPlanet">
                     <gw-add-planet class="slds-p-top_x-small" player={cache.selectedAccount}></gw-add-planet>

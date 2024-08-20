@@ -43,7 +43,8 @@
         "gcp-build": "yarn build",
         "watch": "rollup --config --watch",
         "local": "yarn build && yarn start",
-        "deploy": "gcloud app deploy --quiet",
+        "deploy": "gcloud app deploy -v prod --quiet",
         "open": "gcloud app browse"
-    }
+    },
+    "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
