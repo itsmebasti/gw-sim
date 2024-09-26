@@ -99,10 +99,15 @@ const UNI = {
             towers: {}
         },
         START_RES: [
+            { type: RES.FE, stored: 2500 },
+            { type: RES.LUT, stored: 800 },
+            { type: RES.H2O, stored: 500 },
+            { type: RES.H2, stored: 0 }],
+        PLANET_RES: [
             { type: RES.FE, stored: 500 },
             { type: RES.LUT, stored: 500 },
             { type: RES.H2O, stored: 500 },
-            { type: RES.H2, stored: 0 }]
+            { type: RES.H2, stored: 0 }],
     },
 };
 

@@ -31,7 +31,7 @@ export default class Account extends EventBus {
     
     addNewPlanet = ({coords}) => {
         if(!this.planets.map(({coords}) => coords).includes(coords)) {
-            this.planets.push(new Planet({coords, infra: this.uni.START_INFRA, resources: this.uni.START_RES, current: []}, this, this.uni.SPEED));
+            this.planets.push(new Planet({coords, infra: this.uni.START_INFRA, resources: this.uni.PLANET_RES || this.uni.START_RES, current: []}, this, this.uni.SPEED));
         }
     }
     
