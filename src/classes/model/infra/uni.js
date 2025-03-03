@@ -112,7 +112,7 @@ const UNI = {
     phantom: {
         NAME: 'phantom',
         SPEED: 10,
-        START_DATE: new Date(2024, 10-1, 25, 20),
+        START_DATE: new Date(2025, 3-1, 7, 20),
         START_INFRA: {
             buildings: { [FACTORY.KZ]: 1 },
             ships: {},
