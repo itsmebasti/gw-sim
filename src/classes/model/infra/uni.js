@@ -12,8 +12,8 @@ export function accountState(uniName) {
 }
 
 const UNI = {
-    get default() {return this.uni5},
-    get list() { return ['uni5', 'beta4', 'speed4', 'uni4', 'uni3', 'speed3']; },
+    get default() {return this.phantom},
+    get list() { return ['phantom', 'uni5', 'beta4', 'speed4', 'uni4', 'uni3', 'speed3']; },
     uni3: {
         NAME: 'uni3',
         SPEED: 1,
@@ -103,6 +103,26 @@ const UNI = {
             { type: RES.LUT, stored: 800 },
             { type: RES.H2O, stored: 500 },
             { type: RES.H2, stored: 0 }],
+        PLANET_RES: [
+            { type: RES.FE, stored: 500 },
+            { type: RES.LUT, stored: 500 },
+            { type: RES.H2O, stored: 500 },
+            { type: RES.H2, stored: 0 }],
+    },
+    phantom: {
+        NAME: 'phantom',
+        SPEED: 10,
+        START_DATE: new Date(2024, 10-1, 25, 20),
+        START_INFRA: {
+            buildings: { [FACTORY.KZ]: 1 },
+            ships: {},
+            towers: {}
+        },
+        START_RES: [
+            { type: RES.FE, stored: 10000 },
+            { type: RES.LUT, stored: 5000 },
+            { type: RES.H2O, stored: 1000 },
+            { type: RES.H2, stored: 2000 }],
         PLANET_RES: [
             { type: RES.FE, stored: 500 },
             { type: RES.LUT, stored: 500 },
