@@ -88,7 +88,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
         this.database.get('AccountData', player)
             .then((state) => this.load(state ?? accountState(UNI.default.NAME)))
             .catch((e) => {
-                console.error(e); 
+                console.error(e);
                 this.load(accountState(UNI.default.NAME));
             });
     }
@@ -425,6 +425,17 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
             .catch(this.handle);
     }
 
+    loadPath(evt) {
+        return this.database.get('Paths', this.selectedPath)
+                   .catch((error) => {
+                       this.handle(error);
+                       this.print(this.steps);
+                   })
+                   .then((path) => this.print(path?.steps ?? []))
+                   .then(() => this.toast('Pfade geladen und ausgeführt'))
+                   .catch(this.handle);
+    }
+
     deletePath(evt) {
         return this.database.delete('Paths', this.selectedPath)
                    .then(() => {
@@ -492,7 +503,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
 
     updateLinkValidity() {
         const validated = (construction) => ({
-            construction, 
+            construction,
             possible: this.account.get(construction).dependencies().every(({ type, level }) => (this.levelFor(type) >= level))
         });
         
@@ -575,7 +586,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     }
 
     handle = (error) => {
-        console.error(error); 
+        console.error(error);
         (this.baseToast) ? this.baseToast.display('error', error) : console.error(error);
     }
 
