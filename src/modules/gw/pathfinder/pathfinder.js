@@ -23,7 +23,6 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     @track accountState;
     newPlanets;
     resFleets;
-    koloFleets;
     selectedPath;
     account;
 
@@ -103,7 +102,7 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
     loadPlanet(coords) {
         this.cache.coords = (this.planets.includes(coords)) ? coords : this.planets[0];
         
-        this.selectedPath = this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
+        this.selectedPath = this.defaultPath;
         
         return this.database.get('Paths', this.selectedPath)
         .catch((error) => {
@@ -432,24 +431,34 @@ export default class Pathfinder extends CacheMixin(LightningElement) {
                        this.print(this.steps);
                    })
                    .then((path) => this.print(path?.steps ?? []))
-                   .then(() => this.toast('Pfade geladen und ausgeführt'))
+                   .then(() => this.steps.length && this.toast('Pfad geladen'))
                    .catch(this.handle);
     }
 
     deletePath(evt) {
         return this.database.delete('Paths', this.selectedPath)
+                   .then(() => this.loadStoredPaths())
                    .then(() => {
-                        this.loadStoredPaths();
-                        this.toast('Pfad gelöscht');
+                       this.toast('Pfad gelöscht');
+                       this.selectedPath = this.savedPaths[0] ?? this.defaultPath;
+                       this.loadPath();
                    })
                    .catch(this.handle);
     }
 
     deletePaths(evt) {
         return this.database.clear('Paths')
-                   .then(() => this.loadStoredPaths())
-                   .then(() => this.toast('Alle Pfade gelöscht'))
+                   .then(() => {
+                       this.toast('Alle Pfade gelöscht');
+                       this.loadStoredPaths();
+                       this.selectedPath = this.defaultPath;
+                       this.loadPath();
+                   })
                    .catch(this.handle);
+    }
+    
+    get defaultPath() {
+        return this.accountState.uni + ' ' + this.cache.selectedAccount + ' ' + this.cache.coords;
     }
 
     selectPlanet({target:{selected}}) {
